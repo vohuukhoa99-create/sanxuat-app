@@ -1,0 +1,6566 @@
+.app-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 190px minmax(0, 1fr);
+  background: linear-gradient(180deg, #edf6f3 0%, #eaf3ef 100%);
+}
+
+.sidebar {
+  background: #042f22;
+  color: #eef7f2;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 16px;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-brand {
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
+
+.sidebar-nav {
+  display: grid;
+  gap: 10px;
+}
+
+.nav-item {
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: transparent;
+  color: inherit;
+  padding: 12px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  font-size: 0.96rem;
+}
+
+.nav-item:hover,
+.nav-item.active {
+  background: rgba(66, 206, 163, 0.15);
+  color: #d7fff0;
+}
+
+.main-content {
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  padding: 18px 22px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 18px;
+  box-shadow: 0 30px 60px rgba(7, 34, 26, 0.08);
+}
+
+.topbar-chip {
+  display: inline-flex;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  color: #0f3f2e;
+  background: #d5f1e4;
+  margin-bottom: 8px;
+}
+
+.topbar h1 {
+  margin: 0;
+  font-size: 20px;
+  line-height: 30px;
+  color: #073723;
+}
+
+.topbar-actions span {
+  color: #546b5d;
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.user-session {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: #eef5f1;
+}
+
+.user-session strong {
+  color: #0a3b2c;
+}
+
+.user-session small {
+  color: #60766b;
+  font-weight: 700;
+}
+
+.login-shell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: linear-gradient(180deg, #edf6f3 0%, #dfeee8 100%);
+}
+
+.login-card {
+  width: min(440px, 100%);
+  display: grid;
+  gap: 16px;
+  padding: 28px;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid rgba(5, 55, 44, 0.12);
+  box-shadow: 0 24px 70px rgba(7, 34, 26, 0.14);
+}
+
+.login-card h1 {
+  margin: 0;
+  color: #073723;
+}
+
+.login-card label {
+  display: grid;
+  gap: 7px;
+  color: #38564a;
+  font-weight: 800;
+}
+
+.login-card input {
+  min-height: 42px;
+  border: 1px solid rgba(7, 34, 26, 0.16);
+  border-radius: 6px;
+  padding: 8px 10px;
+  color: #173d2d;
+}
+
+.login-card p {
+  margin: 0;
+  color: #60766b;
+}
+
+.page-content {
+  display: grid;
+  gap: 22px;
+}
+
+.dashboard-grid,
+.reports-grid,
+.formulas-grid,
+.settings-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.dashboard-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.reports-grid,
+.settings-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.formulas-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.stat-card,
+.report-card,
+.setting-card,
+.formula-card,
+.panel {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(5, 55, 44, 0.08);
+  border-radius: 20px;
+  padding: 22px;
+  box-shadow: 0 18px 40px rgba(14, 32, 28, 0.06);
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.stat-card span,
+.report-card span,
+.setting-card strong,
+.formula-card strong,
+.formula-header span {
+  color: #577b6d;
+}
+
+.stat-card strong,
+.report-card strong,
+.formula-header strong {
+  font-size: 18px;
+  color: #04422c;
+}
+
+.formula-card {
+  display: grid;
+  gap: 1rem;
+}
+
+.formula-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  font-size: 0.98rem;
+}
+
+.formula-section h3 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  color: #0a3b2c;
+}
+
+.formula-section ul,
+.log-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.formula-section li {
+  color: #4c675c;
+}
+
+.panel {
+  overflow: hidden;
+}
+
+.panel-header-row,
+.section-heading-row,
+.modal-header,
+.modal-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.panel-header-row {
+  margin-bottom: 18px;
+}
+
+.panel-header-row h2,
+.modal-header h2,
+.form-section h3 {
+  margin: 0;
+  color: #073723;
+}
+
+.panel-header-row .panel-text {
+  margin: 6px 0 0;
+}
+
+.panel-text {
+  margin: 0 0 18px;
+  color: #4e6658;
+  line-height: 1.6;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 640px;
+}
+
+thead tr {
+  background: #edf8f3;
+}
+
+th,
+td {
+  padding: 14px 16px;
+  text-align: left;
+  color: #2f4b3f;
+  border-bottom: 1px solid rgba(7, 34, 26, 0.08);
+}
+
+th {
+  font-size: 0.92rem;
+  letter-spacing: 0.01em;
+}
+
+tbody tr:hover {
+  background: rgba(66, 206, 163, 0.08);
+}
+
+.primary-button,
+.secondary-button,
+.danger-button,
+.icon-button {
+  border: none;
+  padding: 10px 18px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.primary-button,
+.secondary-button,
+.danger-button {
+  border-radius: 999px;
+}
+
+.primary-button {
+  background: #0f6c44;
+  color: #fff;
+}
+
+.secondary-button {
+  background: #eef3f0;
+  color: #1f4234;
+  margin-left: 12px;
+}
+
+.danger-button {
+  background: #f7e8e6;
+  color: #9a2d24;
+  padding: 8px 12px;
+}
+
+.icon-button {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #eef3f0;
+  color: #1f4234;
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.status-pill,
+.section-kicker {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.status-pill {
+  padding: 5px 10px;
+  background: #e3f5ec;
+  color: #0d6040;
+  font-size: 0.84rem;
+}
+
+.section-kicker {
+  padding: 6px 12px;
+  background: #e8f4ef;
+  color: #446c5d;
+  font-size: 0.78rem;
+  margin-bottom: 8px;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 26px;
+  background: rgba(4, 28, 20, 0.52);
+}
+
+.production-modal {
+  width: min(1480px, 96vw);
+  max-height: 92vh;
+  overflow: auto;
+  background: #fbfdfb;
+  border: 1px solid rgba(5, 55, 44, 0.14);
+  border-radius: 8px;
+  box-shadow: 0 28px 80px rgba(4, 28, 20, 0.3);
+}
+
+.production-modal form {
+  display: grid;
+  gap: 18px;
+  padding: 22px;
+}
+
+.order-detail-modal {
+  display: grid;
+  gap: 18px;
+  padding: 22px;
+}
+
+.order-detail-modal .modal-header {
+  padding: 0;
+}
+
+.order-detail-modal .log-tabs {
+  margin: 0;
+}
+
+.form-section {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  background: #ffffff;
+  border: 1px solid rgba(5, 55, 44, 0.1);
+  border-radius: 8px;
+}
+
+.production-form-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+.production-form-grid label,
+.recipe-table td {
+  font-size: 0.9rem;
+}
+
+.production-form-grid label {
+  display: grid;
+  gap: 6px;
+  color: #38564a;
+  font-weight: 700;
+}
+
+.production-form-grid input,
+.production-form-grid select,
+.recipe-table input,
+.recipe-table select {
+  width: 100%;
+  min-height: 38px;
+  border: 1px solid rgba(7, 34, 26, 0.16);
+  border-radius: 6px;
+  background: #fff;
+  color: #173d2d;
+  padding: 8px 10px;
+}
+
+.recipe-table input[readonly] {
+  background: #f1f6f3;
+  color: #0f4e35;
+  font-weight: 700;
+}
+
+.recipe-table-wrapper {
+  border: 1px solid rgba(7, 34, 26, 0.08);
+  border-radius: 8px;
+}
+
+.recipe-table {
+  min-width: 1420px;
+}
+
+.recipe-table th,
+.recipe-table td {
+  padding: 10px 8px;
+}
+
+.recipe-table th {
+  white-space: nowrap;
+}
+
+.recipe-table td:first-child {
+  width: 54px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.modal-actions {
+  justify-content: flex-end;
+  padding-bottom: 2px;
+}
+
+.chemical-layout {
+  display: grid;
+  grid-template-columns: minmax(360px, 0.42fr) minmax(620px, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.order-queue,
+.weighing-board {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid rgba(7, 34, 26, 0.1);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.order-queue h3,
+.weighing-board h3 {
+  margin: 0;
+  color: #073723;
+}
+
+.queue-table {
+  min-width: 620px;
+}
+
+.queue-table .primary-button,
+.active-operation .primary-button,
+.active-operation .secondary-button {
+  white-space: nowrap;
+}
+
+.primary-button:disabled {
+  cursor: not-allowed;
+  background: #a6b4ad;
+  color: #f5f7f6;
+}
+
+.active-order-row {
+  background: #fff5dc;
+}
+
+.workflow-steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.step {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(7, 34, 26, 0.1);
+  background: #edf3f0;
+  color: #4f6158;
+  font-weight: 700;
+}
+
+.step.active {
+  border-color: #e0a638;
+  background: #fff1ce;
+  color: #7a4a00;
+}
+
+.step.locked {
+  background: #eef0ef;
+  color: #7b8580;
+}
+
+.process-alert {
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: #fde7e4;
+  color: #9d2d24;
+  border: 1px solid #f3beb8;
+  font-weight: 700;
+}
+
+.success-alert {
+  background: #dff6e7;
+  color: #0f4e35;
+  border-color: #a9dfc0;
+}
+
+.active-operation {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(260px, 1fr));
+  gap: 14px;
+  padding: 14px;
+  border-radius: 8px;
+  background: #fff9ea;
+  border: 1px solid #efd28c;
+}
+
+.operation-field {
+  display: grid;
+  gap: 8px;
+}
+
+.operation-field label {
+  color: #4e4326;
+  font-weight: 700;
+}
+
+.operation-control {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.operation-control input {
+  min-width: 220px;
+  flex: 1;
+  min-height: 40px;
+  border: 1px solid rgba(7, 34, 26, 0.16);
+  border-radius: 6px;
+  padding: 8px 10px;
+  color: #173d2d;
+}
+
+.chemical-process-table {
+  min-width: 1380px;
+}
+
+.chemical-process-table th,
+.chemical-process-table td {
+  padding: 11px 10px;
+}
+
+.weighing-dispatch-page {
+  gap: 16px;
+}
+
+.weighing-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(160px, 1fr));
+  gap: 14px;
+}
+
+.weighing-stats article {
+  display: grid;
+  gap: 6px;
+  padding: 16px 18px;
+  border-radius: 8px;
+  border: 1px solid rgba(7, 34, 26, 0.08);
+  background: #fff;
+  box-shadow: 0 12px 26px rgba(14, 32, 28, 0.05);
+}
+
+.weighing-stats span {
+  color: #60766b;
+  font-weight: 800;
+}
+
+.weighing-stats strong {
+  color: #073723;
+  font-size: 18px;
+}
+
+.weighing-dispatch-layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 25%) minmax(0, 75%);
+  gap: 16px;
+  align-items: start;
+  padding: 16px;
+}
+
+.weighing-order-list,
+.weighing-active-board {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+.weighing-order-list {
+  padding: 14px;
+  border: 1px solid rgba(7, 34, 26, 0.1);
+  border-radius: 8px;
+  background: #f8fcfa;
+}
+
+.weighing-order-list h2,
+.weighing-order-group h3,
+.weighing-active-board h2 {
+  margin: 0;
+  color: #073723;
+}
+
+.weighing-order-group {
+  display: grid;
+  gap: 8px;
+}
+
+.weighing-order-card {
+  min-height: 78px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2px 8px;
+  width: 100%;
+  padding: 8px 10px;
+  text-align: left;
+  border: 1px solid rgba(7, 34, 26, 0.12);
+  border-radius: 8px;
+  background: #fff;
+  align-items: center;
+}
+
+.weighing-order-card.active {
+  border-color: #0f6c44;
+  background: #dff6e7;
+}
+
+.weighing-order-card strong {
+  color: #073723;
+  font-size: 0.94rem;
+  line-height: 1.15;
+  grid-column: 1;
+}
+
+.weighing-order-card span {
+  color: #38564a;
+  font-weight: 800;
+  font-size: 0.84rem;
+  line-height: 1.15;
+  grid-column: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.weighing-start-button {
+  grid-column: 2;
+  grid-row: 1 / span 4;
+  align-self: center;
+  min-height: 42px;
+  margin-left: 0;
+  padding: 8px 12px;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+
+.weighing-order-summary {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.weighing-order-summary div,
+.weighing-progress-card {
+  padding: 14px;
+  border: 1px solid rgba(7, 34, 26, 0.1);
+  border-radius: 8px;
+  background: #f8fcfa;
+}
+
+.weighing-order-summary div {
+  display: grid;
+  gap: 6px;
+}
+
+.weighing-order-summary span,
+.weighing-progress-card span {
+  color: #60766b;
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.weighing-order-summary strong,
+.weighing-progress-card strong {
+  color: #073723;
+}
+
+.weighing-progress-card {
+  display: grid;
+  grid-template-columns: minmax(160px, 0.28fr) minmax(240px, 1fr) 70px;
+  gap: 14px;
+  align-items: center;
+}
+
+.weighing-progress-card div:first-child {
+  display: grid;
+  gap: 4px;
+}
+
+.weighing-progress {
+  height: 18px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e4ebe8;
+}
+
+.weighing-progress i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #0f6c44, #42cea3);
+}
+
+.weighing-active-board table {
+  min-width: 1120px;
+}
+
+.weighing-active-board th,
+.weighing-active-board td {
+  padding: 12px 10px;
+  vertical-align: middle;
+}
+
+.weighing-active-board th:first-child,
+.weighing-active-board td:first-child,
+.weighing-active-board th:nth-child(8),
+.weighing-active-board td:nth-child(8) {
+  text-align: center;
+}
+
+.weighing-active-row {
+  background: #e7f8ed;
+  outline: 2px solid #0f6c44;
+  outline-offset: -2px;
+}
+
+.weighing-completed-row {
+  background: #f3f8f5;
+}
+
+.weighing-inline-action {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.weighing-inline-action input {
+  width: 130px;
+  min-height: 44px;
+  border: 1px solid rgba(7, 34, 26, 0.16);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 1rem;
+}
+
+.weighing-inline-action button,
+.weighing-finish-button {
+  min-height: 46px;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+
+.weighing-check,
+.weighing-fail {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 30px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.weighing-check {
+  color: #0c6f3c;
+  background: #dff6e7;
+}
+
+.weighing-fail {
+  color: #a6261d;
+  background: #fde0dc;
+}
+
+.weighed-container-list {
+  display: grid;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.weighed-container-card {
+  display: grid;
+  gap: 14px;
+  margin-top: 18px;
+  padding: 16px;
+  border: 1px solid rgba(7, 34, 26, 0.12);
+  border-radius: 8px;
+  background: #f7fbf8;
+}
+
+.weighed-container-card h3 {
+  margin: 2px 0 0;
+  font-size: 1.05rem;
+  overflow-wrap: anywhere;
+}
+
+.weighed-container-grid,
+.weighed-container-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+}
+
+.weighed-container-grid div,
+.weighed-container-detail-grid div {
+  display: grid;
+  gap: 3px;
+  padding: 10px;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.weighed-container-grid span,
+.weighed-container-detail-grid span {
+  color: #64716b;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.weighed-container-grid strong,
+.weighed-container-detail-grid strong {
+  color: #0b2d23;
+  overflow-wrap: anywhere;
+}
+
+.weighed-container-modal {
+  width: min(980px, 96vw);
+  display: grid;
+  gap: 16px;
+}
+
+.qr-print-ticket {
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  padding: 24px;
+  border: 1px solid rgba(7, 34, 26, 0.18);
+  border-radius: 8px;
+  background: #ffffff;
+  color: #0b2d23;
+}
+
+.qr-print-ticket h1 {
+  margin: 0;
+  color: #0b2d23;
+  font-size: 18px;
+  text-align: center;
+  letter-spacing: 0;
+}
+
+.qr-print-code {
+  display: grid;
+  place-items: center;
+  width: 244px;
+  height: 244px;
+  border: 1px solid rgba(7, 34, 26, 0.16);
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.qr-print-text {
+  font-size: 1.2rem;
+  overflow-wrap: anywhere;
+  text-align: center;
+}
+
+.qr-print-info {
+  width: min(620px, 100%);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 14px;
+}
+
+.qr-print-info div {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 10px;
+  align-items: baseline;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(7, 34, 26, 0.12);
+}
+
+.qr-print-info span {
+  color: #64716b;
+  font-weight: 800;
+}
+
+.qr-print-info strong {
+  overflow-wrap: anywhere;
+}
+
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+
+  .qr-print-ticket,
+  .qr-print-ticket * {
+    visibility: visible !important;
+  }
+
+  .qr-print-ticket {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    min-height: 100%;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 24px;
+  }
+
+  .qr-print-info {
+    width: 620px;
+  }
+}
+
+.current-row {
+  background: #fff4d8;
+}
+
+.passed-row {
+  background: #eefaf2;
+}
+
+.locked-row {
+  background: #f0f2f1;
+}
+
+.locked-row td {
+  color: #87928d;
+}
+
+.flow-pill {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.flow-pill.pass {
+  background: #dff6e7;
+  color: #0c6f3c;
+}
+
+.flow-pill.fail {
+  background: #fde0dc;
+  color: #a6261d;
+}
+
+.flow-pill.active,
+.flow-pill.waiting {
+  background: #ffedc1;
+  color: #8a5600;
+}
+
+.flow-pill.locked {
+  background: #e8ecea;
+  color: #64716b;
+}
+
+.mixing-page {
+  gap: 18px;
+}
+
+.mixing-page-v2 {
+  gap: 18px;
+}
+
+.mixing-sections-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.mixing-sections-grid .panel {
+  display: grid;
+  gap: 14px;
+}
+
+.mixing-sections-grid h3,
+.mixing-dispatch h3 {
+  margin: 0;
+  color: #073723;
+}
+
+.mixing-history-panel {
+  grid-column: 1 / -1;
+}
+
+.mixing-dispatch {
+  grid-column: 1 / -1;
+}
+
+.mixing-page-v2 select {
+  width: min(320px, 100%);
+  min-height: 42px;
+  border: 1px solid rgba(7, 34, 26, 0.16);
+  border-radius: 6px;
+  background: #fff;
+  color: #173d2d;
+  padding: 8px 10px;
+  font-weight: 700;
+}
+
+.mixing-order-table {
+  min-width: 1780px;
+}
+
+.mixing-order-table tr {
+  cursor: pointer;
+}
+
+.mixing-order-table th,
+.mixing-order-table td {
+  padding: 11px 10px;
+  vertical-align: middle;
+}
+
+.muted-text {
+  color: #728078;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.mixing-detail-panel {
+  display: grid;
+  gap: 18px;
+}
+
+.mixing-detail-panel h3 {
+  margin: 0;
+  color: #073723;
+}
+
+.mixing-info-grid,
+.mixing-log-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.mixing-info-grid div,
+.mixing-log-grid div {
+  display: grid;
+  gap: 6px;
+  padding: 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(7, 34, 26, 0.1);
+  background: #f8fcfa;
+}
+
+.mixing-info-grid span,
+.mixing-log-grid span {
+  color: #60766b;
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.mixing-info-grid strong,
+.mixing-log-grid strong {
+  color: #113e2c;
+  font-size: 1rem;
+}
+
+.wide-detail {
+  grid-column: span 2;
+}
+
+.mixing-material-table {
+  min-width: 1120px;
+}
+
+.mixing-material-table th,
+.mixing-material-table td {
+  padding: 11px 10px;
+}
+
+.mixing-modal {
+  width: min(780px, 94vw);
+  max-height: 90vh;
+  overflow: auto;
+  display: grid;
+  gap: 18px;
+  padding: 22px;
+  background: #fbfdfb;
+  border: 1px solid rgba(5, 55, 44, 0.14);
+  border-radius: 8px;
+  box-shadow: 0 28px 80px rgba(4, 28, 20, 0.3);
+}
+
+.mixing-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.mixing-form-grid label {
+  display: grid;
+  gap: 7px;
+  color: #38564a;
+  font-weight: 700;
+}
+
+.mixing-form-grid input,
+.mixing-form-grid textarea {
+  width: 100%;
+  min-height: 40px;
+  border: 1px solid rgba(7, 34, 26, 0.16);
+  border-radius: 6px;
+  background: #fff;
+  color: #173d2d;
+  padding: 8px 10px;
+}
+
+.wide-field {
+  grid-column: 1 / -1;
+}
+
+.checkbox-field {
+  display: flex !important;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  min-height: 40px;
+  padding-top: 24px;
+}
+
+.checkbox-field input {
+  width: 18px;
+  min-height: 18px;
+}
+
+.production-log-page {
+  gap: 18px;
+}
+
+.production-log-filters {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+  padding: 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(7, 34, 26, 0.1);
+  background: #f8fcfa;
+}
+
+.production-log-filters label {
+  display: grid;
+  gap: 6px;
+  color: #38564a;
+  font-weight: 700;
+}
+
+.production-log-filters input {
+  min-height: 38px;
+  border: 1px solid rgba(7, 34, 26, 0.16);
+  border-radius: 6px;
+  background: #fff;
+  color: #173d2d;
+  padding: 8px 10px;
+}
+
+.production-log-summary-table {
+  min-width: 1480px;
+}
+
+.production-log-summary-table th,
+.production-log-summary-table td,
+.production-log-wide-table th,
+.production-log-wide-table td {
+  padding: 11px 10px;
+  vertical-align: middle;
+}
+
+.production-log-detail {
+  display: grid;
+  gap: 16px;
+}
+
+.production-log-detail h3 {
+  margin: 0;
+  color: #073723;
+}
+
+.log-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 6px;
+  border-radius: 8px;
+  background: #eef5f1;
+}
+
+.log-tabs button {
+  border: none;
+  border-radius: 6px;
+  padding: 10px 14px;
+  background: transparent;
+  color: #38564a;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.log-tabs button.active {
+  background: #0f6c44;
+  color: #fff;
+}
+
+.production-log-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.production-log-grid div {
+  display: grid;
+  gap: 6px;
+  padding: 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(7, 34, 26, 0.1);
+  background: #f8fcfa;
+}
+
+.production-log-grid span {
+  color: #60766b;
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.production-log-grid strong {
+  color: #113e2c;
+  font-size: 1rem;
+  word-break: break-word;
+}
+
+.production-log-wide-table {
+  min-width: 1540px;
+}
+
+.production-log-stack {
+  display: grid;
+  gap: 16px;
+}
+
+.reports-page {
+  gap: 18px;
+}
+
+.report-filters {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(180px, 1fr));
+  gap: 12px;
+  padding: 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(7, 34, 26, 0.1);
+  background: #f8fcfa;
+}
+
+.report-filters label {
+  display: grid;
+  gap: 6px;
+  color: #38564a;
+  font-weight: 700;
+}
+
+.report-filters input,
+.report-filters select {
+  min-height: 38px;
+  border: 1px solid rgba(7, 34, 26, 0.16);
+  border-radius: 6px;
+  background: #fff;
+  color: #173d2d;
+  padding: 8px 10px;
+}
+
+.report-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(150px, 1fr));
+  gap: 14px;
+}
+
+.report-kpi-card {
+  display: grid;
+  gap: 10px;
+  min-height: 112px;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(5, 55, 44, 0.1);
+  background: #fff;
+  box-shadow: 0 14px 30px rgba(14, 32, 28, 0.05);
+}
+
+.report-kpi-card span {
+  color: #577b6d;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.report-kpi-card strong {
+  align-self: end;
+  color: #04422c;
+  font-size: 18px;
+}
+
+.report-chart-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 0.8fr;
+  gap: 18px;
+}
+
+.report-chart-card {
+  display: grid;
+  gap: 12px;
+}
+
+.report-chart-card h3,
+.report-table-panel h3 {
+  margin: 0;
+  color: #073723;
+}
+
+.css-bar-row {
+  display: grid;
+  grid-template-columns: 130px minmax(160px, 1fr) 110px;
+  gap: 10px;
+  align-items: center;
+}
+
+.css-bar-row span,
+.css-bar-row strong {
+  color: #38564a;
+  font-weight: 800;
+}
+
+.css-bar-row div {
+  height: 18px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #edf3f0;
+}
+
+.css-bar-row i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #0f6c44, #42cea3);
+}
+
+.css-bar-row.status i {
+  background: linear-gradient(90deg, #d99b1d, #42cea3);
+}
+
+.pass-fail-chart {
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  gap: 28px;
+  min-height: 210px;
+  padding-top: 14px;
+}
+
+.pass-fail-chart div {
+  width: 84px;
+  min-height: 32px;
+  display: grid;
+  align-content: end;
+  justify-items: center;
+  gap: 8px;
+  border-radius: 8px 8px 0 0;
+  padding: 10px;
+  color: #fff;
+  font-weight: 800;
+}
+
+.pass-fail-chart .pass {
+  background: #0f6c44;
+}
+
+.pass-fail-chart .fail {
+  background: #b63228;
+}
+
+.report-table-panel {
+  display: grid;
+  gap: 14px;
+}
+
+.report-wide-table {
+  min-width: 1240px;
+}
+
+.report-wide-table th,
+.report-wide-table td {
+  padding: 11px 10px;
+  vertical-align: middle;
+}
+
+.settings-page {
+  gap: 18px;
+}
+
+.settings-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 8px;
+  border-radius: 8px;
+  background: #eef5f1;
+}
+
+.settings-tabs button {
+  border: none;
+  border-radius: 6px;
+  padding: 10px 14px;
+  background: transparent;
+  color: #38564a;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.settings-tabs button.active {
+  background: #0f6c44;
+  color: #fff;
+}
+
+.settings-section {
+  display: grid;
+  gap: 16px;
+}
+
+.settings-section h3 {
+  margin: 0;
+  color: #073723;
+}
+
+.settings-search {
+  min-width: 220px;
+  min-height: 40px;
+  border: 1px solid rgba(7, 34, 26, 0.16);
+  border-radius: 999px;
+  padding: 8px 14px;
+  color: #173d2d;
+}
+
+.settings-wide-table {
+  min-width: 1180px;
+}
+
+.settings-wide-table th,
+.settings-wide-table td {
+  padding: 10px 8px;
+  vertical-align: middle;
+}
+
+.settings-wide-table input,
+.settings-wide-table select,
+.settings-form-grid input,
+.settings-form-grid select,
+.settings-rule-list input {
+  width: 100%;
+  min-height: 38px;
+  border: 1px solid rgba(7, 34, 26, 0.16);
+  border-radius: 6px;
+  background: #fff;
+  color: #173d2d;
+  padding: 8px 10px;
+}
+
+.settings-form-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+.settings-form-grid label {
+  display: grid;
+  gap: 6px;
+  color: #38564a;
+  font-weight: 700;
+}
+
+.formula-ratio-alert,
+.formula-ratio-ok {
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-weight: 800;
+}
+
+.formula-ratio-alert {
+  background: #fde0dc;
+  color: #a6261d;
+  border: 1px solid #f3beb8;
+}
+
+.formula-ratio-ok {
+  background: #dff6e7;
+  color: #0c6f3c;
+  border: 1px solid #b8e8ca;
+}
+
+.diff-up,
+.diff-down,
+.diff-same {
+  font-weight: 900;
+}
+
+.diff-up {
+  color: #0c6f3c;
+}
+
+.diff-down {
+  color: #b63228;
+}
+
+.diff-same {
+  color: #64716b;
+}
+
+.qr-settings-layout {
+  display: grid;
+  grid-template-columns: minmax(360px, 1fr) 320px;
+  gap: 18px;
+  align-items: start;
+}
+
+.qr-preview-panel {
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  padding: 18px;
+  border-radius: 8px;
+  border: 1px solid rgba(7, 34, 26, 0.1);
+  background: #f8fcfa;
+}
+
+.qr-preview-panel code {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  background: #eef5f1;
+  color: #173d2d;
+  white-space: normal;
+  word-break: break-all;
+}
+
+.pseudo-qr {
+  display: grid;
+  grid-template-columns: repeat(9, 12px);
+  gap: 3px;
+  padding: 12px;
+  background: #fff;
+  border: 1px solid rgba(7, 34, 26, 0.16);
+}
+
+.pseudo-qr span {
+  width: 12px;
+  height: 12px;
+  background: #eef3f0;
+}
+
+.pseudo-qr span.on {
+  background: #082f22;
+}
+
+.settings-rule-list {
+  display: grid;
+  gap: 10px;
+}
+
+.backup-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.factory-preview {
+  display: grid;
+  gap: 6px;
+  max-width: 520px;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(7, 34, 26, 0.1);
+  background: #f8fcfa;
+  color: #38564a;
+}
+
+.factory-preview strong {
+  color: #073723;
+  font-size: 1.2rem;
+}
+
+.admin-page {
+  gap: 18px;
+}
+
+.admin-page h3,
+.admin-role-panel h3 {
+  margin: 0 0 14px;
+  color: #073723;
+}
+
+.admin-wide-table {
+  min-width: 980px;
+}
+
+.admin-wide-table th,
+.admin-wide-table td {
+  padding: 10px 8px;
+}
+
+.admin-wide-table input,
+.admin-wide-table select {
+  width: 100%;
+  min-height: 38px;
+  border: 1px solid rgba(7, 34, 26, 0.16);
+  border-radius: 6px;
+  background: #fff;
+  color: #173d2d;
+  padding: 8px 10px;
+}
+
+.role-permission-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.role-card {
+  display: grid;
+  gap: 9px;
+  padding: 14px;
+  border-radius: 8px;
+  background: #f8fcfa;
+  border: 1px solid rgba(7, 34, 26, 0.1);
+}
+
+.role-card strong {
+  color: #073723;
+  margin-bottom: 4px;
+}
+
+.role-card label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #38564a;
+  font-weight: 700;
+}
+
+.executive-dashboard {
+  gap: 18px;
+}
+
+.dashboard-control-panel {
+  display: grid;
+  gap: 16px;
+}
+
+.view-switch,
+.mini-switch {
+  display: inline-flex;
+  gap: 6px;
+  padding: 6px;
+  border-radius: 999px;
+  background: #eef5f1;
+}
+
+.view-switch button,
+.mini-switch button {
+  border: none;
+  border-radius: 999px;
+  padding: 9px 14px;
+  background: transparent;
+  color: #38564a;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.view-switch button.active,
+.mini-switch button.active {
+  background: #0f6c44;
+  color: #fff;
+}
+
+.executive-filters {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(170px, 1fr));
+  gap: 12px;
+  padding: 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(7, 34, 26, 0.1);
+  background: #f8fcfa;
+}
+
+.executive-filters label {
+  display: grid;
+  gap: 6px;
+  color: #38564a;
+  font-weight: 800;
+}
+
+.executive-filters input,
+.executive-filters select {
+  min-height: 38px;
+  border: 1px solid rgba(7, 34, 26, 0.16);
+  border-radius: 6px;
+  background: #fff;
+  color: #173d2d;
+  padding: 8px 10px;
+}
+
+.executive-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(145px, 1fr));
+  gap: 12px;
+}
+
+.executive-kpi {
+  min-height: 122px;
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid rgba(5, 55, 44, 0.1);
+  box-shadow: 0 14px 30px rgba(14, 32, 28, 0.05);
+}
+
+.executive-kpi.warn {
+  border-color: #efc37a;
+  background: #fffaf0;
+}
+
+.executive-kpi span {
+  color: #5c7468;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.executive-kpi strong {
+  align-self: end;
+  color: #04422c;
+  font-size: 18px;
+}
+
+.dashboard-main-grid {
+  display: grid;
+  grid-template-columns: minmax(360px, 0.9fr) minmax(520px, 1.3fr);
+  gap: 18px;
+}
+
+.alert-panel,
+.pipeline-panel,
+.dashboard-chart-card,
+.dashboard-table-panel {
+  display: grid;
+  gap: 14px;
+}
+
+.alert-panel h3,
+.pipeline-panel h3,
+.dashboard-chart-card h3,
+.dashboard-table-panel h3 {
+  margin: 0;
+  color: #073723;
+}
+
+.alert-list {
+  display: grid;
+  gap: 10px;
+}
+
+.alert-item {
+  display: grid;
+  grid-template-columns: 95px 90px 1fr 80px 90px;
+  gap: 8px;
+  align-items: center;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ead6a8;
+  background: #fff9ea;
+}
+
+.alert-item.high {
+  background: #fde7e4;
+  border-color: #f1bab2;
+}
+
+.alert-item.medium {
+  background: #fff4d8;
+  border-color: #ead6a8;
+}
+
+.alert-item.low {
+  background: #eef5f1;
+  border-color: rgba(7, 34, 26, 0.1);
+}
+
+.alert-item strong,
+.alert-item em {
+  color: #073723;
+  font-weight: 900;
+}
+
+.alert-item p,
+.alert-item span,
+.alert-item small {
+  margin: 0;
+  color: #38564a;
+  font-weight: 700;
+}
+
+.empty-alert {
+  padding: 16px;
+  border-radius: 8px;
+  background: #eef5f1;
+  color: #38564a;
+  font-weight: 800;
+}
+
+.pipeline-flow {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(120px, 1fr));
+  gap: 10px;
+}
+
+.pipeline-step {
+  min-height: 132px;
+  display: grid;
+  gap: 6px;
+  padding: 14px;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #f8fcfa, #eef8f3);
+  border: 1px solid rgba(7, 34, 26, 0.1);
+}
+
+.pipeline-step span {
+  color: #38564a;
+  font-weight: 900;
+}
+
+.pipeline-step strong {
+  color: #04422c;
+  font-size: 18px;
+}
+
+.pipeline-step small,
+.pipeline-step em {
+  color: #60766b;
+  font-weight: 800;
+}
+
+.dashboard-chart-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 0.9fr;
+  gap: 18px;
+}
+
+.volume-bars {
+  min-height: 230px;
+  display: flex;
+  align-items: end;
+  gap: 10px;
+  padding-top: 12px;
+}
+
+.volume-bars div {
+  flex: 1;
+  min-width: 44px;
+  height: 210px;
+  display: grid;
+  grid-template-rows: 1fr auto auto;
+  gap: 7px;
+  align-items: end;
+  text-align: center;
+}
+
+.volume-bars i {
+  width: 100%;
+  display: block;
+  border-radius: 8px 8px 0 0;
+  background: linear-gradient(180deg, #42cea3, #0f6c44);
+}
+
+.volume-bars span,
+.volume-bars strong {
+  color: #38564a;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.status-stack {
+  min-height: 120px;
+  display: flex;
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid rgba(7, 34, 26, 0.1);
+}
+
+.status-stack div {
+  min-width: 64px;
+  display: grid;
+  place-items: center;
+  gap: 4px;
+  padding: 10px;
+  background: #dff6e7;
+  color: #0c4c33;
+  text-align: center;
+}
+
+.status-stack div:nth-child(2n) {
+  background: #fff1ce;
+}
+
+.status-stack div:nth-child(3n) {
+  background: #e8ecea;
+}
+
+.status-stack span,
+.status-stack strong {
+  font-weight: 900;
+  font-size: 0.82rem;
+}
+
+.error-bars {
+  display: grid;
+  gap: 14px;
+}
+
+.error-bars div {
+  display: grid;
+  grid-template-columns: 150px 1fr 40px;
+  gap: 10px;
+  align-items: center;
+}
+
+.error-bars span,
+.error-bars strong {
+  color: #38564a;
+  font-weight: 900;
+}
+
+.error-bars i {
+  height: 16px;
+  border-radius: 999px;
+  background: #b63228;
+}
+
+.dashboard-table-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.dashboard-wide-table {
+  min-width: 1180px;
+}
+
+.dashboard-wide-table th,
+.dashboard-wide-table td {
+  padding: 11px 10px;
+  vertical-align: middle;
+}
+
+.action-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.empty-row {
+  text-align: center;
+  color: #5d7265;
+  padding: 18px 0;
+}
+
+.log-list.full-log li {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  border-radius: 14px;
+  background: rgba(228, 247, 238, 0.9);
+}
+
+.log-list li {
+  font-size: 0.96rem;
+  color: #314b3c;
+}
+
+.log-time {
+  display: inline-flex;
+  color: #0f4e35;
+  font-weight: 700;
+  margin-right: 10px;
+}
+
+.process-steps {
+  display: grid;
+  gap: 14px;
+  padding: 12px 0;
+}
+
+.process-steps div {
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #f1fbf6;
+  border: 1px solid rgba(11, 61, 44, 0.1);
+  color: #1a372a;
+}
+
+.small-panel {
+  margin-top: 0;
+}
+
+.v3-grid {
+  display: grid;
+  gap: 18px;
+  align-items: start;
+}
+
+.v3-grid.two {
+  grid-template-columns: minmax(360px, 1fr) 340px;
+}
+
+.v3-form,
+.v3-card {
+  display: grid;
+  gap: 14px;
+}
+
+.v3-card {
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(7, 34, 26, 0.1);
+  background: #fff;
+}
+
+.v3-card h3 {
+  margin: 0;
+  color: #073723;
+}
+
+.v3-form label,
+.v3-card label,
+td label {
+  display: grid;
+  gap: 6px;
+  color: #38564a;
+  font-weight: 700;
+}
+
+.v3-form input,
+.v3-form select,
+.v3-card input,
+.v3-card select,
+td input,
+td select {
+  width: 100%;
+  min-height: 38px;
+  border: 1px solid rgba(7, 34, 26, 0.16);
+  border-radius: 6px;
+  background: #fff;
+  color: #173d2d;
+  padding: 8px 10px;
+}
+
+td input[type="checkbox"] {
+  width: 18px;
+  min-height: 18px;
+}
+
+.v3-card .secondary-button,
+.v3-card .primary-button,
+td .secondary-button,
+td .primary-button {
+  margin-left: 0;
+}
+
+.mixing-dispatch table {
+  min-width: 1180px;
+}
+
+.qc2-analysis-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(160px, 1fr));
+  gap: 14px;
+}
+
+.qc2-analysis-grid .v3-card {
+  grid-column: span 2;
+}
+
+.qc2-layout {
+  grid-template-columns: minmax(280px, 24%) minmax(0, 76%);
+}
+
+.qc2-active-panel {
+  gap: 14px;
+}
+
+.qc2-material-table table {
+  min-width: 1280px;
+}
+
+.qc2-material-table input,
+.qc2-active-panel select,
+.qc2-active-panel input {
+  min-height: 42px;
+  border: 1px solid rgba(7, 34, 26, 0.16);
+  border-radius: 6px;
+  padding: 8px 10px;
+  color: #173d2d;
+}
+
+.qc2-order-analysis .v3-card {
+  grid-column: 1 / -1;
+}
+
+.packaging-layout {
+  display: grid;
+  grid-template-columns: minmax(420px, 38%) minmax(0, 62%);
+  gap: 16px;
+  align-items: start;
+  padding: 16px;
+}
+
+.packaging-list,
+.packaging-detail {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+.packaging-list h2,
+.packaging-detail h2,
+.packaging-detail h3 {
+  margin: 0;
+  color: #073723;
+}
+
+.packaging-list table {
+  min-width: 760px;
+}
+
+.packaging-detail table {
+  min-width: 820px;
+}
+
+.packaging-detail input {
+  min-height: 42px;
+  border: 1px solid rgba(7, 34, 26, 0.16);
+  border-radius: 6px;
+  padding: 8px 10px;
+  color: #173d2d;
+}
+
+.finished-goods-page {
+  gap: 18px;
+}
+
+.finished-goods-filters {
+  margin-bottom: 16px;
+}
+
+.finished-goods-modal {
+  width: min(980px, 96vw);
+  display: grid;
+  gap: 18px;
+  padding: 22px;
+}
+
+.production-history-page {
+  gap: 18px;
+}
+
+.production-history-modal {
+  width: min(1500px, 96vw);
+  max-height: 92vh;
+  overflow: auto;
+  display: grid;
+  gap: 16px;
+  padding: 22px;
+  background: #fbfdfb;
+  border-radius: 8px;
+  box-shadow: 0 28px 80px rgba(4, 28, 20, 0.3);
+}
+
+.production-history-modal .log-tabs {
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  padding-bottom: 4px;
+}
+
+.production-history-modal table {
+  min-width: 1100px;
+}
+
+.dispatch-badge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  min-height: 28px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.dispatch-badge.waiting {
+  background: #e8ecea;
+  color: #64716b;
+}
+
+.dispatch-badge.weighing {
+  background: #ffedc1;
+  color: #8a5600;
+}
+
+.dispatch-badge.ready {
+  background: #dff6e7;
+  color: #0c6f3c;
+}
+
+.dispatch-badge.mixing {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.dispatch-badge.qc2 {
+  background: #ffedd5;
+  color: #c2410c;
+}
+
+.dispatch-badge.packing {
+  background: #ede9fe;
+  color: #6d28d9;
+}
+
+.dispatch-badge.done {
+  background: #064e3b;
+  color: #ecfdf5;
+}
+
+.dispatch-badge.fail {
+  background: #fde0dc;
+  color: #a6261d;
+}
+
+.mixing-qr-input {
+  width: 170px;
+  min-height: 42px;
+  border: 1px solid rgba(7, 34, 26, 0.16);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 0.92rem;
+}
+
+.mixing-qr-confirm {
+  display: grid;
+  gap: 8px;
+  min-width: 190px;
+}
+
+.mixing-qr-confirm button {
+  min-height: 42px;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+
+.mix-progress {
+  display: grid;
+  grid-template-columns: minmax(120px, 1fr) 48px;
+  gap: 10px;
+  align-items: center;
+}
+
+.mix-progress div {
+  height: 12px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e8ecea;
+}
+
+.mix-progress i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #0f6c44, #42cea3);
+}
+
+.mix-progress strong {
+  color: #113e2c;
+  font-size: 0.9rem;
+}
+
+.qc-sample-layout {
+  display: grid;
+  grid-template-columns: minmax(240px, 22%) minmax(0, 78%);
+  gap: 16px;
+  align-items: start;
+  padding: 16px;
+}
+
+.qc-queue {
+  display: grid;
+  gap: 14px;
+  padding: 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(7, 34, 26, 0.1);
+  background: #f8fcfa;
+}
+
+.qc-queue h2,
+.qc-queue h3,
+.qc-active-panel h2,
+.qc-adjustment-list h3 {
+  margin: 0;
+  color: #073723;
+}
+
+.qc-queue-group {
+  display: grid;
+  gap: 8px;
+}
+
+.qc-queue-item {
+  width: 100%;
+  min-height: 74px;
+  display: grid;
+  gap: 3px;
+  text-align: left;
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(7, 34, 26, 0.12);
+  background: #fff;
+  cursor: pointer;
+}
+
+.qc-queue-item.active {
+  border-color: #0f6c44;
+  background: #dff6e7;
+}
+
+.qc-queue-item.completed {
+  background: #eef3f0;
+  color: #60766b;
+}
+
+.qc-queue-item strong {
+  color: #073723;
+  font-size: 0.96rem;
+}
+
+.qc-queue-item span {
+  color: #38564a;
+  font-weight: 800;
+  font-size: 0.88rem;
+}
+
+.qc-active-panel {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+
+.qc-active-panel .section-heading-row {
+  align-items: start;
+  margin-bottom: 2px;
+}
+
+.qc-active-panel .table-wrapper {
+  width: 100%;
+}
+
+.qc-active-panel table {
+  min-width: 860px;
+  table-layout: fixed;
+}
+
+.qc-active-panel th,
+.qc-active-panel td {
+  padding: 12px 10px;
+}
+
+.qc-active-panel input[type='number'],
+.qc-active-panel input:not([type]) {
+  min-height: 44px;
+  border: 1px solid rgba(7, 34, 26, 0.16);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 1rem;
+}
+
+.qc-sample-table table {
+  min-width: 1120px;
+}
+
+.qc-sample-table th:nth-child(1),
+.qc-sample-table td:nth-child(1) {
+  width: 11%;
+}
+
+.qc-sample-table th:nth-child(2),
+.qc-sample-table td:nth-child(2) {
+  width: 12%;
+}
+
+.qc-sample-table th:nth-child(3),
+.qc-sample-table td:nth-child(3) {
+  width: 8%;
+  text-align: center;
+}
+
+.qc-sample-table th:nth-child(4),
+.qc-sample-table td:nth-child(4) {
+  width: 12%;
+}
+
+.qc-sample-table th:nth-child(5),
+.qc-sample-table td:nth-child(5) {
+  width: 8%;
+  text-align: center;
+}
+
+.qc-sample-table th:nth-child(6),
+.qc-sample-table td:nth-child(6) {
+  width: 10%;
+}
+
+.qc-sample-table th:nth-child(7),
+.qc-sample-table td:nth-child(7),
+.qc-sample-table th:nth-child(8),
+.qc-sample-table td:nth-child(8) {
+  min-width: 180px;
+}
+
+.qc-sample-table input[type='checkbox'] {
+  width: 20px;
+  height: 20px;
+}
+
+.qc-value-input {
+  width: 116px !important;
+  max-width: 100%;
+}
+
+.qc-note-input {
+  width: min(220px, 100%) !important;
+}
+
+.qc-added-badge {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 6px;
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: #fff4d6;
+  color: #7a4a00;
+  font-size: 0.72rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.qc-add-material-modal {
+  width: min(900px, 96vw);
+  display: grid;
+  gap: 18px;
+  background: #fbfdfb;
+  border-radius: 8px;
+  padding: 22px;
+  box-shadow: 0 24px 60px rgba(7, 34, 26, 0.22);
+}
+
+.qc-diff-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 86px;
+  min-height: 32px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.qc-diff-badge.diff-up {
+  background: #dff6e7;
+}
+
+.qc-diff-badge.diff-down {
+  background: #fde0dc;
+}
+
+.qc-diff-badge.diff-same {
+  background: #e8ecea;
+}
+
+.qc-change-table td:nth-child(4),
+.qc-change-table th:nth-child(4) {
+  text-align: center;
+}
+
+.qc-order-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(170px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.qc-order-summary div {
+  display: grid;
+  gap: 4px;
+  min-height: 64px;
+  padding: 10px 12px;
+  border: 1px solid rgba(7, 34, 26, 0.1);
+  border-radius: 8px;
+  background: #f8fcfa;
+}
+
+.qc-order-summary span {
+  color: #60766b;
+  font-size: 0.84rem;
+  font-weight: 800;
+}
+
+.qc-order-summary strong {
+  color: #073723;
+  font-size: 0.98rem;
+}
+
+.touch-actions {
+  align-items: stretch;
+}
+
+.touch-button {
+  min-height: 56px;
+  min-width: 220px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.qc-adjustment-list {
+  margin-top: 0;
+}
+
+.empty-alert {
+  padding: 16px;
+  border-radius: 8px;
+  background: #eef5f1;
+  color: #38564a;
+  font-weight: 800;
+}
+
+@media (max-width: 1100px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 18px 16px;
+    border-right: none;
+    border-bottom: 1px solid rgba(5, 55, 44, 0.12);
+  }
+
+  .sidebar-brand {
+    flex: 0 0 auto;
+    margin-bottom: 0;
+    margin-right: 20px;
+  }
+
+  .sidebar-nav {
+    grid-template-columns: repeat(3, auto);
+    gap: 8px;
+    flex: 1;
+  }
+}
+
+@media (max-width: 720px) {
+  .main-content {
+    padding: 18px 16px;
+  }
+
+  .dashboard-grid,
+  .formulas-grid,
+  .reports-grid,
+  .settings-grid,
+  .qc-sample-layout,
+  .v3-grid.two,
+  .production-log-filters,
+  .production-log-grid,
+  .mixing-info-grid,
+  .mixing-log-grid,
+  .report-filters,
+  .report-kpi-grid,
+  .report-chart-grid,
+  .settings-form-grid,
+  .qr-settings-layout,
+  .role-permission-grid,
+  .executive-filters,
+  .executive-kpi-grid,
+  .dashboard-main-grid,
+  .pipeline-flow,
+  .dashboard-chart-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .qc2-analysis-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .qc2-analysis-grid .v3-card {
+    grid-column: auto;
+  }
+
+  .alert-item {
+    grid-template-columns: 1fr;
+  }
+
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  table {
+    min-width: 100%;
+  }
+}
+
+@media (min-width: 1366px) {
+  html {
+    font-size: 14px;
+  }
+
+  body {
+    font-size: 14px;
+  }
+
+  .app-shell {
+    grid-template-columns: 230px minmax(0, 1fr);
+  }
+
+  .sidebar {
+    padding: 14px 12px;
+    gap: 8px;
+  }
+
+  .sidebar-brand {
+    margin-bottom: 12px;
+    font-size: 1rem;
+    letter-spacing: 0.04em;
+  }
+
+  .sidebar-nav {
+    gap: 4px;
+  }
+
+  .nav-item {
+    min-height: 38px;
+    padding: 8px 10px;
+    border-radius: 7px;
+    font-size: 13px;
+    line-height: 1.2;
+  }
+
+  .main-content {
+    gap: 12px;
+    padding: 14px 18px;
+  }
+
+  .topbar {
+    min-height: 82px;
+    align-items: center;
+    padding: 12px 16px;
+    border-radius: 10px;
+    box-shadow: 0 12px 28px rgba(7, 34, 26, 0.06);
+  }
+
+  .topbar-chip {
+    margin-bottom: 4px;
+    padding: 4px 9px;
+    font-size: 12px;
+  }
+
+  .topbar h1,
+  .login-card h1,
+  .qr-print-ticket h1 {
+    font-size: 20px;
+    line-height: 34px;
+  }
+
+  .topbar-actions {
+    gap: 8px;
+    font-size: 13px;
+  }
+
+  .user-session {
+    gap: 7px;
+    padding: 6px 8px;
+  }
+
+  .page-content,
+  .dashboard-grid,
+  .reports-grid,
+  .formulas-grid,
+  .settings-grid,
+  .weighing-dispatch-page,
+  .qc-active-panel,
+  .mixing-page-v2,
+  .finished-goods-page,
+  .production-history-page {
+    gap: 12px;
+  }
+
+  .stat-card,
+  .report-card,
+  .setting-card,
+  .formula-card,
+  .panel,
+  .v3-card,
+  .executive-kpi,
+  .alert-panel,
+  .pipeline-panel,
+  .dashboard-chart-card,
+  .dashboard-table-panel,
+  .small-panel {
+    border-radius: 8px;
+    padding: 14px;
+    box-shadow: 0 8px 20px rgba(14, 32, 28, 0.045);
+  }
+
+  .panel-header-row,
+  .section-heading-row,
+  .modal-header,
+  .modal-actions {
+    gap: 10px;
+  }
+
+  .panel-header-row {
+    margin-bottom: 10px;
+  }
+
+  .panel-header-row h2,
+  .modal-header h2,
+  .qc-queue h2,
+  .qc-active-panel h2,
+  .weighing-order-list h2,
+  .weighing-active-board h2,
+  .packaging-list h2,
+  .packaging-detail h2,
+  .finished-goods-page h2,
+  .production-history-page h2,
+  .mixing-page-v2 h2 {
+    font-size: 20px;
+    line-height: 1.15;
+  }
+
+  .formula-section h3,
+  .order-queue h3,
+  .weighing-board h3,
+  .weighing-order-group h3,
+  .mixing-sections-grid h3,
+  .mixing-dispatch h3,
+  .mixing-detail-panel h3,
+  .production-log-detail h3,
+  .report-chart-card h3,
+  .report-table-panel h3,
+  .settings-section h3,
+  .admin-page h3,
+  .admin-role-panel h3,
+  .dashboard-table-panel h3,
+  .v3-card h3,
+  .qc-queue h3,
+  .qc-adjustment-list h3,
+  .packaging-detail h3,
+  .weighed-container-card h3 {
+    font-size: 20px;
+    line-height: 1.15;
+  }
+
+  .panel-text {
+    margin-bottom: 10px;
+    line-height: 1.45;
+    font-size: 13px;
+  }
+
+  .section-kicker {
+    font-size: 11px;
+  }
+
+  .primary-button,
+  .secondary-button,
+  .danger-button,
+  .icon-button {
+    min-height: 34px;
+    padding: 7px 12px;
+    font-size: 13px;
+  }
+
+  .secondary-button {
+    margin-left: 6px;
+  }
+
+  table,
+  .table-wrapper {
+    font-size: 13px;
+  }
+
+  th,
+  td,
+  .recipe-table th,
+  .recipe-table td,
+  .chemical-process-table th,
+  .chemical-process-table td,
+  .weighing-active-board th,
+  .weighing-active-board td,
+  .mixing-order-table th,
+  .mixing-order-table td,
+  .production-log-summary-table th,
+  .production-log-summary-table td,
+  .production-log-wide-table th,
+  .production-log-wide-table td,
+  .report-wide-table th,
+  .report-wide-table td,
+  .settings-wide-table th,
+  .settings-wide-table td,
+  .admin-wide-table th,
+  .admin-wide-table td,
+  .dashboard-wide-table th,
+  .dashboard-wide-table td,
+  .dashboard-table-panel th,
+  .dashboard-table-panel td,
+  .qc-active-panel th,
+  .qc-active-panel td {
+    height: 40px;
+    padding: 7px 9px;
+    font-size: 13px;
+  }
+
+  th {
+    font-size: 13px;
+  }
+
+  input,
+  select,
+  textarea,
+  .login-card input,
+  .recipe-table input,
+  .recipe-table select,
+  .settings-wide-table input,
+  .settings-wide-table select,
+  .admin-wide-table input,
+  .admin-wide-table select,
+  .mixing-page-v2 select,
+  .weighing-inline-action input,
+  .qc-active-panel input[type='number'],
+  .qc-active-panel input:not([type]),
+  .qc2-material-table input,
+  .qc2-active-panel select,
+  .qc2-active-panel input,
+  .mixing-qr-input {
+    min-height: 34px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 13px;
+  }
+
+  .executive-kpi-grid {
+    gap: 10px;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .executive-kpi {
+    min-height: 88px;
+    gap: 6px;
+  }
+
+  .executive-kpi span {
+    font-size: 12px;
+  }
+
+  .executive-kpi strong,
+  .stat-card strong,
+  .report-card strong,
+  .weighing-stats strong {
+    font-size: 18px;
+  }
+
+  .weighing-stats {
+    gap: 10px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .weighing-stats article {
+    min-height: 92px;
+    gap: 4px;
+    padding: 12px 14px;
+    border-radius: 8px;
+  }
+
+  .weighing-stats span {
+    font-size: 12px;
+  }
+
+  .weighing-dispatch-layout,
+  .qc-sample-layout,
+  .packaging-layout {
+    grid-template-columns: minmax(260px, 30%) minmax(0, 70%);
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .weighing-order-list,
+  .weighing-active-board,
+  .qc-queue,
+  .packaging-list,
+  .packaging-detail {
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .weighing-order-group,
+  .qc-queue-group {
+    gap: 6px;
+  }
+
+  .weighing-order-card,
+  .qc-queue-item {
+    min-height: 58px;
+    padding: 7px 9px;
+    border-radius: 7px;
+  }
+
+  .qc-queue-item strong,
+  .weighing-order-card strong {
+    font-size: 13px;
+  }
+
+  .qc-queue-item span,
+  .weighing-order-card span {
+    font-size: 12px;
+  }
+
+  .weighing-order-summary,
+  .qc-order-summary,
+  .production-form-grid,
+  .weighed-container-grid,
+  .weighed-container-detail-grid {
+    gap: 8px;
+  }
+
+  .weighing-order-summary div,
+  .qc-order-summary div,
+  .weighing-progress-card,
+  .weighed-container-card {
+    padding: 10px;
+    border-radius: 8px;
+  }
+
+  .weighing-progress-card {
+    gap: 10px;
+  }
+
+  .weighing-progress {
+    height: 12px;
+  }
+
+  .mixing-sections-grid,
+  .dashboard-table-grid {
+    gap: 12px;
+  }
+
+  .mixing-sections-grid .panel {
+    min-height: auto;
+  }
+
+  .mixing-dispatch table {
+    min-width: 900px;
+  }
+
+  .log-tabs {
+    gap: 6px;
+  }
+
+  .log-tabs button {
+    min-height: 34px;
+    padding: 7px 10px;
+    font-size: 13px;
+  }
+
+  .modal-backdrop {
+    padding: 16px;
+  }
+
+  .mixing-modal,
+  .production-modal,
+  .finished-goods-modal,
+  .order-detail-modal,
+  .production-history-modal {
+    border-radius: 8px;
+  }
+}
+
+/* ERP/MES desktop compact baseline */
+html {
+  font-size: 14px;
+}
+
+body {
+  font-size: 14px;
+}
+
+.app-shell {
+  grid-template-columns: 220px minmax(0, 1fr);
+}
+
+.sidebar {
+  padding: 16px;
+}
+
+.sidebar-brand {
+  margin-bottom: 16px;
+  font-size: 20px;
+  line-height: 26px;
+  letter-spacing: 0.02em;
+}
+
+.sidebar-nav {
+  gap: 4px;
+}
+
+.nav-item {
+  min-height: 38px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.main-content {
+  max-width: none;
+  min-width: 0;
+  gap: 16px;
+  padding: 20px;
+}
+
+.page-content {
+  max-width: none;
+  gap: 16px;
+}
+
+.topbar {
+  min-height: auto;
+  align-items: center;
+  padding: 18px 22px;
+  border-radius: 14px;
+}
+
+.topbar h1 {
+  font-size: 20px;
+  line-height: 34px;
+}
+
+.topbar-actions {
+  gap: 10px;
+  font-size: 14px;
+}
+
+.topbar-actions span {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.topbar-chip {
+  margin-bottom: 4px;
+  padding: 4px 9px;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.user-session {
+  gap: 7px;
+  padding: 5px 8px;
+  font-size: 13px;
+}
+
+.user-session .secondary-button {
+  min-height: 30px;
+  padding: 6px 10px;
+}
+
+.stat-card,
+.report-card,
+.setting-card,
+.formula-card,
+.panel {
+  margin-bottom: 16px;
+  padding: 18px;
+  border-radius: 14px;
+}
+
+.v3-card,
+.form-section,
+.order-queue,
+.weighing-board,
+.weighing-order-list,
+.weighing-active-board,
+.qc-queue,
+.packaging-list,
+.packaging-detail,
+.dashboard-chart-card,
+.dashboard-table-panel,
+.alert-panel,
+.pipeline-panel {
+  padding: 14px;
+  border-radius: 8px;
+}
+
+.panel-header-row {
+  margin-bottom: 14px;
+}
+
+.panel-header-row h2,
+.modal-header h2,
+.form-section h3,
+.qc-queue h2,
+.qc-active-panel h2,
+.weighing-order-list h2,
+.weighing-active-board h2,
+.packaging-list h2,
+.packaging-detail h2,
+.finished-goods-page h2,
+.production-history-page h2,
+.mixing-page-v2 h2,
+.panel > h2 {
+  font-size: 20px;
+  line-height: 26px;
+}
+
+.formula-section h3,
+.order-queue h3,
+.weighing-board h3,
+.weighing-order-group h3,
+.mixing-sections-grid h3,
+.mixing-dispatch h3,
+.mixing-detail-panel h3,
+.production-log-detail h3,
+.report-chart-card h3,
+.report-table-panel h3,
+.settings-section h3,
+.admin-page h3,
+.admin-role-panel h3,
+.dashboard-table-panel h3,
+.v3-card h3,
+.qc-queue h3,
+.qc-adjustment-list h3,
+.packaging-detail h3,
+.weighed-container-card h3,
+.section-heading-row h3 {
+  font-size: 15px;
+  line-height: 20px;
+}
+
+.panel-text,
+.log-list li {
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+label,
+.production-form-grid label,
+.v3-form label,
+.v3-card label,
+td label,
+.report-filters label,
+.settings-form-grid label,
+.mixing-form-grid label {
+  font-size: 13px;
+}
+
+.dashboard-grid {
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 12px;
+}
+
+.executive-kpi-grid,
+.report-kpi-grid {
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.stat-card,
+.report-kpi-card,
+.executive-kpi,
+.pipeline-step,
+.weighing-stats article {
+  min-height: 86px;
+  padding: 14px;
+  gap: 6px;
+}
+
+.stat-card span,
+.report-kpi-card span,
+.executive-kpi span,
+.pipeline-step span,
+.weighing-stats span {
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.stat-card strong,
+.report-card strong,
+.report-kpi-card strong,
+.executive-kpi strong,
+.pipeline-step strong,
+.weighing-stats strong,
+.formula-header strong {
+  font-size: 20px;
+  line-height: 30px;
+}
+
+.primary-button,
+.secondary-button,
+.danger-button,
+.icon-button,
+.log-tabs button,
+.touch-button,
+.weighing-start-button,
+.weighing-inline-action button,
+.weighing-finish-button,
+.mixing-qr-confirm button {
+  min-height: 36px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.icon-button {
+  width: 36px;
+  min-width: 36px;
+  padding: 0;
+  border-radius: 50%;
+  font-size: 20px;
+}
+
+.secondary-button {
+  margin-left: 0;
+}
+
+input,
+select,
+textarea,
+.login-card input,
+.production-form-grid input,
+.production-form-grid select,
+.recipe-table input,
+.recipe-table select,
+.v3-form input,
+.v3-form select,
+.v3-card input,
+.v3-card select,
+td input,
+td select,
+.report-filters input,
+.report-filters select,
+.settings-wide-table input,
+.settings-wide-table select,
+.admin-wide-table input,
+.admin-wide-table select,
+.mixing-page-v2 select,
+.mixing-qr-input,
+.weighing-inline-action input,
+.operation-control input,
+.qc-active-panel input[type='number'],
+.qc-active-panel input:not([type]),
+.qc2-material-table input,
+.qc2-active-panel select,
+.qc2-active-panel input,
+.packaging-detail input {
+  min-height: 36px;
+  padding: 8px 10px;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.production-form-grid,
+.settings-form-grid,
+.report-filters,
+.mixing-form-grid {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+table,
+.table-wrapper {
+  font-size: 13px;
+}
+
+table {
+  min-width: 760px;
+}
+
+thead tr {
+  height: 36px;
+}
+
+th,
+td,
+.recipe-table th,
+.recipe-table td,
+.chemical-process-table th,
+.chemical-process-table td,
+.weighing-active-board th,
+.weighing-active-board td,
+.mixing-order-table th,
+.mixing-order-table td,
+.production-log-summary-table th,
+.production-log-summary-table td,
+.production-log-wide-table th,
+.production-log-wide-table td,
+.report-wide-table th,
+.report-wide-table td,
+.settings-wide-table th,
+.settings-wide-table td,
+.admin-wide-table th,
+.admin-wide-table td,
+.dashboard-wide-table th,
+.dashboard-wide-table td,
+.dashboard-table-panel th,
+.dashboard-table-panel td,
+.qc-active-panel th,
+.qc-active-panel td {
+  height: 38px;
+  padding: 8px 10px;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+th {
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.chemical-layout,
+.weighing-dispatch-layout,
+.qc-sample-layout,
+.qc2-layout,
+.packaging-layout {
+  grid-template-columns: minmax(280px, 320px) minmax(0, 1fr);
+  gap: 14px;
+  padding: 14px;
+}
+
+.weighing-order-card,
+.qc-queue-item {
+  min-height: 0;
+  max-height: 74px;
+  padding: 8px 10px;
+  gap: 2px;
+}
+
+.weighing-order-card strong,
+.qc-queue-item strong {
+  font-size: 13px;
+  line-height: 17px;
+}
+
+.weighing-order-card span,
+.qc-queue-item span {
+  font-size: 12.5px;
+  line-height: 16px;
+}
+
+.touch-button {
+  min-width: 0;
+}
+
+.qc-active-panel table {
+  min-width: 980px;
+}
+
+.qc-sample-table table {
+  min-width: 1080px;
+}
+
+.chemical-process-table,
+.mixing-order-table,
+.production-log-wide-table,
+.settings-wide-table,
+.admin-wide-table,
+.report-wide-table {
+  min-width: 1100px;
+}
+
+.packaging-list table,
+.packaging-detail table {
+  min-width: 760px;
+}
+
+.empty-row {
+  padding: 12px 0;
+}
+
+@media (min-width: 1366px) {
+  .app-shell {
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+
+  .sidebar {
+    padding: 16px;
+  }
+
+  .sidebar-brand {
+    font-size: 20px;
+    line-height: 26px;
+  }
+
+  .nav-item {
+    min-height: 38px;
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+
+  .main-content {
+    padding: 20px;
+    gap: 16px;
+  }
+
+  .topbar {
+    min-height: auto;
+    padding: 18px 22px;
+    border-radius: 14px;
+  }
+
+  .topbar h1,
+  .login-card h1,
+  .qr-print-ticket h1 {
+    font-size: 20px;
+    line-height: 34px;
+  }
+
+  .stat-card,
+  .report-card,
+  .setting-card,
+  .formula-card,
+  .panel,
+  .v3-card,
+  .executive-kpi,
+  .alert-panel,
+  .pipeline-panel,
+  .dashboard-chart-card,
+  .dashboard-table-panel,
+  .small-panel {
+    padding: 18px;
+    border-radius: 14px;
+  }
+
+  .v3-card,
+  .executive-kpi,
+  .alert-panel,
+  .pipeline-panel,
+  .dashboard-chart-card,
+  .dashboard-table-panel,
+  .small-panel {
+    padding: 14px;
+    border-radius: 8px;
+  }
+
+  .panel-header-row h2,
+  .modal-header h2,
+  .qc-queue h2,
+  .qc-active-panel h2,
+  .weighing-order-list h2,
+  .weighing-active-board h2,
+  .packaging-list h2,
+  .packaging-detail h2,
+  .finished-goods-page h2,
+  .production-history-page h2,
+  .mixing-page-v2 h2 {
+    font-size: 20px;
+    line-height: 26px;
+  }
+
+  .formula-section h3,
+  .order-queue h3,
+  .weighing-board h3,
+  .weighing-order-group h3,
+  .mixing-sections-grid h3,
+  .mixing-dispatch h3,
+  .mixing-detail-panel h3,
+  .production-log-detail h3,
+  .report-chart-card h3,
+  .report-table-panel h3,
+  .settings-section h3,
+  .admin-page h3,
+  .admin-role-panel h3,
+  .dashboard-table-panel h3,
+  .v3-card h3,
+  .qc-queue h3,
+  .qc-adjustment-list h3,
+  .packaging-detail h3,
+  .weighed-container-card h3 {
+    font-size: 15px;
+    line-height: 20px;
+  }
+
+  .primary-button,
+  .secondary-button,
+  .danger-button,
+  .icon-button,
+  .log-tabs button {
+    min-height: 36px;
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+
+  input,
+  select,
+  textarea,
+  .login-card input,
+  .recipe-table input,
+  .recipe-table select,
+  .settings-wide-table input,
+  .settings-wide-table select,
+  .admin-wide-table input,
+  .admin-wide-table select,
+  .mixing-page-v2 select,
+  .weighing-inline-action input,
+  .qc-active-panel input[type='number'],
+  .qc-active-panel input:not([type]),
+  .qc2-material-table input,
+  .qc2-active-panel select,
+  .qc2-active-panel input,
+  .mixing-qr-input {
+    min-height: 36px;
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+
+  th,
+  td,
+  .recipe-table th,
+  .recipe-table td,
+  .chemical-process-table th,
+  .chemical-process-table td,
+  .weighing-active-board th,
+  .weighing-active-board td,
+  .mixing-order-table th,
+  .mixing-order-table td,
+  .production-log-summary-table th,
+  .production-log-summary-table td,
+  .production-log-wide-table th,
+  .production-log-wide-table td,
+  .report-wide-table th,
+  .report-wide-table td,
+  .settings-wide-table th,
+  .settings-wide-table td,
+  .admin-wide-table th,
+  .admin-wide-table td,
+  .dashboard-wide-table th,
+  .dashboard-wide-table td,
+  .dashboard-table-panel th,
+  .dashboard-table-panel td,
+  .qc-active-panel th,
+  .qc-active-panel td {
+    height: 38px;
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+
+  .executive-kpi-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .report-kpi-grid {
+    grid-template-columns: repeat(5, minmax(150px, 1fr));
+  }
+
+  .executive-kpi,
+  .stat-card,
+  .report-kpi-card,
+  .pipeline-step,
+  .weighing-stats article {
+    min-height: 86px;
+    padding: 14px;
+  }
+
+  .executive-kpi strong,
+  .stat-card strong,
+  .report-card strong,
+  .report-kpi-card strong,
+  .pipeline-step strong,
+  .weighing-stats strong {
+    font-size: 20px;
+    line-height: 30px;
+  }
+
+  .weighing-dispatch-layout,
+  .qc-sample-layout,
+  .qc2-layout,
+  .chemical-layout,
+  .packaging-layout {
+    grid-template-columns: minmax(280px, 320px) minmax(0, 1fr);
+    gap: 14px;
+    padding: 14px;
+  }
+
+  .weighing-order-card,
+  .qc-queue-item {
+    max-height: 74px;
+    padding: 8px 10px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .dashboard-grid,
+  .executive-kpi-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .report-kpi-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .main-content {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 18px 16px;
+    border-right: none;
+    border-bottom: 1px solid rgba(5, 55, 44, 0.12);
+  }
+
+  .sidebar-brand {
+    flex: 0 0 auto;
+    margin-bottom: 0;
+    margin-right: 20px;
+  }
+
+  .sidebar-nav {
+    grid-template-columns: repeat(3, auto);
+    gap: 8px;
+    flex: 1;
+  }
+}
+
+@media (max-width: 720px) {
+  .main-content {
+    padding: 18px 16px;
+  }
+
+  .dashboard-grid,
+  .formulas-grid,
+  .reports-grid,
+  .settings-grid,
+  .chemical-layout,
+  .weighing-dispatch-layout,
+  .qc-sample-layout,
+  .qc2-layout,
+  .packaging-layout,
+  .v3-grid.two,
+  .production-log-filters,
+  .production-log-grid,
+  .mixing-info-grid,
+  .mixing-log-grid,
+  .report-filters,
+  .report-kpi-grid,
+  .settings-form-grid,
+  .qr-settings-layout,
+  .role-permission-grid,
+  .executive-filters,
+  .executive-kpi-grid,
+  .dashboard-main-grid,
+  .pipeline-flow,
+  .dashboard-chart-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* Compact ERP audit overrides. Keep this block last so deploy builds use ERP sizing. */
+.app-shell {
+  --sidebar-width: 190px;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  overflow-x: hidden;
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  padding: 14px 12px;
+  overflow-x: hidden;
+}
+
+.sidebar-brand {
+  margin-bottom: 14px;
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: 0.02em;
+}
+
+.sidebar-nav {
+  gap: 4px;
+}
+
+.nav-item {
+  min-height: 36px;
+  height: 36px;
+  padding: 8px 12px;
+  border-radius: 7px;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.main-content {
+  min-width: 0;
+  max-width: none;
+  gap: 12px;
+  padding: 16px;
+  overflow-x: hidden;
+}
+
+.page-content,
+.dashboard-grid,
+.reports-grid,
+.formulas-grid,
+.settings-grid,
+.weighing-dispatch-page,
+.mixing-page,
+.mixing-page-v2,
+.finished-goods-page,
+.production-history-page,
+.dashboard-table-grid,
+.report-chart-grid,
+.mixing-sections-grid {
+  gap: 12px;
+}
+
+.topbar {
+  min-height: 0;
+  max-height: 90px;
+  align-items: center;
+  padding: 14px 16px;
+  border-radius: 10px;
+  box-shadow: 0 10px 22px rgba(7, 34, 26, 0.055);
+}
+
+.topbar-chip {
+  margin-bottom: 3px;
+  padding: 3px 8px;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.topbar h1,
+.login-card h1,
+.qr-print-ticket h1 {
+  font-size: 20px;
+  line-height: 30px;
+}
+
+.topbar-actions,
+.topbar-actions span {
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.topbar-actions {
+  gap: 8px;
+}
+
+.user-session {
+  gap: 6px;
+  padding: 4px 7px;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.user-session .secondary-button {
+  min-height: 28px;
+  padding: 5px 9px;
+}
+
+.stat-card,
+.report-card,
+.setting-card,
+.formula-card,
+.panel,
+.v3-card,
+.form-section,
+.order-queue,
+.weighing-board,
+.weighing-order-list,
+.weighing-active-board,
+.qc-queue,
+.packaging-list,
+.packaging-detail,
+.dashboard-chart-card,
+.dashboard-table-panel,
+.alert-panel,
+.pipeline-panel,
+.report-chart-card,
+.report-table-panel,
+.weighed-container-card {
+  padding: 16px;
+  border-radius: 10px;
+  gap: 12px;
+  box-shadow: 0 8px 18px rgba(14, 32, 28, 0.045);
+}
+
+.panel {
+  margin-bottom: 12px;
+}
+
+.panel-header-row {
+  margin-bottom: 12px;
+}
+
+.panel-header-row,
+.section-heading-row,
+.modal-header,
+.modal-actions,
+.action-row {
+  gap: 10px;
+}
+
+.panel-header-row h2,
+.modal-header h2,
+.form-section h3,
+.qc-queue h2,
+.qc-active-panel h2,
+.weighing-order-list h2,
+.weighing-active-board h2,
+.packaging-list h2,
+.packaging-detail h2,
+.finished-goods-page h2,
+.production-history-page h2,
+.mixing-page-v2 h2,
+.panel > h2 {
+  font-size: 18px;
+  line-height: 24px;
+}
+
+.formula-section h3,
+.order-queue h3,
+.weighing-board h3,
+.weighing-order-group h3,
+.mixing-sections-grid h3,
+.mixing-dispatch h3,
+.mixing-detail-panel h3,
+.production-log-detail h3,
+.report-chart-card h3,
+.report-table-panel h3,
+.settings-section h3,
+.admin-page h3,
+.admin-role-panel h3,
+.dashboard-table-panel h3,
+.v3-card h3,
+.qc-queue h3,
+.qc-adjustment-list h3,
+.packaging-detail h3,
+.weighed-container-card h3,
+.section-heading-row h3 {
+  font-size: 15px;
+  line-height: 20px;
+}
+
+.panel-text,
+.log-list li,
+.muted-text,
+.empty-alert {
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+label,
+.production-form-grid label,
+.v3-form label,
+.v3-card label,
+td label,
+.report-filters label,
+.settings-form-grid label,
+.mixing-form-grid label {
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.dashboard-grid,
+.executive-kpi-grid,
+.report-kpi-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.stat-card,
+.report-kpi-card,
+.executive-kpi,
+.pipeline-step,
+.weighing-stats article {
+  min-height: 80px;
+  max-height: 90px;
+  padding: 12px;
+  gap: 5px;
+  overflow: hidden;
+}
+
+.stat-card span,
+.report-kpi-card span,
+.executive-kpi span,
+.pipeline-step span,
+.weighing-stats span {
+  font-size: 13px;
+  line-height: 17px;
+}
+
+.stat-card strong,
+.report-card strong,
+.report-kpi-card strong,
+.executive-kpi strong,
+.pipeline-step strong,
+.weighing-stats strong,
+.formula-header strong {
+  font-size: 22px;
+  line-height: 26px;
+}
+
+.primary-button,
+.secondary-button,
+.danger-button,
+.icon-button,
+.log-tabs button,
+.touch-button,
+.weighing-start-button,
+.weighing-inline-action button,
+.weighing-finish-button,
+.mixing-qr-confirm button {
+  min-height: 34px;
+  height: auto;
+  padding: 7px 12px;
+  border-radius: 7px;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.icon-button {
+  width: 34px;
+  min-width: 34px;
+  padding: 0;
+  border-radius: 50%;
+  font-size: 18px;
+}
+
+input,
+select,
+textarea,
+.login-card input,
+.production-form-grid input,
+.production-form-grid select,
+.recipe-table input,
+.recipe-table select,
+.v3-form input,
+.v3-form select,
+.v3-card input,
+.v3-card select,
+td input,
+td select,
+.report-filters input,
+.report-filters select,
+.settings-wide-table input,
+.settings-wide-table select,
+.admin-wide-table input,
+.admin-wide-table select,
+.mixing-page-v2 select,
+.mixing-qr-input,
+.weighing-inline-action input,
+.operation-control input,
+.qc-active-panel input[type='number'],
+.qc-active-panel input:not([type]),
+.qc2-material-table input,
+.qc2-active-panel select,
+.qc2-active-panel input,
+.packaging-detail input {
+  min-height: 34px;
+  height: auto;
+  padding: 6px 8px;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.production-form-grid,
+.settings-form-grid,
+.report-filters,
+.mixing-form-grid,
+.mixing-info-grid,
+.mixing-log-grid,
+.weighed-container-grid,
+.weighed-container-detail-grid,
+.qc-order-summary,
+.weighing-order-summary {
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.table-wrapper {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+table,
+.table-wrapper {
+  font-size: 13px;
+}
+
+table,
+.recipe-table,
+.queue-table,
+.chemical-process-table,
+.weighing-active-board table,
+.mixing-order-table,
+.mixing-material-table,
+.mixing-dispatch table,
+.production-log-summary-table,
+.production-log-wide-table,
+.report-wide-table,
+.settings-wide-table,
+.admin-wide-table,
+.dashboard-wide-table,
+.qc-active-panel table,
+.qc-sample-table table,
+.qc2-material-table table,
+.packaging-list table,
+.packaging-detail table,
+.production-history-modal table {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  table-layout: auto;
+}
+
+thead tr {
+  height: 36px;
+}
+
+th,
+td,
+.recipe-table th,
+.recipe-table td,
+.chemical-process-table th,
+.chemical-process-table td,
+.weighing-active-board th,
+.weighing-active-board td,
+.mixing-order-table th,
+.mixing-order-table td,
+.production-log-summary-table th,
+.production-log-summary-table td,
+.production-log-wide-table th,
+.production-log-wide-table td,
+.report-wide-table th,
+.report-wide-table td,
+.settings-wide-table th,
+.settings-wide-table td,
+.admin-wide-table th,
+.admin-wide-table td,
+.dashboard-wide-table th,
+.dashboard-wide-table td,
+.dashboard-table-panel th,
+.dashboard-table-panel td,
+.qc-active-panel th,
+.qc-active-panel td {
+  height: 36px;
+  max-height: 40px;
+  padding: 6px 8px;
+  font-size: 13px;
+  line-height: 18px;
+  overflow-wrap: anywhere;
+  vertical-align: middle;
+}
+
+th {
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.chemical-layout,
+.weighing-dispatch-layout,
+.qc-sample-layout,
+.qc2-layout,
+.packaging-layout {
+  grid-template-columns: minmax(260px, 300px) minmax(0, 1fr);
+  gap: 12px;
+  padding: 12px;
+  overflow-x: hidden;
+}
+
+.weighing-order-list,
+.weighing-active-board,
+.qc-queue,
+.packaging-list,
+.packaging-detail {
+  min-width: 0;
+  padding: 12px;
+}
+
+.weighing-order-card,
+.qc-queue-item {
+  min-height: 0;
+  max-height: 74px;
+  padding: 7px 9px;
+  gap: 2px;
+}
+
+.weighing-order-card strong,
+.qc-queue-item strong {
+  font-size: 13px;
+  line-height: 17px;
+}
+
+.weighing-order-card span,
+.qc-queue-item span {
+  font-size: 12.5px;
+  line-height: 16px;
+}
+
+.touch-button {
+  min-width: 0;
+}
+
+.flow-pill,
+.status-pill,
+.dispatch-badge,
+.section-kicker,
+.qc-diff-badge,
+.weighing-check,
+.weighing-fail {
+  min-height: 24px;
+  padding: 4px 8px;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.volume-bars {
+  min-height: 160px;
+}
+
+.volume-bars div {
+  height: 150px;
+}
+
+.status-stack {
+  min-height: 90px;
+}
+
+.pipeline-flow {
+  grid-template-columns: repeat(auto-fit, minmax(115px, 1fr));
+}
+
+@media (min-width: 1024px) {
+  .app-shell {
+    --sidebar-width: 190px;
+    grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  }
+
+  .sidebar {
+    width: var(--sidebar-width);
+    flex-direction: column;
+    padding: 14px 12px;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 0;
+  }
+
+  .sidebar-brand {
+    margin-right: 0;
+  }
+
+  .sidebar-nav {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 1366px) {
+  .app-shell {
+    --sidebar-width: 210px;
+  }
+
+  .dashboard-grid,
+  .executive-kpi-grid,
+  .report-kpi-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1600px) {
+  .app-shell {
+    --sidebar-width: 220px;
+  }
+
+  .dashboard-grid,
+  .executive-kpi-grid,
+  .report-kpi-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1920px) {
+  .dashboard-grid,
+  .executive-kpi-grid,
+  .report-kpi-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1023px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    overflow-x: hidden;
+    padding: 10px 12px;
+    border-right: 0;
+    border-bottom: 1px solid rgba(5, 55, 44, 0.12);
+  }
+
+  .sidebar-brand {
+    margin-bottom: 0;
+    margin-right: 12px;
+    white-space: nowrap;
+  }
+
+  .sidebar-nav {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    flex: 1;
+  }
+
+  .dashboard-grid,
+  .executive-kpi-grid,
+  .report-kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .dashboard-grid,
+  .executive-kpi-grid,
+  .report-kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 479px) {
+  .dashboard-grid,
+  .executive-kpi-grid,
+  .report-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 80% compact mode - final ERP density layer */
+html,
+body {
+  font-size: 12px;
+}
+
+.app-shell {
+  --sidebar-width: 200px;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  padding: 12px 10px;
+}
+
+.sidebar-brand {
+  margin-bottom: 12px;
+  font-size: 16px;
+  line-height: 22px;
+}
+
+.nav-item {
+  min-height: 34px;
+  height: 34px;
+  padding: 6px 10px;
+  font-size: 13px;
+  line-height: 18px;
+  border-radius: 6px;
+}
+
+.sidebar-nav {
+  gap: 3px;
+}
+
+.main-content {
+  gap: 10px;
+  padding: 12px;
+}
+
+.page-content,
+.dashboard-grid,
+.reports-grid,
+.formulas-grid,
+.settings-grid,
+.weighing-dispatch-page,
+.mixing-page,
+.mixing-page-v2,
+.finished-goods-page,
+.production-history-page,
+.dashboard-table-grid,
+.report-chart-grid,
+.mixing-sections-grid {
+  gap: 10px;
+}
+
+.topbar {
+  max-height: 78px;
+  padding: 12px 14px;
+  border-radius: 8px;
+}
+
+.topbar-chip {
+  margin-bottom: 2px;
+  padding: 2px 7px;
+  font-size: 11px;
+  line-height: 15px;
+}
+
+.topbar h1,
+.login-card h1,
+.qr-print-ticket h1 {
+  font-size: 20px;
+  line-height: 28px;
+}
+
+.topbar-actions,
+.topbar-actions span,
+.user-session {
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.topbar-actions {
+  gap: 6px;
+}
+
+.user-session {
+  gap: 5px;
+  padding: 3px 6px;
+}
+
+.user-session .secondary-button {
+  min-height: 26px;
+  padding: 4px 8px;
+}
+
+.stat-card,
+.report-card,
+.setting-card,
+.formula-card,
+.panel,
+.v3-card,
+.form-section,
+.order-queue,
+.weighing-board,
+.weighing-order-list,
+.weighing-active-board,
+.qc-queue,
+.packaging-list,
+.packaging-detail,
+.dashboard-chart-card,
+.dashboard-table-panel,
+.alert-panel,
+.pipeline-panel,
+.report-chart-card,
+.report-table-panel,
+.weighed-container-card {
+  padding: 12px;
+  border-radius: 8px;
+  gap: 12px;
+}
+
+.panel {
+  margin-bottom: 10px;
+}
+
+.panel-header-row {
+  margin-bottom: 10px;
+}
+
+.panel-header-row,
+.section-heading-row,
+.modal-header,
+.modal-actions,
+.action-row {
+  gap: 8px;
+}
+
+.panel-header-row h2,
+.modal-header h2,
+.form-section h3,
+.qc-queue h2,
+.qc-active-panel h2,
+.weighing-order-list h2,
+.weighing-active-board h2,
+.packaging-list h2,
+.packaging-detail h2,
+.finished-goods-page h2,
+.production-history-page h2,
+.mixing-page-v2 h2,
+.panel > h2 {
+  font-size: 17px;
+  line-height: 22px;
+}
+
+.formula-section h3,
+.order-queue h3,
+.weighing-board h3,
+.weighing-order-group h3,
+.mixing-sections-grid h3,
+.mixing-dispatch h3,
+.mixing-detail-panel h3,
+.production-log-detail h3,
+.report-chart-card h3,
+.report-table-panel h3,
+.settings-section h3,
+.admin-page h3,
+.admin-role-panel h3,
+.dashboard-table-panel h3,
+.v3-card h3,
+.qc-queue h3,
+.qc-adjustment-list h3,
+.packaging-detail h3,
+.weighed-container-card h3,
+.section-heading-row h3 {
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.panel-text,
+.log-list li,
+.muted-text,
+.empty-alert,
+label,
+.production-form-grid label,
+.v3-form label,
+.v3-card label,
+td label,
+.report-filters label,
+.settings-form-grid label,
+.mixing-form-grid label {
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.dashboard-grid,
+.executive-kpi-grid,
+.report-kpi-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.stat-card,
+.report-kpi-card,
+.executive-kpi,
+.pipeline-step,
+.weighing-stats article {
+  min-height: 72px;
+  max-height: 72px;
+  padding: 12px;
+  gap: 4px;
+}
+
+.stat-card span,
+.report-kpi-card span,
+.executive-kpi span,
+.pipeline-step span,
+.weighing-stats span {
+  font-size: 12px;
+  line-height: 15px;
+}
+
+.stat-card strong,
+.report-card strong,
+.report-kpi-card strong,
+.executive-kpi strong,
+.pipeline-step strong,
+.weighing-stats strong,
+.formula-header strong {
+  font-size: 20px;
+  line-height: 24px;
+}
+
+.primary-button,
+.secondary-button,
+.danger-button,
+.icon-button,
+.log-tabs button,
+.touch-button,
+.weighing-start-button,
+.weighing-inline-action button,
+.weighing-finish-button,
+.mixing-qr-confirm button {
+  min-height: 32px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.icon-button {
+  width: 32px;
+  min-width: 32px;
+  padding: 0;
+  font-size: 16px;
+}
+
+input,
+select,
+textarea,
+.login-card input,
+.production-form-grid input,
+.production-form-grid select,
+.recipe-table input,
+.recipe-table select,
+.v3-form input,
+.v3-form select,
+.v3-card input,
+.v3-card select,
+td input,
+td select,
+.report-filters input,
+.report-filters select,
+.settings-wide-table input,
+.settings-wide-table select,
+.admin-wide-table input,
+.admin-wide-table select,
+.mixing-page-v2 select,
+.mixing-qr-input,
+.weighing-inline-action input,
+.operation-control input,
+.qc-active-panel input[type='number'],
+.qc-active-panel input:not([type]),
+.qc2-material-table input,
+.qc2-active-panel select,
+.qc2-active-panel input,
+.packaging-detail input {
+  min-height: 32px;
+  padding: 5px 8px;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.production-form-grid,
+.settings-form-grid,
+.report-filters,
+.mixing-form-grid,
+.mixing-info-grid,
+.mixing-log-grid,
+.weighed-container-grid,
+.weighed-container-detail-grid,
+.qc-order-summary,
+.weighing-order-summary {
+  grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+  gap: 8px;
+}
+
+table,
+.table-wrapper {
+  font-size: 12px;
+}
+
+thead tr {
+  height: 34px;
+}
+
+th,
+td,
+.recipe-table th,
+.recipe-table td,
+.chemical-process-table th,
+.chemical-process-table td,
+.weighing-active-board th,
+.weighing-active-board td,
+.mixing-order-table th,
+.mixing-order-table td,
+.production-log-summary-table th,
+.production-log-summary-table td,
+.production-log-wide-table th,
+.production-log-wide-table td,
+.report-wide-table th,
+.report-wide-table td,
+.settings-wide-table th,
+.settings-wide-table td,
+.admin-wide-table th,
+.admin-wide-table td,
+.dashboard-wide-table th,
+.dashboard-wide-table td,
+.dashboard-table-panel th,
+.dashboard-table-panel td,
+.qc-active-panel th,
+.qc-active-panel td {
+  height: 34px;
+  max-height: 34px;
+  padding: 4px 8px;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+th {
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.chemical-layout,
+.weighing-dispatch-layout,
+.qc-sample-layout,
+.qc2-layout,
+.packaging-layout {
+  grid-template-columns: minmax(240px, 280px) minmax(0, 1fr);
+  gap: 10px;
+  padding: 10px;
+}
+
+.weighing-order-list,
+.weighing-active-board,
+.qc-queue,
+.packaging-list,
+.packaging-detail {
+  padding: 10px;
+  gap: 10px;
+}
+
+.weighing-order-card,
+.qc-queue-item {
+  max-height: 64px;
+  padding: 6px 8px;
+}
+
+.weighing-order-card strong,
+.qc-queue-item strong {
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.weighing-order-card span,
+.qc-queue-item span {
+  font-size: 11.5px;
+  line-height: 15px;
+}
+
+.flow-pill,
+.status-pill,
+.dispatch-badge,
+.section-kicker,
+.qc-diff-badge,
+.weighing-check,
+.weighing-fail {
+  min-height: 22px;
+  padding: 3px 7px;
+  font-size: 11px;
+  line-height: 15px;
+}
+
+.volume-bars {
+  min-height: 130px;
+}
+
+.volume-bars div {
+  height: 120px;
+}
+
+.status-stack {
+  min-height: 78px;
+}
+
+.pipeline-flow {
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 8px;
+}
+
+@media (min-width: 1024px) {
+  .app-shell {
+    --sidebar-width: 200px;
+  }
+}
+
+@media (min-width: 1366px) {
+  .app-shell {
+    --sidebar-width: 220px;
+  }
+
+  .dashboard-grid,
+  .executive-kpi-grid,
+  .report-kpi-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1600px) {
+  .dashboard-grid,
+  .executive-kpi-grid,
+  .report-kpi-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+/* Ultra compact ERP mode - 75% density target */
+html,
+body {
+  font-size: 11px;
+  line-height: 1.3;
+}
+
+.app-shell {
+  --sidebar-width: 180px;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  overflow-x: hidden;
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  padding: 10px 8px;
+}
+
+.sidebar-brand {
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 20px;
+}
+
+.sidebar-nav {
+  gap: 2px;
+}
+
+.nav-item {
+  min-height: 32px;
+  height: 32px;
+  padding: 6px 10px;
+  font-size: 12px;
+  line-height: 16px;
+  border-radius: 6px;
+}
+
+.nav-item svg,
+.sidebar svg {
+  width: 14px;
+  height: 14px;
+}
+
+.main-content {
+  gap: 8px;
+  padding: 10px;
+}
+
+.page-content,
+.dashboard-grid,
+.reports-grid,
+.formulas-grid,
+.settings-grid,
+.weighing-dispatch-page,
+.mixing-page,
+.mixing-page-v2,
+.finished-goods-page,
+.production-history-page,
+.dashboard-table-grid,
+.report-chart-grid,
+.mixing-sections-grid {
+  gap: 8px;
+}
+
+.topbar {
+  max-height: 68px;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.topbar-chip {
+  margin-bottom: 2px;
+  padding: 2px 6px;
+  font-size: 10px;
+  line-height: 13px;
+}
+
+.topbar h1,
+.login-card h1,
+.qr-print-ticket h1 {
+  font-size: 22px;
+  line-height: 26px;
+}
+
+.topbar-actions,
+.topbar-actions span {
+  font-size: 12px;
+  line-height: 15px;
+}
+
+.topbar-actions {
+  gap: 5px;
+}
+
+.user-session {
+  gap: 4px;
+  padding: 3px 5px;
+  font-size: 11px;
+  line-height: 14px;
+}
+
+.user-session .secondary-button {
+  min-height: 24px;
+  padding: 3px 7px;
+}
+
+.stat-card,
+.report-card,
+.setting-card,
+.formula-card,
+.panel,
+.v3-card,
+.form-section,
+.order-queue,
+.weighing-board,
+.weighing-order-list,
+.weighing-active-board,
+.qc-queue,
+.packaging-list,
+.packaging-detail,
+.dashboard-chart-card,
+.dashboard-table-panel,
+.alert-panel,
+.pipeline-panel,
+.report-chart-card,
+.report-table-panel,
+.weighed-container-card,
+.weighed-container-grid div,
+.weighed-container-detail-grid div,
+.mixing-info-grid div,
+.mixing-log-grid div,
+.weighing-order-summary div,
+.qc-order-summary div,
+.weighing-progress-card {
+  padding: 12px;
+  border-radius: 8px;
+  gap: 10px;
+}
+
+.panel {
+  margin-bottom: 8px;
+}
+
+.panel-header-row {
+  margin-bottom: 8px;
+}
+
+.panel-header-row,
+.section-heading-row,
+.modal-header,
+.modal-actions,
+.action-row,
+.operation-control,
+.weighing-inline-action {
+  gap: 6px;
+}
+
+.panel-header-row h2,
+.modal-header h2,
+.form-section h3,
+.qc-queue h2,
+.qc-active-panel h2,
+.weighing-order-list h2,
+.weighing-active-board h2,
+.packaging-list h2,
+.packaging-detail h2,
+.finished-goods-page h2,
+.production-history-page h2,
+.mixing-page-v2 h2,
+.panel > h2 {
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.formula-section h3,
+.order-queue h3,
+.weighing-board h3,
+.weighing-order-group h3,
+.mixing-sections-grid h3,
+.mixing-dispatch h3,
+.mixing-detail-panel h3,
+.production-log-detail h3,
+.report-chart-card h3,
+.report-table-panel h3,
+.settings-section h3,
+.admin-page h3,
+.admin-role-panel h3,
+.dashboard-table-panel h3,
+.v3-card h3,
+.qc-queue h3,
+.qc-adjustment-list h3,
+.packaging-detail h3,
+.weighed-container-card h3,
+.section-heading-row h3 {
+  font-size: 13px;
+  line-height: 17px;
+}
+
+.panel-text,
+.log-list li,
+.muted-text,
+.empty-alert,
+label,
+.production-form-grid label,
+.v3-form label,
+.v3-card label,
+td label,
+.report-filters label,
+.settings-form-grid label,
+.mixing-form-grid label {
+  font-size: 11px;
+  line-height: 15px;
+}
+
+.dashboard-grid,
+.executive-kpi-grid,
+.report-kpi-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.stat-card,
+.report-kpi-card,
+.executive-kpi,
+.pipeline-step,
+.weighing-stats article {
+  min-height: 64px;
+  max-height: 64px;
+  padding: 10px;
+  gap: 3px;
+  overflow: hidden;
+}
+
+.stat-card span,
+.report-kpi-card span,
+.executive-kpi span,
+.pipeline-step span,
+.weighing-stats span {
+  font-size: 11px;
+  line-height: 14px;
+}
+
+.stat-card strong,
+.report-card strong,
+.report-kpi-card strong,
+.executive-kpi strong,
+.pipeline-step strong,
+.weighing-stats strong,
+.formula-header strong {
+  font-size: 18px;
+  line-height: 22px;
+}
+
+.primary-button,
+.secondary-button,
+.danger-button,
+.icon-button,
+.log-tabs button,
+.touch-button,
+.weighing-start-button,
+.weighing-inline-action button,
+.weighing-finish-button,
+.mixing-qr-confirm button {
+  min-height: 30px;
+  padding: 5px 9px;
+  border-radius: 6px;
+  font-size: 11px;
+  line-height: 15px;
+}
+
+.icon-button {
+  width: 30px;
+  min-width: 30px;
+  padding: 0;
+  font-size: 15px;
+}
+
+input,
+select,
+textarea,
+.login-card input,
+.production-form-grid input,
+.production-form-grid select,
+.recipe-table input,
+.recipe-table select,
+.v3-form input,
+.v3-form select,
+.v3-card input,
+.v3-card select,
+td input,
+td select,
+.report-filters input,
+.report-filters select,
+.settings-wide-table input,
+.settings-wide-table select,
+.admin-wide-table input,
+.admin-wide-table select,
+.mixing-page-v2 select,
+.mixing-qr-input,
+.weighing-inline-action input,
+.operation-control input,
+.qc-active-panel input[type='number'],
+.qc-active-panel input:not([type]),
+.qc2-material-table input,
+.qc2-active-panel select,
+.qc2-active-panel input,
+.packaging-detail input {
+  min-height: 30px;
+  padding: 4px 6px;
+  font-size: 11px;
+  line-height: 15px;
+}
+
+.production-form-grid,
+.settings-form-grid,
+.report-filters,
+.mixing-form-grid,
+.mixing-info-grid,
+.mixing-log-grid,
+.weighed-container-grid,
+.weighed-container-detail-grid,
+.qc-order-summary,
+.weighing-order-summary {
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 6px;
+}
+
+.table-wrapper {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: visible;
+}
+
+table,
+.table-wrapper {
+  font-size: 11px;
+}
+
+table,
+.recipe-table,
+.queue-table,
+.chemical-process-table,
+.weighing-active-board table,
+.mixing-order-table,
+.mixing-material-table,
+.mixing-dispatch table,
+.production-log-summary-table,
+.production-log-wide-table,
+.report-wide-table,
+.settings-wide-table,
+.admin-wide-table,
+.dashboard-wide-table,
+.qc-active-panel table,
+.qc-sample-table table,
+.qc2-material-table table,
+.packaging-list table,
+.packaging-detail table,
+.production-history-modal table {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+thead tr {
+  height: 30px;
+}
+
+thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+th,
+td,
+.recipe-table th,
+.recipe-table td,
+.chemical-process-table th,
+.chemical-process-table td,
+.weighing-active-board th,
+.weighing-active-board td,
+.mixing-order-table th,
+.mixing-order-table td,
+.production-log-summary-table th,
+.production-log-summary-table td,
+.production-log-wide-table th,
+.production-log-wide-table td,
+.report-wide-table th,
+.report-wide-table td,
+.settings-wide-table th,
+.settings-wide-table td,
+.admin-wide-table th,
+.admin-wide-table td,
+.dashboard-wide-table th,
+.dashboard-wide-table td,
+.dashboard-table-panel th,
+.dashboard-table-panel td,
+.qc-active-panel th,
+.qc-active-panel td {
+  height: 30px;
+  max-height: 30px;
+  padding: 4px 6px;
+  font-size: 11px;
+  line-height: 14px;
+  vertical-align: middle;
+}
+
+th {
+  font-size: 11px;
+  line-height: 14px;
+}
+
+.chemical-layout,
+.weighing-dispatch-layout,
+.qc-sample-layout,
+.qc2-layout,
+.packaging-layout {
+  grid-template-columns: minmax(220px, 250px) minmax(0, 1fr);
+  gap: 8px;
+  padding: 8px;
+}
+
+.weighing-order-list,
+.weighing-active-board,
+.qc-queue,
+.packaging-list,
+.packaging-detail {
+  padding: 8px;
+  gap: 8px;
+}
+
+.weighing-order-card,
+.qc-queue-item {
+  min-height: 0;
+  max-height: 52px;
+  padding: 8px;
+  gap: 1px;
+}
+
+.weighing-order-card strong,
+.qc-queue-item strong {
+  font-size: 11px;
+  line-height: 14px;
+}
+
+.weighing-order-card span,
+.qc-queue-item span {
+  font-size: 11px;
+  line-height: 14px;
+}
+
+.flow-pill,
+.status-pill,
+.dispatch-badge,
+.section-kicker,
+.qc-diff-badge,
+.weighing-check,
+.weighing-fail {
+  min-height: 20px;
+  padding: 3px 6px;
+  font-size: 10px;
+  line-height: 13px;
+}
+
+.volume-bars {
+  min-height: 110px;
+}
+
+.volume-bars div {
+  height: 100px;
+}
+
+.status-stack {
+  min-height: 68px;
+}
+
+.pipeline-flow {
+  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  gap: 6px;
+}
+
+.log-list.full-log li,
+.process-steps div {
+  padding: 8px 10px;
+  border-radius: 8px;
+}
+
+.modal-backdrop {
+  padding: 12px;
+}
+
+.production-modal form,
+.order-detail-modal,
+.mixing-modal,
+.finished-goods-modal,
+.production-history-modal,
+.qc-add-material-modal {
+  gap: 10px;
+  padding: 12px;
+}
+
+@media (min-width: 1024px) {
+  .app-shell {
+    --sidebar-width: 180px;
+  }
+
+  .dashboard-grid,
+  .executive-kpi-grid,
+  .report-kpi-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1366px) {
+  .dashboard-grid,
+  .executive-kpi-grid,
+  .report-kpi-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1023px) {
+  .dashboard-grid,
+  .executive-kpi-grid,
+  .report-kpi-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Mandatory 75% compact ERP override from root/global down. */
+:root {
+  --ui-scale: 0.75;
+  --sidebar-width: 180px;
+  --font-base: 11px;
+  --font-menu: 11px;
+  --font-h1: 20px;
+  --font-h2: 16px;
+  --font-card-title: 12px;
+  --font-kpi-value: 18px;
+  --space-page: 12px;
+  --space-card: 10px;
+}
+
+html {
+  font-size: 11px !important;
+}
+
+body {
+  font-size: 11px !important;
+  line-height: 1.25 !important;
+  overflow-x: hidden !important;
+}
+
+h1,
+.page-title,
+.topbar h1,
+.login-card h1,
+.qr-print-ticket h1 {
+  font-size: var(--font-h1) !important;
+  line-height: 1.2 !important;
+}
+
+h2,
+.section-title,
+.panel-header-row h2,
+.modal-header h2,
+.qc-queue h2,
+.qc-active-panel h2,
+.weighing-order-list h2,
+.weighing-active-board h2,
+.packaging-list h2,
+.packaging-detail h2,
+.finished-goods-page h2,
+.production-history-page h2,
+.mixing-page-v2 h2,
+.panel > h2 {
+  font-size: var(--font-h2) !important;
+  line-height: 1.2 !important;
+}
+
+h3,
+.card-title,
+.formula-section h3,
+.order-queue h3,
+.weighing-board h3,
+.weighing-order-group h3,
+.mixing-sections-grid h3,
+.mixing-dispatch h3,
+.mixing-detail-panel h3,
+.production-log-detail h3,
+.report-chart-card h3,
+.report-table-panel h3,
+.settings-section h3,
+.admin-page h3,
+.admin-role-panel h3,
+.dashboard-table-panel h3,
+.v3-card h3,
+.qc-queue h3,
+.qc-adjustment-list h3,
+.packaging-detail h3,
+.weighed-container-card h3,
+.section-heading-row h3 {
+  font-size: 13px !important;
+  line-height: 1.2 !important;
+}
+
+p,
+span,
+label,
+input,
+select,
+textarea,
+button,
+td,
+th {
+  font-size: var(--font-base) !important;
+}
+
+.app-shell {
+  --sidebar-width: 180px !important;
+  grid-template-columns: 180px minmax(0, 1fr) !important;
+  overflow-x: hidden !important;
+}
+
+.sidebar {
+  width: 180px !important;
+  min-width: 180px !important;
+  max-width: 180px !important;
+  padding: 10px !important;
+}
+
+.sidebar-brand,
+.logo {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+}
+
+.sidebar a,
+.sidebar button,
+.menu-item,
+.nav-item {
+  height: 30px !important;
+  min-height: 30px !important;
+  padding: 6px 8px !important;
+  font-size: var(--font-menu) !important;
+  line-height: 1.2 !important;
+}
+
+.sidebar svg,
+.nav-item svg {
+  width: 14px !important;
+  height: 14px !important;
+}
+
+.main,
+.content,
+.app-main {
+  margin-left: 180px !important;
+}
+
+.main-content {
+  padding: var(--space-page) !important;
+  gap: 8px !important;
+}
+
+.page-header,
+.topbar {
+  min-height: 60px !important;
+  max-height: 60px !important;
+  padding: 10px 14px !important;
+  margin-bottom: 10px !important;
+  border-radius: 8px !important;
+}
+
+.page-header .badge,
+.topbar-chip {
+  padding: 4px 8px !important;
+  font-size: 10px !important;
+  line-height: 1.2 !important;
+}
+
+.topbar-actions,
+.topbar-actions span {
+  font-size: 11px !important;
+  line-height: 1.25 !important;
+}
+
+.user-box,
+.user-panel,
+.user-session {
+  padding: 6px 10px !important;
+  font-size: 11px !important;
+  line-height: 1.2 !important;
+}
+
+.kpi-card,
+.stat-card,
+.dashboard-card,
+.report-kpi-card,
+.executive-kpi,
+.pipeline-step,
+.weighing-stats article {
+  min-height: 58px !important;
+  height: 58px !important;
+  max-height: 58px !important;
+  padding: 8px 10px !important;
+  border-radius: 8px !important;
+  gap: 3px !important;
+}
+
+.kpi-card .label,
+.stat-card .label,
+.stat-card span,
+.report-kpi-card span,
+.executive-kpi span,
+.pipeline-step span,
+.weighing-stats span {
+  font-size: 11px !important;
+  line-height: 1.2 !important;
+}
+
+.kpi-card .value,
+.stat-card .value,
+.stat-card strong,
+.report-card strong,
+.report-kpi-card strong,
+.executive-kpi strong,
+.pipeline-step strong,
+.weighing-stats strong,
+.formula-header strong {
+  font-size: var(--font-kpi-value) !important;
+  line-height: 1.1 !important;
+}
+
+.dashboard-grid,
+.kpi-grid,
+.executive-kpi-grid,
+.report-kpi-grid {
+  gap: 8px !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+}
+
+.card,
+.section-card,
+.panel,
+.v3-card,
+.form-section,
+.report-card,
+.setting-card,
+.formula-card,
+.order-queue,
+.weighing-board,
+.weighing-order-list,
+.weighing-active-board,
+.qc-queue,
+.packaging-list,
+.packaging-detail,
+.dashboard-chart-card,
+.dashboard-table-panel,
+.alert-panel,
+.pipeline-panel,
+.report-chart-card,
+.report-table-panel,
+.weighed-container-card {
+  padding: var(--space-card) !important;
+  border-radius: 8px !important;
+  margin-bottom: 10px !important;
+  gap: 8px !important;
+}
+
+input,
+select,
+textarea {
+  height: 28px !important;
+  min-height: 28px !important;
+  padding: 4px 8px !important;
+  font-size: 11px !important;
+  line-height: 1.2 !important;
+}
+
+button,
+.btn,
+.primary-button,
+.secondary-button,
+.danger-button,
+.log-tabs button,
+.touch-button,
+.weighing-start-button,
+.weighing-inline-action button,
+.weighing-finish-button,
+.mixing-qr-confirm button {
+  height: 28px !important;
+  min-height: 28px !important;
+  padding: 4px 10px !important;
+  font-size: 11px !important;
+  line-height: 1.2 !important;
+  border-radius: 6px !important;
+}
+
+.icon-button {
+  width: 28px !important;
+  min-width: 28px !important;
+  height: 28px !important;
+  padding: 0 !important;
+}
+
+.table-wrapper {
+  max-width: 100% !important;
+  overflow-x: auto !important;
+}
+
+table,
+.recipe-table,
+.queue-table,
+.chemical-process-table,
+.weighing-active-board table,
+.mixing-order-table,
+.mixing-material-table,
+.mixing-dispatch table,
+.production-log-summary-table,
+.production-log-wide-table,
+.report-wide-table,
+.settings-wide-table,
+.admin-wide-table,
+.dashboard-wide-table,
+.qc-active-panel table,
+.qc-sample-table table,
+.qc2-material-table table,
+.packaging-list table,
+.packaging-detail table,
+.production-history-modal table {
+  width: 100% !important;
+  max-width: 100% !important;
+  font-size: 11px !important;
+}
+
+th,
+td {
+  height: 28px !important;
+  padding: 4px 6px !important;
+  font-size: 11px !important;
+  line-height: 1.2 !important;
+}
+
+thead th {
+  height: 28px !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 1 !important;
+}
+
+.left-panel,
+.queue-panel,
+.order-list-panel,
+.qc-queue,
+.weighing-order-list,
+.packaging-list,
+.order-queue {
+  width: 240px !important;
+  min-width: 240px !important;
+  max-width: 240px !important;
+}
+
+.right-panel,
+.work-panel,
+.detail-panel,
+.qc-active-panel,
+.weighing-active-board,
+.packaging-detail {
+  flex: 1 !important;
+  min-width: 0 !important;
+}
+
+.chemical-layout,
+.weighing-dispatch-layout,
+.qc-sample-layout,
+.qc2-layout,
+.packaging-layout {
+  grid-template-columns: 240px minmax(0, 1fr) !important;
+  gap: 8px !important;
+  padding: 8px !important;
+}
+
+.order-card,
+.queue-card,
+.weighing-order-card,
+.qc-queue-item {
+  min-height: 52px !important;
+  max-height: 52px !important;
+  padding: 6px 8px !important;
+  font-size: 11px !important;
+  line-height: 1.2 !important;
+}
+
+.weighing-order-card strong,
+.qc-queue-item strong,
+.weighing-order-card span,
+.qc-queue-item span {
+  font-size: 11px !important;
+  line-height: 1.2 !important;
+}
+
+.page-content,
+.production-form-grid,
+.settings-form-grid,
+.report-filters,
+.mixing-form-grid,
+.mixing-info-grid,
+.mixing-log-grid,
+.weighed-container-grid,
+.weighed-container-detail-grid,
+.qc-order-summary,
+.weighing-order-summary {
+  gap: 8px !important;
+}
+
+@media (max-width: 1023px) {
+  .app-shell {
+    grid-template-columns: 1fr !important;
+  }
+
+  .sidebar {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+  }
+
+  .main,
+  .content,
+  .app-main {
+    margin-left: 0 !important;
+  }
+
+  .dashboard-grid,
+  .kpi-grid,
+  .executive-kpi-grid,
+  .report-kpi-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+}
+
+/* Mixing page readability fix: prevent per-character wrapping and keep wide tables readable. */
+.table-cell,
+td,
+th {
+  white-space: nowrap !important;
+  word-break: normal !important;
+  overflow-wrap: normal !important;
+}
+
+.table-wrapper {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: auto !important;
+}
+
+.mixing-page-v2,
+.mixing-sections-grid,
+.mixing-sections-grid > .panel {
+  min-width: 0 !important;
+  overflow-x: hidden !important;
+}
+
+.mixing-sections-grid {
+  grid-template-columns: 1fr !important;
+  align-items: start !important;
+}
+
+.mixing-dispatch,
+.mixing-history-panel {
+  grid-column: 1 / -1 !important;
+}
+
+.ready-mixing-table-wrapper,
+.mixing-sections-grid > .panel:nth-child(2) .table-wrapper {
+  width: 100% !important;
+  overflow-x: auto !important;
+}
+
+.ready-mixing-table,
+.ready-mixing-table-wrapper table,
+.mixing-sections-grid > .panel:nth-child(2) table {
+  width: 100% !important;
+  min-width: 900px !important;
+  max-width: none !important;
+  table-layout: auto !important;
+}
+
+.mixing-sections-grid > .panel:nth-child(2) th:nth-child(1),
+.mixing-sections-grid > .panel:nth-child(2) td:nth-child(1),
+.mixing-sections-grid > .panel:nth-child(2) th:nth-child(3),
+.mixing-sections-grid > .panel:nth-child(2) td:nth-child(3),
+.mixing-sections-grid > .panel:nth-child(2) th:nth-child(4),
+.mixing-sections-grid > .panel:nth-child(2) td:nth-child(4),
+.mixing-sections-grid > .panel:nth-child(2) th:nth-child(5),
+.mixing-sections-grid > .panel:nth-child(2) td:nth-child(5),
+.mixing-sections-grid > .panel:nth-child(2) th:nth-child(6),
+.mixing-sections-grid > .panel:nth-child(2) td:nth-child(6) {
+  max-width: 160px !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.mixing-qr-input,
+.mixing-sections-grid > .panel:nth-child(2) input {
+  min-width: 180px !important;
+  width: 180px !important;
+  max-width: 240px !important;
+}
+
+.mixing-sections-grid > .panel:nth-child(2) th:last-child,
+.mixing-sections-grid > .panel:nth-child(2) td:last-child {
+  min-width: 120px !important;
+}
+
+.mixing-sections-grid > .panel:nth-child(2) button,
+.mixing-sections-grid > .panel:first-child button {
+  white-space: nowrap !important;
+  min-width: max-content !important;
+}
+
+.mixing-qr-confirm {
+  min-width: 150px !important;
+}
+
+@media (min-width: 1600px) {
+  .mixing-sections-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .mixing-dispatch,
+  .mixing-history-panel {
+    grid-column: 1 / -1 !important;
+  }
+}
+
+/* Lightweight ERP/MES pass: reduce visual weight and right-side density. */
+body {
+  font-size: 11px !important;
+  font-weight: 400 !important;
+  line-height: 1.35 !important;
+}
+
+.main-content {
+  padding: 9px !important;
+  gap: 7px !important;
+}
+
+.page-content,
+.dashboard-grid,
+.reports-grid,
+.formulas-grid,
+.settings-grid,
+.weighing-dispatch-page,
+.mixing-page,
+.mixing-page-v2,
+.finished-goods-page,
+.production-history-page,
+.dashboard-table-grid,
+.report-chart-grid,
+.mixing-sections-grid {
+  gap: 7px !important;
+}
+
+.sidebar {
+  width: 180px !important;
+  min-width: 180px !important;
+  max-width: 180px !important;
+}
+
+.sidebar-brand,
+.logo {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+}
+
+.sidebar a,
+.sidebar button,
+.menu-item,
+.nav-item {
+  height: 30px !important;
+  min-height: 30px !important;
+  padding: 6px 10px !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+}
+
+.nav-item.active,
+.sidebar button.active {
+  font-weight: 500 !important;
+}
+
+h1,
+.page-title,
+.topbar h1 {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+}
+
+h2,
+.section-title,
+.panel-header-row h2,
+.modal-header h2,
+.panel > h2 {
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+}
+
+h3,
+.card-title,
+.section-heading-row h3,
+.v3-card h3,
+.dashboard-table-panel h3,
+.report-chart-card h3,
+.report-table-panel h3,
+.qc-queue h3,
+.qc-adjustment-list h3,
+.packaging-detail h3,
+.weighed-container-card h3 {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  line-height: 1.2 !important;
+}
+
+p,
+span,
+label,
+input,
+select,
+textarea,
+td,
+.panel-text,
+.muted-text,
+.empty-alert,
+.log-list li,
+.weighing-order-card,
+.qc-queue-item {
+  font-weight: 400 !important;
+}
+
+label,
+.production-form-grid label,
+.v3-form label,
+.v3-card label,
+td label,
+.report-filters label,
+.settings-form-grid label,
+.mixing-form-grid label {
+  font-size: 11px !important;
+  font-weight: 500 !important;
+}
+
+.panel-text,
+.topbar-actions span,
+.muted-text,
+.empty-alert {
+  font-weight: 400 !important;
+}
+
+.card,
+.section-card,
+.panel,
+.v3-card,
+.form-section,
+.report-card,
+.setting-card,
+.formula-card,
+.order-queue,
+.weighing-board,
+.weighing-order-list,
+.weighing-active-board,
+.qc-queue,
+.packaging-list,
+.packaging-detail,
+.dashboard-chart-card,
+.dashboard-table-panel,
+.alert-panel,
+.pipeline-panel,
+.report-chart-card,
+.report-table-panel,
+.weighed-container-card {
+  padding: 10px !important;
+  border-radius: 8px !important;
+  margin-bottom: 8px !important;
+  gap: 7px !important;
+}
+
+.mixing-info-grid div,
+.mixing-log-grid div,
+.weighed-container-grid div,
+.weighed-container-detail-grid div,
+.weighing-order-summary div,
+.qc-order-summary div,
+.weighing-progress-card {
+  min-height: 46px !important;
+  padding: 8px !important;
+  gap: 4px !important;
+}
+
+.mixing-info-grid span,
+.mixing-log-grid span,
+.weighed-container-grid span,
+.weighed-container-detail-grid span,
+.weighing-order-summary span,
+.qc-order-summary span,
+.weighing-progress-card span {
+  font-weight: 500 !important;
+}
+
+.mixing-info-grid strong,
+.mixing-log-grid strong,
+.weighed-container-grid strong,
+.weighed-container-detail-grid strong,
+.weighing-order-summary strong,
+.qc-order-summary strong,
+.weighing-progress-card strong {
+  font-weight: 500 !important;
+}
+
+.stat-card,
+.report-kpi-card,
+.executive-kpi,
+.pipeline-step,
+.weighing-stats article {
+  height: 58px !important;
+  min-height: 58px !important;
+  max-height: 64px !important;
+  padding: 8px 10px !important;
+}
+
+.stat-card span,
+.report-kpi-card span,
+.executive-kpi span,
+.pipeline-step span,
+.weighing-stats span {
+  font-size: 11px !important;
+  font-weight: 500 !important;
+}
+
+.stat-card strong,
+.report-card strong,
+.report-kpi-card strong,
+.executive-kpi strong,
+.pipeline-step strong,
+.weighing-stats strong,
+.formula-header strong {
+  font-size: 18px !important;
+  font-weight: 700 !important;
+}
+
+.dashboard-grid,
+.kpi-grid,
+.executive-kpi-grid,
+.report-kpi-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  gap: 7px !important;
+}
+
+input,
+select,
+textarea {
+  height: 28px !important;
+  min-height: 28px !important;
+  padding: 4px 8px !important;
+  font-size: 11px !important;
+  font-weight: 400 !important;
+}
+
+button,
+.btn,
+.primary-button,
+.secondary-button,
+.danger-button,
+.log-tabs button,
+.touch-button,
+.weighing-start-button,
+.weighing-inline-action button,
+.weighing-finish-button,
+.mixing-qr-confirm button {
+  height: 28px !important;
+  min-height: 28px !important;
+  padding: 4px 10px !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+}
+
+.secondary-button,
+.danger-button,
+.icon-button {
+  font-weight: 500 !important;
+}
+
+table,
+.table-wrapper {
+  font-size: 11px !important;
+  font-weight: 400 !important;
+}
+
+th,
+td {
+  height: 28px !important;
+  padding: 4px 6px !important;
+  font-size: 11px !important;
+  line-height: 1.25 !important;
+  white-space: nowrap !important;
+  word-break: normal !important;
+  overflow-wrap: normal !important;
+}
+
+td {
+  font-weight: 400 !important;
+}
+
+th,
+thead th {
+  font-weight: 500 !important;
+}
+
+.flow-pill,
+.status-pill,
+.dispatch-badge,
+.section-kicker,
+.qc-diff-badge,
+.weighing-check,
+.weighing-fail {
+  font-weight: 500 !important;
+}
+
+.chemical-layout,
+.weighing-dispatch-layout,
+.qc-sample-layout,
+.qc2-layout,
+.packaging-layout {
+  grid-template-columns: minmax(250px, 280px) minmax(0, 1fr) !important;
+  gap: 7px !important;
+  padding: 7px !important;
+}
+
+.weighing-order-list,
+.qc-queue,
+.packaging-list,
+.order-queue {
+  width: 250px !important;
+  min-width: 250px !important;
+  max-width: 280px !important;
+}
+
+.weighing-active-board,
+.qc-active-panel,
+.packaging-detail {
+  padding: 8px !important;
+}
+
+.order-card,
+.queue-card,
+.weighing-order-card,
+.qc-queue-item {
+  min-height: 42px !important;
+  max-height: 52px !important;
+  padding: 6px 8px !important;
+  font-size: 11px !important;
+  font-weight: 400 !important;
+}
+
+.weighing-order-card strong,
+.qc-queue-item strong,
+.weighing-order-card span,
+.qc-queue-item span {
+  font-size: 11px !important;
+  font-weight: 400 !important;
+}
+
+.table-wrapper {
+  overflow-x: auto !important;
+  max-width: 100% !important;
+}
+
+/* Weighing material tables: fit chemical/solid boards on desktop without page overflow. */
+.weighing-active-board > .table-wrapper {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: auto !important;
+}
+
+.weighing-active-board > .table-wrapper table {
+  width: 100% !important;
+  table-layout: fixed !important;
+  min-width: 890px !important;
+  max-width: 100% !important;
+}
+
+.weighing-active-board > .table-wrapper th,
+.weighing-active-board > .table-wrapper td {
+  height: 34px !important;
+  padding: 4px 6px !important;
+  font-size: 11px !important;
+  line-height: 1.2 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  word-break: normal !important;
+  overflow-wrap: normal !important;
+}
+
+.weighing-active-board > .table-wrapper th {
+  height: 30px !important;
+  font-weight: 500 !important;
+}
+
+.weighing-active-board > .table-wrapper th:nth-child(1),
+.weighing-active-board > .table-wrapper td:nth-child(1) {
+  width: 40px !important;
+  text-align: center !important;
+}
+
+.weighing-active-board > .table-wrapper th:nth-child(2),
+.weighing-active-board > .table-wrapper td:nth-child(2) {
+  width: 80px !important;
+}
+
+.weighing-active-board > .table-wrapper th:nth-child(3),
+.weighing-active-board > .table-wrapper td:nth-child(3) {
+  width: 110px !important;
+}
+
+.weighing-active-board > .table-wrapper th:nth-child(4),
+.weighing-active-board > .table-wrapper td:nth-child(4) {
+  width: 110px !important;
+}
+
+.weighing-active-board > .table-wrapper th:nth-child(5),
+.weighing-active-board > .table-wrapper td:nth-child(5) {
+  width: 150px !important;
+}
+
+.weighing-active-board > .table-wrapper th:nth-child(6),
+.weighing-active-board > .table-wrapper td:nth-child(6) {
+  width: 110px !important;
+}
+
+.weighing-active-board > .table-wrapper th:nth-child(7),
+.weighing-active-board > .table-wrapper td:nth-child(7) {
+  width: 120px !important;
+}
+
+.weighing-active-board > .table-wrapper th:nth-child(8),
+.weighing-active-board > .table-wrapper td:nth-child(8) {
+  width: 80px !important;
+}
+
+.weighing-active-board > .table-wrapper th:nth-child(9),
+.weighing-active-board > .table-wrapper td:nth-child(9) {
+  width: 100px !important;
+}
+
+.weighing-active-board .weighing-inline-action {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  flex-wrap: nowrap !important;
+}
+
+.weighing-active-board .weighing-inline-action input {
+  height: 28px !important;
+  min-height: 28px !important;
+}
+
+.weighing-active-board > .table-wrapper td:nth-child(5) .weighing-inline-action input {
+  width: 120px !important;
+  min-width: 120px !important;
+  max-width: 120px !important;
+}
+
+.weighing-active-board > .table-wrapper td:nth-child(7) .weighing-inline-action input {
+  width: 90px !important;
+  min-width: 90px !important;
+  max-width: 90px !important;
+}
+
+.weighing-active-board .weighing-inline-action button,
+.weighing-active-board .flow-pill,
+.weighing-active-board .weighing-check,
+.weighing-active-board .weighing-fail,
+.weighing-active-board .qc-diff-badge {
+  height: 24px !important;
+  min-height: 24px !important;
+  padding: 3px 6px !important;
+  font-size: 10px !important;
+  line-height: 1.2 !important;
+  white-space: nowrap !important;
+}
+
+.weighing-active-board .weighing-inline-action button {
+  width: 28px !important;
+  min-width: 28px !important;
+}
+
+@media (min-width: 1366px) {
+  .weighing-active-board > .table-wrapper {
+    overflow-x: hidden !important;
+  }
+
+  .weighing-active-board > .table-wrapper table {
+    min-width: 0 !important;
+  }
+}
+
+@media (max-width: 1365px) {
+  .weighing-active-board > .table-wrapper {
+    overflow-x: auto !important;
+  }
+
+  .weighing-active-board > .table-wrapper table {
+    min-width: 890px !important;
+  }
+}
+
+/* Final chemical/solid weighing table fit: 8 compact columns, no desktop horizontal scrollbar. */
+.weighing-dispatch-layout {
+  grid-template-columns: 260px minmax(0, 1fr) !important;
+}
+
+.weighing-order-list {
+  width: 260px !important;
+  min-width: 260px !important;
+  max-width: 260px !important;
+}
+
+.weighing-active-board {
+  min-width: 0 !important;
+  overflow-x: hidden !important;
+}
+
+.weighing-active-board > .table-wrapper {
+  overflow-x: hidden !important;
+  width: 100% !important;
+}
+
+.weighing-active-board > .table-wrapper table {
+  width: 100% !important;
+  min-width: 696px !important;
+  max-width: 100% !important;
+  table-layout: fixed !important;
+}
+
+.weighing-active-board > .table-wrapper th,
+.weighing-active-board > .table-wrapper td {
+  height: 30px !important;
+  padding: 4px 5px !important;
+  font-size: 11px !important;
+  font-weight: 400 !important;
+  line-height: 1.2 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  word-break: normal !important;
+  overflow-wrap: normal !important;
+}
+
+.weighing-active-board > .table-wrapper th {
+  height: 30px !important;
+  font-weight: 500 !important;
+}
+
+.weighing-active-board > .table-wrapper th:nth-child(1),
+.weighing-active-board > .table-wrapper td:nth-child(1) {
+  width: 36px !important;
+}
+
+.weighing-active-board > .table-wrapper th:nth-child(2),
+.weighing-active-board > .table-wrapper td:nth-child(2) {
+  width: 70px !important;
+}
+
+.weighing-active-board > .table-wrapper th:nth-child(3),
+.weighing-active-board > .table-wrapper td:nth-child(3) {
+  width: 90px !important;
+}
+
+.weighing-active-board > .table-wrapper th:nth-child(4),
+.weighing-active-board > .table-wrapper td:nth-child(4) {
+  width: 80px !important;
+}
+
+.weighing-active-board > .table-wrapper th:nth-child(5),
+.weighing-active-board > .table-wrapper td:nth-child(5) {
+  width: 170px !important;
+}
+
+.weighing-active-board > .table-wrapper th:nth-child(6),
+.weighing-active-board > .table-wrapper td:nth-child(6) {
+  width: 90px !important;
+}
+
+.weighing-active-board > .table-wrapper th:nth-child(7),
+.weighing-active-board > .table-wrapper td:nth-child(7) {
+  width: 70px !important;
+}
+
+.weighing-active-board > .table-wrapper th:nth-child(8),
+.weighing-active-board > .table-wrapper td:nth-child(8) {
+  width: 90px !important;
+}
+
+.weighing-active-board .weighing-inline-action {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  flex-wrap: nowrap !important;
+}
+
+.weighing-active-board > .table-wrapper td:nth-child(5) .weighing-inline-action input {
+  width: 110px !important;
+  min-width: 110px !important;
+  max-width: 110px !important;
+  height: 26px !important;
+  min-height: 26px !important;
+}
+
+.weighing-active-board > .table-wrapper td:nth-child(6) .weighing-inline-action input {
+  width: 70px !important;
+  min-width: 70px !important;
+  max-width: 70px !important;
+  height: 26px !important;
+  min-height: 26px !important;
+}
+
+.weighing-active-board .weighing-inline-action button {
+  width: 34px !important;
+  min-width: 34px !important;
+  height: 26px !important;
+  min-height: 26px !important;
+  padding: 3px 6px !important;
+  font-size: 10px !important;
+}
+
+.weighing-active-board .flow-pill,
+.weighing-active-board .weighing-check,
+.weighing-active-board .weighing-fail,
+.weighing-active-board .qc-diff-badge {
+  height: 24px !important;
+  min-height: 24px !important;
+  padding: 3px 6px !important;
+  font-size: 10px !important;
+  font-weight: 500 !important;
+}
+
+@media (max-width: 1023px) {
+  .weighing-active-board > .table-wrapper {
+    overflow-x: auto !important;
+  }
+
+  .weighing-active-board > .table-wrapper table {
+    min-width: 696px !important;
+    max-width: none !important;
+  }
+}
+
+/* QC queue cards: prevent text overflow in QC trial and finished QC left lists. */
+.order-card,
+.queue-card,
+.qc-order-card,
+.qc-queue-item {
+  min-height: 58px !important;
+  height: auto !important;
+  max-height: none !important;
+  padding: 8px 10px !important;
+  overflow: hidden !important;
+  word-break: normal !important;
+  overflow-wrap: break-word !important;
+  font-size: 11px !important;
+  line-height: 1.25 !important;
+  font-weight: 400 !important;
+  align-content: start !important;
+}
+
+.order-card div,
+.queue-card div,
+.qc-order-card div,
+.qc-queue-item div,
+.qc-queue-item span,
+.qc-queue-item strong {
+  max-width: 100% !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  font-size: 11px !important;
+  line-height: 1.25 !important;
+}
+
+.qc-queue-item strong {
+  display: block !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+}
+
+.qc-queue-item span {
+  display: block !important;
+  font-weight: 400 !important;
+  white-space: normal !important;
+  overflow-wrap: break-word !important;
+}
+
+.qc-queue-item span:nth-of-type(n+4) {
+  display: none !important;
+}
+
+.lot-text,
+.qc-queue-item span:nth-of-type(2) {
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+}
+
+.qc-queue-item.active,
+.qc-queue-item.completed {
+  min-height: 58px !important;
+  height: auto !important;
+  max-height: none !important;
+  font-size: 11px !important;
+}
+
+.qc-queue-group {
+  gap: 6px !important;
+}
+

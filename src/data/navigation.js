@@ -1,0 +1,15 @@
+export const defaultNavItems = [
+  { id: 'dashboard', label: 'Dashboard' },
+  { id: 'formulas', label: 'Công thức gốc' },
+  { id: 'orders', label: 'Lệnh sản xuất' },
+  { id: 'qc', label: 'QC sản xuất thử' },
+  { id: 'chemical', label: 'Tổ cân hóa' },
+  { id: 'solid', label: 'Tổ cân rắn' },
+  { id: 'mixing', label: 'Tổ phối trộn' },
+  { id: 'finished-qc', label: 'QC thành phẩm' },
+  { id: 'packaging', label: 'Đóng gói' },
+  { id: 'finished-goods', label: 'Kho thành phẩm' },
+  { id: 'logs', label: 'Nhật ký sản xuất' },
+  { id: 'reports', label: 'Báo cáo' },
+  { id: 'admin', label: 'Quản trị hệ thống' },
+]

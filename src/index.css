@@ -1,0 +1,64 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --ui-scale: 0.75;
+  --sidebar-width: 180px;
+  --font-base: 11px;
+  --font-menu: 11px;
+  --font-h1: 20px;
+  --font-h2: 16px;
+  --font-card-title: 12px;
+  --font-kpi-value: 18px;
+  --space-page: 12px;
+  --space-card: 10px;
+  color: #0c2f22;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  background: #eaf3ef;
+  font-size: 11px !important;
+}
+
+html, body, #root {
+  min-height: 100%;
+  margin: 0;
+}
+
+html {
+  font-size: 11px !important;
+}
+
+body {
+  background: radial-gradient(circle at top left, rgba(81, 192, 146, 0.18), transparent 32%),
+    radial-gradient(circle at bottom right, rgba(34, 83, 59, 0.12), transparent 28%),
+    #eaf3ef;
+  color: #133b2a;
+  font-size: 11px !important;
+  line-height: 1.25 !important;
+  overflow-x: hidden;
+}
+
+button {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+table,
+input,
+select,
+button {
+  max-width: 100%;
+}
+
+input, textarea, select {
+  font: inherit;
+}
