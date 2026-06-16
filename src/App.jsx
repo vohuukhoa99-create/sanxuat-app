@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { Children, cloneElement, useEffect, useMemo, useRef, useState } from 'react'
 import * as XLSX from 'xlsx'
 import { jsPDF } from 'jspdf'
 import autoTable from 'jspdf-autotable'
@@ -366,12 +366,20 @@ function LoginPage({ onLogin, error }) {
 }
 
 function SimpleTable({ headers, rows, empty = 'Không có dữ liệu.', tableClassName = '' }) {
+  const labeledRows = rows.map((row) => {
+    if (!row?.props?.children) return row
+    const cells = Children.toArray(row.props.children).map((cell, index) => {
+      if (!cell?.props) return cell
+      return cloneElement(cell, { 'data-label': headers[index] || '' })
+    })
+    return cloneElement(row, {}, cells)
+  })
   return (
     <div className="table-wrapper">
       <table className={tableClassName}>
         <thead><tr>{headers.map((header) => <th key={header}>{header}</th>)}</tr></thead>
         <tbody>
-          {rows}
+          {labeledRows}
           {!rows.length && <tr><td className="empty-row" colSpan={headers.length}>{empty}</td></tr>}
         </tbody>
       </table>
@@ -4059,22 +4067,22 @@ function AdminPage({ authData, setAuthData }) {
             <tbody>
               {(authData.users || []).map((user) => (
                 <tr key={user.username}>
-                  <td>
+                  <td data-label="Tài khoản">
                     <input
                       value={user.username}
                       disabled={defaultUsers.some((item) => item.username === user.username)}
                       onChange={(event) => updateUser(user.username, { username: event.target.value.trim() })}
                     />
                   </td>
-                  <td><input value={user.password} onChange={(event) => updateUser(user.username, { password: event.target.value })} /></td>
-                  <td><input value={user.fullName || ''} onChange={(event) => updateUser(user.username, { fullName: event.target.value })} /></td>
-                  <td>
+                  <td data-label="Mật khẩu"><input value={user.password} onChange={(event) => updateUser(user.username, { password: event.target.value })} /></td>
+                  <td data-label="Họ tên"><input value={user.fullName || ''} onChange={(event) => updateUser(user.username, { fullName: event.target.value })} /></td>
+                  <td data-label="Vai trò">
                     <select value={user.role} onChange={(event) => updateUser(user.username, { role: event.target.value })}>
                       {Object.keys(authData.roles || {}).map((role) => <option key={role} value={role}>{role}</option>)}
                     </select>
                   </td>
-                  <td><span className={`status-pill ${user.status === ACTIVE_STATUS ? 'pass' : 'locked'}`}>{user.status}</span></td>
-                  <td>
+                  <td data-label="Trạng thái"><span className={`status-pill ${user.status === ACTIVE_STATUS ? 'pass' : 'locked'}`}>{user.status}</span></td>
+                  <td data-label="Hành động">
                     <div className="user-action-group">
                       <button type="button" className="secondary-button" onClick={() => resetPassword(user.username)}>Đặt lại mật khẩu</button>
                       <button type="button" className={user.status === ACTIVE_STATUS ? 'danger-button' : 'secondary-button'} disabled={user.username === 'admin'} onClick={() => toggleUserLock(user.username)}>
@@ -4215,6 +4223,7 @@ function App() {
   const [loginError, setLoginError] = useState('')
   const initialPage = new URLSearchParams(window.location.search).get('page') || 'dashboard'
   const [selectedPage, setSelectedPage] = useState(initialPage)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
     const orders = normalizeProductionOrders(data.orders || [], data.formulas || [])
@@ -4252,6 +4261,10 @@ function App() {
     setLoginError('')
   }
   const logout = () => { localStorage.removeItem(SESSION_KEY); setCurrentUser(null) }
+  const changePage = (nextPage) => {
+    setSelectedPage(nextPage)
+    setMobileMenuOpen(false)
+  }
 
   if (!user) return <LoginPage onLogin={login} error={loginError} />
 
@@ -4273,9 +4286,22 @@ function App() {
   }
 
   return (
-    <div className="app-shell">
-      <Sidebar selected={page} onChange={setSelectedPage} navItems={navItems} />
+    <div className={`app-shell ${mobileMenuOpen ? 'mobile-menu-open' : ''}`}>
+      <div className="mobile-drawer-backdrop" onClick={() => setMobileMenuOpen(false)} />
+      <Sidebar selected={page} onChange={changePage} navItems={navItems} className="desktop-sidebar" />
+      <Sidebar selected={page} onChange={changePage} navItems={navItems} className="mobile-sidebar" />
       <main className="main-content">
+        <header className="mobile-header">
+          <button type="button" className="hamburger-button" onClick={() => setMobileMenuOpen(true)} aria-label="Mở menu">☰</button>
+          <div className="mobile-brand">
+            <strong>SƠN HÒA BÌNH</strong>
+            <span>{title}</span>
+          </div>
+          <div className="mobile-user">
+            <span>{user.fullName || user.username}</span>
+            <button className="secondary-button" onClick={logout}>Đăng xuất</button>
+          </div>
+        </header>
         <TopBar title={title} subtitle={subtitle} user={user} onLogout={logout} />
         {pages[page] || pages.dashboard}
       </main>

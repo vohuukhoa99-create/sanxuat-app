@@ -1,8 +1,8 @@
 import { defaultNavItems } from '../data/navigation.js'
 
-export function Sidebar({ selected, onChange, navItems = defaultNavItems }) {
+export function Sidebar({ selected, onChange, navItems = defaultNavItems, className = '' }) {
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${className}`}>
       <div className="sidebar-brand">
         <span>Sơn Hòa Bình</span>
       </div>
