@@ -1806,7 +1806,34 @@ tbody tr:hover {
 .permission-matrix th:first-child {
   z-index: 4;
 }
+.permission-matrix input[type="checkbox"] {
+  width: 13px;
+  height: 13px;
+  transform: scale(0.75);
+  margin: 0;
+  cursor: pointer;
+}
 
+.permission-matrix th,
+.permission-matrix td {
+  height: 22px;
+  padding: 2px 4px;
+  line-height: 1;
+}
+
+.permission-matrix th:first-child,
+.permission-matrix td:first-child {
+  width: 140px;
+}
+
+.permission-matrix th:not(:first-child),
+.permission-matrix td:not(:first-child) {
+  width: 48px;
+}
+
+.permission-matrix-wrapper {
+  max-height: calc(100vh - 150px);
+}
 .role-column-header {
   display: grid;
   gap: 3px;
