@@ -7329,3 +7329,117 @@ textarea {
   }
 }
 
+/* Final QC trial compact table: continuous rows with note as the last column. */
+html,
+body,
+#root {
+  overflow-x: hidden !important;
+}
+
+.qc-trial-page,
+.qc-trial-panel,
+.qc-trial-table-wrapper {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+  box-sizing: border-box !important;
+}
+
+.qc-trial-page {
+  font-size: 11px !important;
+}
+
+.qc-trial-page .qc-trial-summary-grid {
+  grid-template-columns: repeat(3, minmax(120px, 1fr)) !important;
+  gap: 7px !important;
+  max-width: 760px !important;
+}
+
+.qc-trial-page .qc-trial-summary-grid > div {
+  min-height: 48px !important;
+  height: 52px !important;
+  padding: 8px !important;
+}
+
+.qc-trial-page .qc-trial-summary-grid span {
+  font-size: 11px !important;
+  font-weight: 500 !important;
+}
+
+.qc-trial-page .qc-trial-summary-grid strong {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+}
+
+.qc-trial-page .section-title,
+.qc-trial-page .qc-trial-info h2 {
+  font-size: 15px !important;
+  font-weight: 600 !important;
+}
+
+.qc-trial-page .button,
+.qc-trial-page button {
+  height: 28px !important;
+  min-height: 28px !important;
+  padding: 5px 10px !important;
+  font-size: 11px !important;
+}
+
+.qc-trial-page .qc-trial-action-bar .primary-button {
+  min-width: 170px !important;
+}
+
+.qc-trial-page .qc-trial-action-bar .secondary-button {
+  min-width: 70px !important;
+}
+
+.qc-trial-page .compact-qc-table {
+  width: 100% !important;
+  max-width: 100% !important;
+  table-layout: fixed !important;
+  border-collapse: collapse !important;
+  font-size: 11px !important;
+}
+
+.qc-trial-page .compact-qc-table th,
+.qc-trial-page .compact-qc-table td {
+  width: auto !important;
+  height: 30px !important;
+  padding: 4px 5px !important;
+  font-size: 11px !important;
+  font-weight: 400 !important;
+  line-height: 1.2 !important;
+  vertical-align: middle !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.qc-trial-page .compact-qc-table th {
+  font-weight: 600 !important;
+}
+
+.qc-trial-page .compact-input {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 24px !important;
+  min-height: 24px !important;
+  padding: 3px 6px !important;
+  font-size: 11px !important;
+  line-height: 1.2 !important;
+  box-sizing: border-box !important;
+}
+
+.qc-trial-page .compact-qc-table .qc-value-input {
+  max-width: 80px !important;
+}
+
+.qc-trial-page .compact-qc-table .qc-reason-input,
+.qc-trial-page .compact-qc-table .qc-note-input {
+  width: 100% !important;
+}
+
+.qc-trial-page .qc-trial-note-row {
+  display: none !important;
+}
+

@@ -1536,8 +1536,8 @@ function QC1({ data, setData }) {
   const hasChanges = adjustedRows.length > 0
 
   return (
-    <div className="page-content qc-sample-page">
-      <section className="panel qc-sample-layout">
+    <div className="page-content qc-sample-page qc-trial-page">
+      <section className="panel qc-sample-layout qc-trial-panel">
         <aside className="qc-queue">
           <div>
             <span className="section-kicker">Danh sách chờ</span>
@@ -1584,24 +1584,48 @@ function QC1({ data, setData }) {
               </div>
 
               <div className="qc-trial-table-wrapper">
-                <SimpleTable tableClassName="qc-trial-table" headers={['Mã VT', 'Tên VT', 'Nhóm', 'Theo lệnh', 'Giá trị sau QC', 'Chênh lệch', 'Lý do điều chỉnh']} rows={getEffectiveFormula(activeOrder).flatMap((item) => {
+                <table className="qc-trial-table compact-qc-table">
+                  <colgroup>
+                    <col style={{ width: '9%' }} />
+                    <col style={{ width: '10%' }} />
+                    <col style={{ width: '7%' }} />
+                    <col style={{ width: '9%' }} />
+                    <col style={{ width: '12%' }} />
+                    <col style={{ width: '10%' }} />
+                    <col style={{ width: '22%' }} />
+                    <col style={{ width: '21%' }} />
+                  </colgroup>
+                  <thead>
+                    <tr>
+                      <th>Mã VT</th>
+                      <th>Tên VT</th>
+                      <th>Nhóm</th>
+                      <th>Theo lệnh</th>
+                      <th>Giá trị sau QC</th>
+                      <th>Chênh lệch</th>
+                      <th>Lý do điều chỉnh</th>
+                      <th>Ghi chú</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {getEffectiveFormula(activeOrder).map((item) => {
                   const adjustedValue = item.qcAdjustKg === '' || item.qcAdjustKg == null ? item.requiredKg : num(item.qcAdjustKg)
                   const diff = Number((adjustedValue - num(item.requiredKg)).toFixed(3))
                   return (
-                    [<tr key={`${item.id}-main`} className="qc-trial-main-row">
+                    <tr key={item.id} className="qc-trial-main-row">
                       <td>{item.materialCode} {item.isQc1Added && <span className="qc-added-badge">NVL bổ sung</span>}</td>
                       <td>{item.materialName || item.materialCode}</td>
                       <td>{item.materialGroup}</td>
                       <td>{kg(item.requiredKg)}</td>
-                      <td><input className="qc-value-input" type="number" value={item.qcAdjustKg === '' || item.qcAdjustKg == null ? item.requiredKg : item.qcAdjustKg} onChange={(event) => updateItem(activeOrder.id, item.id, 'qcAdjustKg', event.target.value)} /></td>
+                      <td><input className="qc-value-input compact-input" type="number" value={item.qcAdjustKg === '' || item.qcAdjustKg == null ? item.requiredKg : item.qcAdjustKg} onChange={(event) => updateItem(activeOrder.id, item.id, 'qcAdjustKg', event.target.value)} /></td>
                       <td><span className={`qc-diff-badge ${diff > 0 ? 'diff-up' : diff < 0 ? 'diff-down' : 'diff-same'}`}>{diff > 0 ? '+' : ''}{kg(diff)}</span></td>
-                      <td><input className="qc-reason-input" value={item.qcAdjustReason || ''} onChange={(event) => updateItem(activeOrder.id, item.id, 'qcAdjustReason', event.target.value)} /></td>
-                    </tr>,
-                    <tr key={`${item.id}-note`} className="qc-trial-note-row">
-                      <td colSpan="7"><label><span>Ghi chú</span><input className="qc-note-input" value={item.note} onChange={(event) => updateItem(activeOrder.id, item.id, 'note', event.target.value)} /></label></td>
-                    </tr>]
+                      <td><input className="qc-reason-input compact-input" value={item.qcAdjustReason || ''} onChange={(event) => updateItem(activeOrder.id, item.id, 'qcAdjustReason', event.target.value)} /></td>
+                      <td><input className="qc-note-input compact-input" value={item.note} onChange={(event) => updateItem(activeOrder.id, item.id, 'note', event.target.value)} /></td>
+                    </tr>
                   )
-                })} />
+                    })}
+                  </tbody>
+                </table>
               </div>
 
               <section className="v3-card qc-adjustment-list">
