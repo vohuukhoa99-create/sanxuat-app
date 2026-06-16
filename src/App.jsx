@@ -161,12 +161,15 @@ const defaultRoles = {
   'Phối trộn': ['dashboard', 'mixing', 'logs'],
   'Đóng gói': ['dashboard', 'packaging', 'logs'],
   'Kho TP': ['dashboard', 'finished-goods', 'logs'],
+  'Quản đốc': ['dashboard', 'orders', 'qc', 'chemical', 'solid', 'mixing', 'finished-qc', 'packaging', 'finished-goods', 'logs', 'reports'],
+  'Ban giám đốc': ['dashboard', 'finished-qc', 'reports', 'logs'],
 }
 
 const ACTIVE_STATUS = 'Hoạt động'
 const LOCKED_STATUS = 'Khóa'
 const DEFAULT_PASSWORD = '123456'
 const AUTH_VERSION = 2
+const removedDefaultUsernames = new Set(['kho-nvl', 'kho-tp'])
 
 const defaultUsers = [
   { username: 'admin', password: 'Admin@123', role: 'Admin', fullName: 'Quản trị hệ thống' },
@@ -179,6 +182,8 @@ const defaultUsers = [
   { username: 'phoitron', password: 'PhoiTron@123', role: 'Phối trộn', fullName: 'Tổ phối trộn' },
   { username: 'donggoi', password: 'DongGoi@123', role: 'Đóng gói', fullName: 'Tổ đóng gói' },
   { username: 'kho.tp', password: 'KhoTP@123', role: 'Kho TP', fullName: 'Kho thành phẩm' },
+  { username: 'quandoc', password: 'QuanDoc@123', role: 'Quản đốc', fullName: 'Quản đốc' },
+  { username: 'giamdoc', password: 'GiamDoc@123', role: 'Ban giám đốc', fullName: 'Ban giám đốc' },
 ].map((user) => ({ ...user, department: user.role, status: ACTIVE_STATUS }))
 
 const legacyRoleMap = {
@@ -206,7 +211,8 @@ function normalizeAuthData(saved = {}) {
   roles.Admin = defaultNavItems.map((item) => item.id)
 
   const shouldPreserveDefaultUsers = saved.authVersion === AUTH_VERSION
-  const savedUsersByUsername = new Map((saved.users || []).map((user) => [user.username, user]))
+  const savedUsers = (saved.users || []).filter((user) => user?.username && !removedDefaultUsernames.has(user.username))
+  const savedUsersByUsername = new Map(savedUsers.map((user) => [user.username, user]))
   const seededUsers = defaultUsers.map((user) => {
     const savedUser = shouldPreserveDefaultUsers ? savedUsersByUsername.get(user.username) : null
     if (!savedUser) return user
@@ -220,7 +226,7 @@ function normalizeAuthData(saved = {}) {
     }
   })
   const defaultUsernames = new Set(defaultUsers.map((user) => user.username))
-  const migratedSavedUsers = (saved.users || [])
+  const migratedSavedUsers = savedUsers
     .filter((user) => user?.username && !defaultUsernames.has(user.username))
     .map((user) => {
       const role = legacyRoleMap[user.role] || user.role || 'Sản xuất'
