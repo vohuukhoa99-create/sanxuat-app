@@ -1537,7 +1537,7 @@ function FormulasPage({ data, setData }) {
 }
 
 function OrdersPage({ data, setData }) {
-  const [form, setForm] = useState({ formulaId: data.formulas[0]?.id || '', quantityKg: 1000, lot: '', customer: '' })
+  const [form, setForm] = useState({ formulaId: data.formulas[0]?.id || '', quantityKg: 1000, lot: '', customer: '', mixerMachine: '', productionRequestNo: '', note: '' })
   const [message, setMessage] = useState('')
   const [warning, setWarning] = useState('')
   const [detailOrderId, setDetailOrderId] = useState('')
@@ -1580,6 +1580,9 @@ function OrdersPage({ data, setData }) {
       product: formula.product,
       lot: form.lot || `LOT-${id}`,
       customer: form.customer,
+      mixerMachine: form.mixerMachine,
+      productionRequestNo: form.productionRequestNo,
+      note: form.note,
       requestedWeight: num(form.quantityKg),
       quantityKg: num(form.quantityKg),
       stage: 'qc1',
@@ -1612,7 +1615,7 @@ function OrdersPage({ data, setData }) {
     }
     setData((current) => addLogToData({ ...current, orders: [order, ...current.orders] }, `Sử dụng ${sourceLabel} của ${formula.code} để tạo lệnh SX ${id}.`))
     setMessage('Tạo lệnh sản xuất thành công')
-    setForm((current) => ({ ...current, lot: '', customer: '' }))
+    setForm((current) => ({ ...current, lot: '', customer: '', mixerMachine: '', productionRequestNo: '', note: '' }))
   }
   const detailOrder = data.orders.find((order) => order.id === detailOrderId)
   return (
@@ -1621,18 +1624,21 @@ function OrdersPage({ data, setData }) {
         <div className="panel-header-row"><div><h2>Lệnh sản xuất</h2><p className="panel-text">Phòng SX tạo lệnh từ công thức gốc. Hệ thống tự quy đổi khối lượng từng nguyên liệu theo khối lượng yêu cầu.</p></div></div>
         {warning && <div className="process-alert">{warning}</div>}
         {message && <div className="formula-ratio-ok">{message}</div>}
-        <div className="production-form-grid">
+        <div className="production-form-grid order-create-form">
           <label>Công thức gốc<select value={form.formulaId} onChange={(event) => setForm({ ...form, formulaId: event.target.value })}>{data.formulas.map((item) => <option value={item.id} key={item.id}>{item.code} - {item.version}</option>)}</select></label>
           <label>Khối lượng đơn hàng<input type="number" value={form.quantityKg} onChange={(event) => setForm({ ...form, quantityKg: event.target.value })} /></label>
           <label>Mã LOT<input value={form.lot} onChange={(event) => setForm({ ...form, lot: event.target.value })} /></label>
           <label>Khách hàng<input value={form.customer} onChange={(event) => setForm({ ...form, customer: event.target.value })} /></label>
+          <label>Máy phối trộn<select value={form.mixerMachine} onChange={(event) => setForm({ ...form, mixerMachine: event.target.value })}><option value="">Chọn máy</option><option value="MX01">MX01 - Máy phối trộn 1</option><option value="MX02">MX02 - Máy phối trộn 2</option><option value="MX03">MX03 - Máy phối trộn 3</option><option value="MX04">MX04 - Máy phối trộn 4</option></select></label>
+          <label>Phiếu yêu cầu SX<input value={form.productionRequestNo} placeholder="Nhập số phiếu yêu cầu sản xuất" onChange={(event) => setForm({ ...form, productionRequestNo: event.target.value })} /></label>
+          <label className="wide-field">Ghi chú<textarea value={form.note} placeholder="Ví dụ: Giống mẫu đã duyệt ngày .../..." onChange={(event) => setForm({ ...form, note: event.target.value })} /></label>
         </div>
         <button className="primary-button" onClick={create}>Tạo lệnh sản xuất</button>
       </section>
       <section className="panel">
         <h3>Danh sách lệnh</h3>
-        <SimpleTable headers={['Mã lệnh SX', 'Sản phẩm', 'Công thức gốc', 'Version', 'LOT', 'Khối lượng', 'Trạng thái', 'Ngày tạo', 'Hành động']} rows={data.orders.map((order) => (
-          <tr key={order.id}><td>{order.orderCode || order.id}</td><td>{order.productName || order.product}</td><td>{order.formulaCode || order.originalFormulaId}</td><td>{order.formulaVersion || order.originalFormulaVersion}</td><td>{order.lot}</td><td>{kg(order.requestedWeight ?? order.quantityKg)}</td><td><span className={`flow-pill ${statusClass(order.status)}`}>{displayQcTrialText(order.status)}</span></td><td>{order.createdAt}</td><td><button className="secondary-button" onClick={() => { setDetailOrderId(order.id); setDetailTab('info') }}>Chi tiết</button></td></tr>
+        <SimpleTable tableClassName="orders-table" headers={['Mã lệnh SX', 'Sản phẩm', 'Công thức gốc', 'Version', 'LOT', 'Khối lượng', 'Máy phối trộn', 'Phiếu yêu cầu SX', 'Ghi chú', 'Trạng thái', 'Ngày tạo', 'Hành động']} rows={data.orders.map((order) => (
+          <tr key={order.id}><td>{order.orderCode || order.id}</td><td>{order.productName || order.product}</td><td>{order.formulaCode || order.originalFormulaId}</td><td>{order.formulaVersion || order.originalFormulaVersion}</td><td>{order.lot}</td><td>{kg(order.requestedWeight ?? order.quantityKg)}</td><td>{order.mixerMachine || '-'}</td><td>{order.productionRequestNo || '-'}</td><td className="ellipsis-cell" title={order.note || ''}>{order.note || '-'}</td><td><span className={`flow-pill ${statusClass(order.status)}`}>{displayQcTrialText(order.status)}</span></td><td>{order.createdAt}</td><td><button className="secondary-button" onClick={() => { setDetailOrderId(order.id); setDetailTab('info') }}>Chi tiết</button></td></tr>
         ))} />
       </section>
       {detailOrder && (

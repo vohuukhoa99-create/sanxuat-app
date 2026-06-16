@@ -464,6 +464,7 @@ tbody tr:hover {
 
 .production-form-grid input,
 .production-form-grid select,
+.production-form-grid textarea,
 .recipe-table input,
 .recipe-table select {
   width: 100%;
@@ -473,6 +474,46 @@ tbody tr:hover {
   background: #fff;
   color: #173d2d;
   padding: 8px 10px;
+}
+
+.order-create-form {
+  grid-template-columns: 1.2fr 0.8fr 1fr 1fr;
+  gap: 10px 12px;
+  align-items: end;
+  margin-bottom: 16px;
+}
+
+.order-create-form .wide-field {
+  grid-column: span 2;
+}
+
+.order-create-form input,
+.order-create-form select,
+.order-create-form textarea {
+  min-height: 38px;
+  font-size: 14px;
+}
+
+.order-create-form textarea {
+  resize: vertical;
+  min-height: 38px;
+}
+
+.orders-table {
+  min-width: 1320px;
+}
+
+.orders-table th,
+.orders-table td {
+  padding: 9px 8px;
+  font-size: 13px;
+}
+
+.ellipsis-cell {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .recipe-table input[readonly] {
