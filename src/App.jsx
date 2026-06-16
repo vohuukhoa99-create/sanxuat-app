@@ -4286,13 +4286,13 @@ function App() {
   }
 
   return (
-    <div className={`app-shell ${mobileMenuOpen ? 'mobile-menu-open' : ''}`}>
-      <div className="mobile-drawer-backdrop" onClick={() => setMobileMenuOpen(false)} />
+    <div className="app-shell">
+      {mobileMenuOpen && <div className="mobile-overlay" onClick={() => setMobileMenuOpen(false)} />}
       <Sidebar selected={page} onChange={changePage} navItems={navItems} className="desktop-sidebar" />
-      <Sidebar selected={page} onChange={changePage} navItems={navItems} className="mobile-sidebar" />
+      <Sidebar selected={page} onChange={changePage} navItems={navItems} className={`mobile-sidebar ${mobileMenuOpen ? 'mobile-open' : ''}`} />
       <main className="main-content">
         <header className="mobile-header">
-          <button type="button" className="hamburger-button" onClick={() => setMobileMenuOpen(true)} aria-label="Mở menu">☰</button>
+          <button type="button" className="mobile-menu-button" onClick={() => setMobileMenuOpen(true)} aria-label="Mở menu">☰</button>
           <div className="mobile-brand">
             <strong>SƠN HÒA BÌNH</strong>
             <span>{title}</span>
