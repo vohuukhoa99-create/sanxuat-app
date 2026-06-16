@@ -3178,70 +3178,114 @@ function FinishedGoodsPage({ data, setData }) {
 }
 
 function DashboardPage({ data }) {
-  const count = (fn) => data.orders.filter(fn).length
+  const [filters, setFilters] = useState({ fromDate: '', toDate: '', productGroup: 'all', machine: 'all', stage: 'all' })
+  const updateFilter = (field, value) => setFilters((current) => ({ ...current, [field]: value }))
   const machines = data.mixingMachines?.length ? data.mixingMachines : defaultMixingMachines
-  const runningMixingOrders = data.orders.filter((o) => o.mixing?.status === 'Active' || o.mixingStatus === 'Active')
+  const getOrderGroup = (order = {}) => String(order.productName || order.product || 'Khác').split(/[.\s-]/)[0] || 'Khác'
+  const productGroups = Array.from(new Set((data.orders || []).map(getOrderGroup))).filter(Boolean)
+  const stageOptions = [
+    ['qc1', 'QC sản xuất thử'],
+    ['weighing', 'Cân'],
+    ['mixing', 'Phối trộn'],
+    ['finished-qc', 'QC thành phẩm'],
+    ['packaging', 'Đóng gói'],
+    ['finished-goods', 'Kho TP'],
+    ['completed', 'Hoàn thành'],
+  ]
+  const filteredOrders = (data.orders || []).filter((order) => {
+    const dateText = String(order.updatedAt || order.createdAt || '').slice(0, 10)
+    const machineCode = order.mixingMachine || order.mixing?.machineCode || ''
+    if (filters.fromDate && dateText && dateText < filters.fromDate) return false
+    if (filters.toDate && dateText && dateText > filters.toDate) return false
+    if (filters.productGroup !== 'all' && getOrderGroup(order) !== filters.productGroup) return false
+    if (filters.machine !== 'all' && machineCode !== filters.machine) return false
+    if (filters.stage !== 'all' && order.stage !== filters.stage) return false
+    return true
+  })
+  const runningMixingOrders = filteredOrders.filter((o) => o.mixing?.status === 'Active' || o.mixingStatus === 'Active')
   const runningMachines = machines.filter((machine) => runningMixingOrders.some((order) => (order.mixingMachine || order.mixing?.machineCode) === machine.machineCode)).length
-  const qc2AdjustmentRows = data.orders.flatMap((order) => getQc2Adjustments(order).map((ticket) => ({ order, ticket })))
+  const qc2AdjustmentRows = filteredOrders.flatMap((order) => getQc2Adjustments(order).map((ticket) => ({ order, ticket })))
   const today = todayText()
-  const finishedGoods = normalizeFinishedGoodsData(data.finishedGoods || [])
-  const todayOutput = data.orders
-    .filter((order) => String(order.updatedAt || order.createdAt || '').startsWith(today) || String(order.mixingCompletedAt || order.mixing?.completedAt || '').startsWith(today))
-    .reduce((sum, order) => sum + num(order.quantityKg || order.requestedWeight), 0)
-  const qc2Ok = count((o) => o.qc2?.result === 'OK')
-  const qc2ColorAdjustOrders = count((o) => getQc2Adjustments(o).length > 0)
-  const qc2Orders = data.orders.filter((o) => o.qc2 || getQc2Adjustments(o).length > 0 || ['finished-qc', 'packaging', 'finished-goods', 'completed'].includes(o.stage))
+  const finishedGoods = normalizeFinishedGoodsData(data.finishedGoods || []).filter((item) => (
+    filteredOrders.some((order) => order.id === item.orderId || order.orderCode === item.orderCode)
+  ))
+  const qc2Orders = filteredOrders.filter((o) => o.qc2 || getQc2Adjustments(o).length > 0 || ['finished-qc', 'packaging', 'finished-goods', 'completed'].includes(o.stage))
   const qc2FirstPass = qc2Orders.filter((o) => o.qc2?.result === 'OK' && getQc2Adjustments(o).length === 0).length
   const firstPassRate = qc2Orders.length ? Math.round((qc2FirstPass / qc2Orders.length) * 100) : 0
-  const lowStockRawMaterials = (data.rawMaterials || []).filter((item) => num(item.weight) < 100).length
-  const waitingFinishedImport = count((o) => (o.packingStatus === 'completed' || o.packagingStatus === 'Completed' || o.stage === 'finished-goods') && !['completed', 'Completed'].includes(o.finishedGoodsStatus))
-  const waitingFinishedExport = finishedGoods.filter((item) => !item.exportedAt && !item.exportStatus).length
-  const delayedOrders = data.orders.filter((order) => ['qc1', 'weighing', 'mixing', 'finished-qc', 'packaging', 'finished-goods'].includes(order.stage) && String(order.createdAt || '').slice(0, 10) < today).length
+  const delayedOrders = filteredOrders.filter((order) => ['qc1', 'weighing', 'mixing', 'finished-qc', 'packaging', 'finished-goods'].includes(order.stage) && String(order.createdAt || '').slice(0, 10) < today).length
   const stoppedMachines = machines.filter((machine) => ['Dừng', 'Bảo trì', 'Lỗi', 'Stopped'].includes(machine.status)).length
   const repeatedFormulaAdjustments = countBy(qc2AdjustmentRows, ({ order }) => order.formulaCode || order.originalFormulaId).filter(([, value]) => value >= 2).length
-  const runningOrders = count((o) => !['completed', 'cancelled'].includes(o.stage) && !['Hoàn thành', 'Đã hủy'].includes(o.status))
-  const waitingOrders = count((o) => ['qc1', 'packaging', 'finished-goods'].includes(o.stage) || String(o.status || '').includes('Chờ'))
+  const plannedOutput = filteredOrders.reduce((sum, order) => sum + num(order.quantityKg || order.requestedWeight), 0)
+  const actualOutput = finishedGoods.reduce((sum, item) => sum + num(item.weight), 0) || filteredOrders.filter((order) => ['completed', 'finished-goods', 'packaging'].includes(order.stage)).reduce((sum, order) => sum + num(order.quantityKg || order.requestedWeight), 0)
+  const completionRate = plannedOutput ? Math.round((actualOutput / plannedOutput) * 100) : 0
+  const capacityUse = machines.length ? Math.round((runningMachines / machines.length) * 100) : 0
+  const oee = Math.round((capacityUse / 100) * Math.min(completionRate, 100) * (firstPassRate / 100))
+  const packingLogs = data.packingLogs || []
+  const materialLossKg = Math.abs(packingLogs.reduce((sum, log) => sum + num(log.differenceWeight), 0)) + qc2AdjustmentRows.reduce((sum, { ticket }) => sum + getAdjustmentItems(ticket).reduce((lineSum, item) => lineSum + Math.max(0, num(item.adjustmentKg ?? item.requiredKg)), 0), 0)
+  const productionValue = actualOutput * 45000
+  const inventoryValue = finishedGoods.reduce((sum, item) => sum + num(item.weight) * 45000, 0) + (data.rawMaterials || []).reduce((sum, item) => sum + num(item.weight) * 18000, 0)
+  const lossLimitKg = Math.max(1, plannedOutput * 0.015)
   const productionKpis = [
-    ['Lệnh đang chạy', runningOrders, 'normal'],
-    ['Lệnh chờ', waitingOrders, 'watch'],
-    ['Sản lượng hôm nay', kg(todayOutput), 'normal'],
-    ['Công suất sử dụng', `${machines.length ? Math.round((runningMachines / machines.length) * 100) : 0}%`, 'normal'],
-    ['Máy hoạt động', `${runningMachines}/${machines.length}`, 'normal'],
-  ]
-  const qualityKpis = [
-    ['Pass lần đầu', `${firstPassRate}%`, 'normal'],
-    ['QC thành phẩm đạt', qc2Ok, 'normal'],
-    ['Lệnh phải điều chỉnh', qc2ColorAdjustOrders, 'watch'],
-    ['Lệnh lỗi', count((o) => String(o.status || '').includes('FAIL') || String(o.qc2?.result || '').includes('FAIL')), 'risk'],
-  ]
-  const warehouseKpis = [
-    ['Nguyên liệu tồn thấp', lowStockRawMaterials, 'risk'],
-    ['TP chờ nhập kho', waitingFinishedImport, 'watch'],
-    ['TP chờ xuất kho', waitingFinishedExport, 'normal'],
+    ['Sản lượng thực tế', kg(actualOutput), 'normal'],
+    ['% hoàn thành kế hoạch', `${completionRate}%`, completionRate >= 90 ? 'normal' : 'watch'],
+    ['Công suất sử dụng', `${capacityUse}%`, 'normal'],
+    ['OEE', `${oee}%`, oee >= 60 ? 'normal' : 'watch'],
+    ['Hao hụt nguyên liệu', kg(materialLossKg), materialLossKg > lossLimitKg ? 'risk' : 'normal'],
+    ['Pass QC lần đầu', `${firstPassRate}%`, firstPassRate >= 85 ? 'normal' : 'watch'],
+    ['Giá trị sản xuất', `${Math.round(productionValue / 1000000).toLocaleString('vi-VN')} tr`, 'normal'],
+    ['Giá trị tồn kho', `${Math.round(inventoryValue / 1000000).toLocaleString('vi-VN')} tr`, 'normal'],
   ]
   const alertKpis = [
     ['Chậm tiến độ', delayedOrders, 'risk'],
     ['Máy dừng bất thường', stoppedMachines, 'risk'],
-    ['Công thức phải chỉnh nhiều lần', repeatedFormulaAdjustments, 'watch'],
+    ['Hao hụt vượt định mức', materialLossKg > lossLimitKg ? 1 : 0, materialLossKg > lossLimitKg ? 'risk' : 'normal'],
+    ['QC phải điều chỉnh nhiều lần', repeatedFormulaAdjustments, 'watch'],
+  ]
+  const outputByTime = countBy(filteredOrders, (order) => String(order.updatedAt || order.createdAt || '').slice(5, 10) || 'N/A', (order) => num(order.quantityKg || order.requestedWeight)).slice(-5)
+  const capacityByMachine = machines.map((machine) => {
+    const active = filteredOrders.filter((order) => (order.mixingMachine || order.mixing?.machineCode) === machine.machineCode).reduce((sum, order) => sum + num(order.quantityKg || order.requestedWeight), 0)
+    return [machine.machineCode, Math.min(100, Math.round((active / Math.max(1, num(machine.capacityKg))) * 100))]
+  })
+  const outputByGroup = countBy(filteredOrders, getOrderGroup, (order) => num(order.quantityKg || order.requestedWeight)).slice(0, 4)
+  const lossRows = [
+    ['Định mức', lossLimitKg],
+    ['Thực tế', materialLossKg],
   ]
   const renderExecutiveMetrics = (items) => items.map(([label, value, tone]) => <div className={`ceo-metric ${tone}`} key={label}><span>{label}</span><strong>{value}</strong></div>)
+  const renderBars = (items, maxValue = Math.max(1, ...items.map(([, value]) => num(value)))) => items.map(([label, value]) => (
+    <div className="ceo-bar-row" key={label}>
+      <span>{label}</span>
+      <i style={{ width: `${Math.max(4, Math.round((num(value) / maxValue) * 100))}%` }} />
+      <strong>{typeof value === 'number' ? Math.round(value).toLocaleString('vi-VN') : value}</strong>
+    </div>
+  ))
+  const renderDonutLegend = (items, total = items.reduce((sum, [, value]) => sum + num(value), 0)) => items.map(([label, value], index) => (
+    <div className="ceo-legend-row" key={label}>
+      <span className={`dot dot-${index + 1}`} />
+      <strong>{label}</strong>
+      <em>{total ? Math.round((num(value) / total) * 100) : 0}%</em>
+    </div>
+  ))
   return (
     <div className="page-content ceo-dashboard">
-      <section className="ceo-panel production">
-        <div className="ceo-panel-title"><span>01</span><h2>Tình hình sản xuất</h2></div>
-        <div className="ceo-metric-grid production">{renderExecutiveMetrics(productionKpis)}</div>
+      <section className="ceo-filter-strip">
+        <label>Từ ngày<input type="date" value={filters.fromDate} onChange={(event) => updateFilter('fromDate', event.target.value)} /></label>
+        <label>Đến ngày<input type="date" value={filters.toDate} onChange={(event) => updateFilter('toDate', event.target.value)} /></label>
+        <label>Nhóm sản phẩm<select value={filters.productGroup} onChange={(event) => updateFilter('productGroup', event.target.value)}><option value="all">Tất cả</option>{productGroups.map((group) => <option key={group} value={group}>{group}</option>)}</select></label>
+        <label>Máy<select value={filters.machine} onChange={(event) => updateFilter('machine', event.target.value)}><option value="all">Tất cả</option>{machines.map((machine) => <option key={machine.machineCode} value={machine.machineCode}>{machine.machineCode}</option>)}</select></label>
+        <label>Công đoạn<select value={filters.stage} onChange={(event) => updateFilter('stage', event.target.value)}><option value="all">Tất cả</option>{stageOptions.map(([stage, label]) => <option key={stage} value={stage}>{label}</option>)}</select></label>
       </section>
-      <section className="ceo-panel quality">
-        <div className="ceo-panel-title"><span>02</span><h2>Chất lượng</h2></div>
-        <div className="ceo-metric-grid quality">{renderExecutiveMetrics(qualityKpis)}</div>
+      <section className="ceo-kpi-strip">
+        {renderExecutiveMetrics(productionKpis)}
       </section>
-      <section className="ceo-panel warehouse">
-        <div className="ceo-panel-title"><span>03</span><h2>Kho</h2></div>
-        <div className="ceo-metric-grid warehouse">{renderExecutiveMetrics(warehouseKpis)}</div>
+      <section className="ceo-chart-grid">
+        <article className="ceo-chart-card"><h3>Sản lượng theo thời gian</h3><div className="ceo-bars">{renderBars(outputByTime)}</div></article>
+        <article className="ceo-chart-card"><h3>Công suất theo máy</h3><div className="ceo-bars">{renderBars(capacityByMachine, 100)}</div></article>
+        <article className="ceo-chart-card"><h3>Cơ cấu sản lượng</h3><div className="ceo-donut"><div className="donut-ring" /><div>{renderDonutLegend(outputByGroup)}</div></div></article>
+        <article className="ceo-chart-card"><h3>Hao hụt thực tế vs định mức</h3><div className="ceo-bars loss">{renderBars(lossRows)}</div></article>
       </section>
-      <section className="ceo-panel alerts">
-        <div className="ceo-panel-title"><span>04</span><h2>Cảnh báo điều hành</h2></div>
-        <div className="ceo-metric-grid alerts">{renderExecutiveMetrics(alertKpis)}</div>
+      <section className="ceo-alert-strip">
+        {alertKpis.map(([label, value, tone]) => <div className={`ceo-alert-item ${tone}`} key={label}><span>{label}</span><strong>{value}</strong></div>)}
       </section>
     </div>
   )
