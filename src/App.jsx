@@ -3183,64 +3183,68 @@ function DashboardPage({ data }) {
   const runningMixingOrders = data.orders.filter((o) => o.mixing?.status === 'Active' || o.mixingStatus === 'Active')
   const runningMachines = machines.filter((machine) => runningMixingOrders.some((order) => (order.mixingMachine || order.mixing?.machineCode) === machine.machineCode)).length
   const qc2AdjustmentRows = data.orders.flatMap((order) => getQc2Adjustments(order).map((ticket) => ({ order, ticket })))
-  const qc2AdjustmentItems = qc2AdjustmentRows.flatMap(({ order, ticket }) => getAdjustmentItems(ticket).map((item) => ({ ...item, order, ticket })))
-  const packingLogs = data.packingLogs || []
+  const today = todayText()
   const finishedGoods = normalizeFinishedGoodsData(data.finishedGoods || [])
-  const weighedContainers = normalizeWeighedContainers(data.weighedContainers || [])
-  const totalPackedWeight = packingLogs.reduce((sum, log) => sum + num(log.totalPackedWeight), 0)
-  const totalPackingDifference = packingLogs.reduce((sum, log) => sum + num(log.differenceWeight), 0)
-  const totalFinishedWeight = finishedGoods.reduce((sum, item) => sum + num(item.weight), 0)
-  const totalFinishedBoxes = finishedGoods.reduce((sum, item) => sum + num(item.boxes), 0)
-  const qc2Adjust = qc2AdjustmentRows.length
+  const todayOutput = data.orders
+    .filter((order) => String(order.updatedAt || order.createdAt || '').startsWith(today) || String(order.mixingCompletedAt || order.mixing?.completedAt || '').startsWith(today))
+    .reduce((sum, order) => sum + num(order.quantityKg || order.requestedWeight), 0)
   const qc2Ok = count((o) => o.qc2?.result === 'OK')
   const qc2ColorAdjustOrders = count((o) => getQc2Adjustments(o).length > 0)
   const qc2Orders = data.orders.filter((o) => o.qc2 || getQc2Adjustments(o).length > 0 || ['finished-qc', 'packaging', 'finished-goods', 'completed'].includes(o.stage))
-  const qrFailCount = (data.productionLogs || data.logs || []).filter((log) => String(log.entry || '').includes('Xác nhận QR hỗn hợp FAIL')).length
   const qc2FirstPass = qc2Orders.filter((o) => o.qc2?.result === 'OK' && getQc2Adjustments(o).length === 0).length
   const firstPassRate = qc2Orders.length ? Math.round((qc2FirstPass / qc2Orders.length) * 100) : 0
-  const adjustmentRate = qc2Orders.length ? Math.round((qc2ColorAdjustOrders / qc2Orders.length) * 100) : 0
-  const avgAdjustments = qc2Orders.length ? (qc2Adjust / qc2Orders.length).toFixed(2) : '0.00'
-  const kpis = [
-    ['Tổng số máy phối trộn', machines.length],
-    ['Máy đang chạy', runningMachines],
-    ['Máy rảnh', machines.length - runningMachines],
-    ['Công suất sử dụng', `${machines.length ? Math.round((runningMachines / machines.length) * 100) : 0}%`],
-    ['Số lệnh chờ phối trộn', count((o) => getMixingDispatchState(o).canStart)],
-    ['Số lệnh đang phối trộn', runningMixingOrders.length],
-    ['Lệnh chờ QC sản xuất thử', count((o) => o.stage === 'qc1')],
-    ['QC sản xuất thử cần điều chỉnh', count((o) => o.qc1AdjustedFormula?.length)],
-    ['Lệnh đang cân', count((o) => ['weighing', 'supplement-weighing'].includes(o.stage))],
-    ['Đang phối trộn', count((o) => ['mixing', 'mixing-supplement'].includes(o.stage))],
-    ['Số lệnh chờ QC thành phẩm', count((o) => o.stage === 'finished-qc' || o.status === 'Chờ QC thành phẩm')],
-    ['QC thành phẩm OK', qc2Ok],
-    ['Số lệnh cần chỉnh màu', qc2ColorAdjustOrders],
-    ['Số lần chỉnh màu', qc2Adjust],
-    ['Tỷ lệ Pass lần đầu', `${firstPassRate}%`],
-    ['Tỷ lệ phải điều chỉnh', `${adjustmentRate}%`],
-    ['Số lần điều chỉnh TB/lệnh', avgAdjustments],
-    ['Số lệnh chờ đóng gói', count((o) => o.stage === 'packaging' || o.status === 'Chờ đóng gói')],
-    ['Số lệnh đang đóng gói', count((o) => o.status === 'Đang đóng gói' || o.packingStatus === 'active')],
-    ['Số lệnh đã đóng gói', count((o) => o.packingStatus === 'completed' || o.packagingStatus === 'Completed')],
-    ['Tổng khối lượng đã đóng gói', kg(totalPackedWeight)],
-    ['Sai lệch đóng gói', kg(totalPackingDifference)],
-    ['Số lệnh chờ nhập kho TP', count((o) => (o.packingStatus === 'completed' || o.packagingStatus === 'Completed') && !['completed', 'Completed'].includes(o.finishedGoodsStatus))],
-    ['Số lệnh đã nhập kho TP', finishedGoods.length],
-    ['Tổng khối lượng TP nhập kho', kg(totalFinishedWeight)],
-    ['Tổng số thùng thành phẩm', totalFinishedBoxes],
-    ['Số lệnh hoàn thành', count((o) => o.stage === 'completed' || o.orderStatus === 'Hoàn thành')],
-    ['Tổng số QR hỗn hợp đã tạo', weighedContainers.length],
-    ['QR hỗn hợp Hóa đã tạo', weighedContainers.filter((item) => item.materialGroup === CHEMICAL).length],
-    ['QR hỗn hợp Rắn đã tạo', weighedContainers.filter((item) => item.materialGroup === SOLID).length],
-    ['QR hỗn hợp đã chuyển phối trộn', weighedContainers.filter((item) => item.status === 'Đã chuyển phối trộn').length],
-    ['QR hỗn hợp đã phối trộn', weighedContainers.filter((item) => item.status === 'Đã phối trộn').length],
-    ['Số lỗi xác nhận QR hỗn hợp', qrFailCount],
-    ['Lệnh nhập kho TP', count((o) => o.stage === 'finished-goods')],
-    ['Số lần chỉnh QC sản xuất thử', count((o) => o.qc1AdjustedFormula?.length)],
+  const lowStockRawMaterials = (data.rawMaterials || []).filter((item) => num(item.weight) < 100).length
+  const waitingFinishedImport = count((o) => (o.packingStatus === 'completed' || o.packagingStatus === 'Completed' || o.stage === 'finished-goods') && !['completed', 'Completed'].includes(o.finishedGoodsStatus))
+  const waitingFinishedExport = finishedGoods.filter((item) => !item.exportedAt && !item.exportStatus).length
+  const delayedOrders = data.orders.filter((order) => ['qc1', 'weighing', 'mixing', 'finished-qc', 'packaging', 'finished-goods'].includes(order.stage) && String(order.createdAt || '').slice(0, 10) < today).length
+  const stoppedMachines = machines.filter((machine) => ['Dừng', 'Bảo trì', 'Lỗi', 'Stopped'].includes(machine.status)).length
+  const repeatedFormulaAdjustments = countBy(qc2AdjustmentRows, ({ order }) => order.formulaCode || order.originalFormulaId).filter(([, value]) => value >= 2).length
+  const runningOrders = count((o) => !['completed', 'cancelled'].includes(o.stage) && !['Hoàn thành', 'Đã hủy'].includes(o.status))
+  const waitingOrders = count((o) => ['qc1', 'packaging', 'finished-goods'].includes(o.stage) || String(o.status || '').includes('Chờ'))
+  const productionKpis = [
+    ['Lệnh đang chạy', runningOrders, 'normal'],
+    ['Lệnh chờ', waitingOrders, 'watch'],
+    ['Sản lượng hôm nay', kg(todayOutput), 'normal'],
+    ['Công suất sử dụng', `${machines.length ? Math.round((runningMachines / machines.length) * 100) : 0}%`, 'normal'],
+    ['Máy hoạt động', `${runningMachines}/${machines.length}`, 'normal'],
   ]
-  const topFormula = countBy(qc2AdjustmentRows, ({ order }) => order.formulaCode || order.originalFormulaId).slice(0, 5)
-  const topMaterials = countBy(qc2AdjustmentItems, (item) => item.materialCode, (item) => Math.max(0, num(item.adjustmentKg ?? item.requiredKg))).slice(0, 5)
-  const topQc = countBy(qc2AdjustmentRows, ({ ticket }) => ticket.createdBy).slice(0, 5)
-  return <div className="page-content"><section className="executive-kpi-grid">{kpis.map(([label, value]) => <article className="executive-kpi" key={label}><span>{label}</span><strong>{value}</strong></article>)}</section><section className="panel"><h2>Pipeline V3</h2><div className="pipeline-flow">{['qc1', 'weighing', 'mixing', 'finished-qc', 'packaging', 'finished-goods', 'completed'].map((stage) => <div className="pipeline-step" key={stage}><span>{stage}</span><strong>{count((o) => o.stage === stage)}</strong><small>{kg(data.orders.filter((o) => o.stage === stage).reduce((s, o) => s + o.quantityKg, 0))}</small></div>)}</div></section><section className="dashboard-table-grid"><article className="dashboard-table-panel"><h3>Top công thức phải điều chỉnh</h3><SimpleTable headers={['Công thức', 'Số lần']} rows={topFormula.map(([name, value]) => <tr key={name}><td>{name}</td><td>{value}</td></tr>)} /></article><article className="dashboard-table-panel"><h3>Top nguyên liệu bổ sung</h3><SimpleTable headers={['Nguyên liệu', 'Kg bổ sung']} rows={topMaterials.map(([name, value]) => <tr key={name}><td>{name}</td><td>{kg(value)}</td></tr>)} /></article><article className="dashboard-table-panel"><h3>Top QC điều chỉnh</h3><SimpleTable headers={['Người điều chỉnh', 'Số phiếu']} rows={topQc.map(([name, value]) => <tr key={name}><td>{name}</td><td>{value}</td></tr>)} /></article></section></div>
+  const qualityKpis = [
+    ['Pass lần đầu', `${firstPassRate}%`, 'normal'],
+    ['QC thành phẩm đạt', qc2Ok, 'normal'],
+    ['Lệnh phải điều chỉnh', qc2ColorAdjustOrders, 'watch'],
+    ['Lệnh lỗi', count((o) => String(o.status || '').includes('FAIL') || String(o.qc2?.result || '').includes('FAIL')), 'risk'],
+  ]
+  const warehouseKpis = [
+    ['Nguyên liệu tồn thấp', lowStockRawMaterials, 'risk'],
+    ['TP chờ nhập kho', waitingFinishedImport, 'watch'],
+    ['TP chờ xuất kho', waitingFinishedExport, 'normal'],
+  ]
+  const alertKpis = [
+    ['Chậm tiến độ', delayedOrders, 'risk'],
+    ['Máy dừng bất thường', stoppedMachines, 'risk'],
+    ['Công thức phải chỉnh nhiều lần', repeatedFormulaAdjustments, 'watch'],
+  ]
+  const renderExecutiveMetrics = (items) => items.map(([label, value, tone]) => <div className={`ceo-metric ${tone}`} key={label}><span>{label}</span><strong>{value}</strong></div>)
+  return (
+    <div className="page-content ceo-dashboard">
+      <section className="ceo-panel production">
+        <div className="ceo-panel-title"><span>01</span><h2>Tình hình sản xuất</h2></div>
+        <div className="ceo-metric-grid production">{renderExecutiveMetrics(productionKpis)}</div>
+      </section>
+      <section className="ceo-panel quality">
+        <div className="ceo-panel-title"><span>02</span><h2>Chất lượng</h2></div>
+        <div className="ceo-metric-grid quality">{renderExecutiveMetrics(qualityKpis)}</div>
+      </section>
+      <section className="ceo-panel warehouse">
+        <div className="ceo-panel-title"><span>03</span><h2>Kho</h2></div>
+        <div className="ceo-metric-grid warehouse">{renderExecutiveMetrics(warehouseKpis)}</div>
+      </section>
+      <section className="ceo-panel alerts">
+        <div className="ceo-panel-title"><span>04</span><h2>Cảnh báo điều hành</h2></div>
+        <div className="ceo-metric-grid alerts">{renderExecutiveMetrics(alertKpis)}</div>
+      </section>
+    </div>
+  )
 }
 
 function normalizeProductionHistory(data = {}) {
@@ -3505,9 +3509,118 @@ function ProductionHistoryModal({ record, tab, setTab, onClose }) {
 }
 
 function ReportsPage({ data }) {
+  const [tab, setTab] = useState('production')
+  const orders = normalizeProductionOrders(data.orders || [], data.formulas || [])
   const packingLogs = data.packingLogs || []
   const finishedGoods = normalizeFinishedGoodsData(data.finishedGoods || [])
-  return <div className="page-content"><DashboardPage data={data} /><section className="panel"><h2>Báo cáo lệnh sản xuất V3</h2><SimpleTable headers={['Lệnh', 'Sản phẩm', 'LOT', 'Công thức', 'QC sản xuất thử', 'QC2', 'Đóng gói', 'Kho TP', 'Trạng thái']} rows={data.orders.map((order) => <tr key={order.id}><td>{order.id}</td><td>{order.product}</td><td>{order.lot}</td><td>{order.originalFormulaId}/{order.originalFormulaVersion}</td><td>{displayQcTrialText(order.qc1Result) || '-'}</td><td>{order.qc2?.result || '-'}</td><td>{order.packaging ? 'Đã đóng gói' : '-'}</td><td>{order.stage === 'completed' ? 'Đã nhập' : '-'}</td><td>{displayQcTrialText(order.status)}</td></tr>)} /></section><section className="panel"><h2>Báo cáo đóng gói</h2><SimpleTable headers={['Phiếu đóng gói', 'Lệnh SX', 'Sản phẩm', 'LOT', 'Khối lượng QC2', 'Đã đóng gói', 'Còn lại', 'Sai lệch', 'Người đóng gói', 'Trạng thái']} rows={packingLogs.map((log) => <tr key={log.packingId}><td>{log.packingId}</td><td>{log.orderCode || log.orderId}</td><td>{log.productName}</td><td>{log.lot}</td><td>{kg(log.qc2FinalWeight)}</td><td>{kg(log.totalPackedWeight)}</td><td>{kg(log.remainingWeight)}</td><td>{kg(log.differenceWeight)}</td><td>{log.packer || '-'}</td><td>{log.status === 'completed' ? 'Hoàn thành' : log.status}</td></tr>)} /></section><section className="panel"><h2>Báo cáo kho thành phẩm</h2><SimpleTable headers={['Mã TP', 'Lệnh SX', 'Sản phẩm', 'LOT', 'Quy cách', 'Số thùng', 'Khối lượng', 'Ngày nhập', 'Vị trí', 'Người nhập']} rows={finishedGoods.map((item) => <tr key={item.id}><td>{item.finishedCode}</td><td>{item.orderCode || item.orderId}</td><td>{item.productName}</td><td>{item.lot}</td><td>{item.spec}</td><td>{item.boxes}</td><td>{kg(item.weight)}</td><td>{item.importDate}</td><td>{item.location}</td><td>{item.receiver || '-'}</td></tr>)} /></section></div>
+  const machines = data.mixingMachines?.length ? data.mixingMachines : defaultMixingMachines
+  const weighedContainers = normalizeWeighedContainers(data.weighedContainers || [])
+  const qc2AdjustmentRows = orders.flatMap((order) => getQc2Adjustments(order).map((ticket) => ({ order, ticket })))
+  const qc2AdjustmentItems = qc2AdjustmentRows.flatMap(({ order, ticket }) => getAdjustmentItems(ticket).map((item) => ({ ...item, order, ticket })))
+  const topFormula = countBy(qc2AdjustmentRows, ({ order }) => order.formulaCode || order.originalFormulaId).slice(0, 5)
+  const topMaterials = countBy(qc2AdjustmentItems, (item) => item.materialCode, (item) => Math.max(0, num(item.adjustmentKg ?? item.requiredKg))).slice(0, 5)
+  const topQc = countBy(qc2AdjustmentRows, ({ ticket }) => ticket.createdBy).slice(0, 5)
+  const qrFailLogs = (data.productionLogs || data.logs || []).filter((log) => String(log.entry || '').includes('QR') && String(log.entry || '').includes('FAIL'))
+  const pipelineStages = ['qc1', 'weighing', 'mixing', 'finished-qc', 'packaging', 'finished-goods', 'completed']
+  const tabs = [
+    ['production', 'Sản xuất'],
+    ['qc', 'QC'],
+    ['warehouse', 'Kho'],
+    ['machines', 'Máy móc'],
+    ['qr', 'Truy xuất QR'],
+  ]
+  const reportKpis = {
+    production: [
+      ['Tổng lệnh', orders.length],
+      ['Đang chạy', orders.filter((order) => !['completed', 'cancelled'].includes(order.stage)).length],
+      ['Hoàn thành', orders.filter((order) => order.stage === 'completed').length],
+      ['Tổng sản lượng', kg(orders.reduce((sum, order) => sum + num(order.quantityKg), 0))],
+    ],
+    qc: [
+      ['Lệnh có QC2', orders.filter((order) => order.qc2 || getQc2Adjustments(order).length).length],
+      ['QC thành phẩm OK', orders.filter((order) => order.qc2?.result === 'OK').length],
+      ['Lệnh chỉnh màu', orders.filter((order) => getQc2Adjustments(order).length > 0).length],
+      ['Lần chỉnh màu', qc2AdjustmentRows.length],
+    ],
+    warehouse: [
+      ['Phiếu đóng gói', packingLogs.length],
+      ['Kg đã đóng gói', kg(packingLogs.reduce((sum, log) => sum + num(log.totalPackedWeight), 0))],
+      ['Mã TP nhập kho', finishedGoods.length],
+      ['Kg TP nhập kho', kg(finishedGoods.reduce((sum, item) => sum + num(item.weight), 0))],
+    ],
+    machines: [
+      ['Tổng máy', machines.length],
+      ['Máy đang chạy', machines.filter((machine) => orders.some((order) => (order.mixingMachine || order.mixing?.machineCode) === machine.machineCode && (order.mixing?.status === 'Active' || order.mixingStatus === 'Active'))).length],
+      ['Lệnh chờ phối trộn', orders.filter((order) => getMixingDispatchState(order).canStart).length],
+      ['Lệnh đang phối trộn', orders.filter((order) => ['mixing', 'mixing-supplement'].includes(order.stage)).length],
+    ],
+    qr: [
+      ['QR hỗn hợp', weighedContainers.length],
+      ['QR hóa', weighedContainers.filter((item) => item.materialGroup === CHEMICAL).length],
+      ['QR rắn', weighedContainers.filter((item) => item.materialGroup === SOLID).length],
+      ['Lỗi QR', qrFailLogs.length],
+    ],
+  }
+  const renderKpis = (items) => <section className="report-kpi-grid compact">{items.map(([label, value]) => <article className="report-kpi-card" key={label}><span>{label}</span><strong>{value}</strong></article>)}</section>
+  const renderTab = () => {
+    if (tab === 'production') return (
+      <>
+        {renderKpis(reportKpis.production)}
+        <section className="panel"><h2>Pipeline sản xuất</h2><div className="pipeline-flow report-pipeline">{pipelineStages.map((stage) => <div className="pipeline-step" key={stage}><span>{stage}</span><strong>{orders.filter((order) => order.stage === stage).length}</strong><small>{kg(orders.filter((order) => order.stage === stage).reduce((sum, order) => sum + num(order.quantityKg), 0))}</small></div>)}</div></section>
+        <section className="panel report-table-panel"><h2>Báo cáo lệnh sản xuất V3</h2><SimpleTable tableClassName="report-wide-table" headers={['Lệnh', 'Sản phẩm', 'LOT', 'Công thức', 'QC sản xuất thử', 'QC2', 'Đóng gói', 'Kho TP', 'Trạng thái']} rows={orders.map((order) => <tr key={order.id}><td>{order.id}</td><td>{order.product}</td><td>{order.lot}</td><td>{order.originalFormulaId}/{order.originalFormulaVersion}</td><td>{displayQcTrialText(order.qc1Result) || '-'}</td><td>{order.qc2?.result || '-'}</td><td>{order.packaging ? 'Đã đóng gói' : '-'}</td><td>{order.stage === 'completed' ? 'Đã nhập' : '-'}</td><td>{displayQcTrialText(order.status)}</td></tr>)} /></section>
+      </>
+    )
+    if (tab === 'qc') return (
+      <>
+        {renderKpis(reportKpis.qc)}
+        <section className="report-analysis-grid">
+          <article className="panel report-table-panel"><h3>Top công thức phải điều chỉnh</h3><SimpleTable headers={['Công thức', 'Số lần']} rows={topFormula.map(([name, value]) => <tr key={name}><td>{name}</td><td>{value}</td></tr>)} /></article>
+          <article className="panel report-table-panel"><h3>Top nguyên liệu bổ sung</h3><SimpleTable headers={['Nguyên liệu', 'Kg bổ sung']} rows={topMaterials.map(([name, value]) => <tr key={name}><td>{name}</td><td>{kg(value)}</td></tr>)} /></article>
+          <article className="panel report-table-panel"><h3>Top QC điều chỉnh</h3><SimpleTable headers={['Người điều chỉnh', 'Số phiếu']} rows={topQc.map(([name, value]) => <tr key={name || '-'}><td>{name || '-'}</td><td>{value}</td></tr>)} /></article>
+        </section>
+        <section className="panel report-table-panel"><h2>Chi tiết QC</h2><SimpleTable tableClassName="report-wide-table" headers={['Lệnh', 'LOT', 'QC1', 'QC2', 'Số lần chỉnh màu', 'Kg bổ sung', 'Trạng thái']} rows={orders.map((order) => {
+          const adjustments = getQc2Adjustments(order)
+          const totalSupplement = adjustments.reduce((sum, ticket) => sum + getAdjustmentItems(ticket).reduce((lineSum, item) => lineSum + Math.max(0, num(item.adjustmentKg ?? item.requiredKg)), 0), 0)
+          return <tr key={order.id}><td>{order.id}</td><td>{order.lot}</td><td>{displayQcTrialText(order.qc1Result) || '-'}</td><td>{order.qc2?.result || '-'}</td><td>{adjustments.length}</td><td>{kg(totalSupplement)}</td><td>{displayQcTrialText(order.status)}</td></tr>
+        })} /></section>
+      </>
+    )
+    if (tab === 'warehouse') return (
+      <>
+        {renderKpis(reportKpis.warehouse)}
+        <section className="panel report-table-panel"><h2>Báo cáo đóng gói</h2><SimpleTable tableClassName="report-wide-table" headers={['Phiếu đóng gói', 'Lệnh SX', 'Sản phẩm', 'LOT', 'Khối lượng QC2', 'Đã đóng gói', 'Còn lại', 'Sai lệch', 'Người đóng gói', 'Trạng thái']} rows={packingLogs.map((log) => <tr key={log.packingId}><td>{log.packingId}</td><td>{log.orderCode || log.orderId}</td><td>{log.productName}</td><td>{log.lot}</td><td>{kg(log.qc2FinalWeight)}</td><td>{kg(log.totalPackedWeight)}</td><td>{kg(log.remainingWeight)}</td><td>{kg(log.differenceWeight)}</td><td>{log.packer || '-'}</td><td>{log.status === 'completed' ? 'Hoàn thành' : log.status}</td></tr>)} /></section>
+        <section className="panel report-table-panel"><h2>Báo cáo kho thành phẩm</h2><SimpleTable tableClassName="report-wide-table" headers={['Mã TP', 'Lệnh SX', 'Sản phẩm', 'LOT', 'Quy cách', 'Số thùng', 'Khối lượng', 'Ngày nhập', 'Vị trí', 'Người nhập']} rows={finishedGoods.map((item) => <tr key={item.id}><td>{item.finishedCode}</td><td>{item.orderCode || item.orderId}</td><td>{item.productName}</td><td>{item.lot}</td><td>{item.spec}</td><td>{item.boxes}</td><td>{kg(item.weight)}</td><td>{item.importDate}</td><td>{item.location}</td><td>{item.receiver || '-'}</td></tr>)} /></section>
+      </>
+    )
+    if (tab === 'machines') return (
+      <>
+        {renderKpis(reportKpis.machines)}
+        <section className="panel report-table-panel"><h2>Máy phối trộn</h2><SimpleTable headers={['Mã máy', 'Tên máy', 'Công suất', 'Trạng thái', 'Lệnh đang chạy']} rows={machines.map((machine) => {
+          const activeOrder = orders.find((order) => (order.mixingMachine || order.mixing?.machineCode) === machine.machineCode && (order.mixing?.status === 'Active' || order.mixingStatus === 'Active'))
+          return <tr key={machine.machineCode}><td>{machine.machineCode}</td><td>{machine.machineName}</td><td>{kg(machine.capacityKg)}</td><td>{machine.status}</td><td>{activeOrder?.id || '-'}</td></tr>
+        })} /></section>
+        <section className="panel report-table-panel"><h2>Lệnh phối trộn</h2><SimpleTable tableClassName="report-wide-table" headers={['Lệnh', 'Sản phẩm', 'LOT', 'Máy', 'Trạng thái phối trộn', 'Bắt đầu', 'Hoàn thành']} rows={orders.filter((order) => order.mixing || order.mixingStatus || ['mixing', 'mixing-supplement'].includes(order.stage)).map((order) => <tr key={order.id}><td>{order.id}</td><td>{order.product}</td><td>{order.lot}</td><td>{order.mixingMachine || order.mixing?.machineCode || '-'}</td><td>{order.mixingStatus || order.mixing?.status || '-'}</td><td>{order.mixingStartAt || order.mixing?.startedAt || '-'}</td><td>{order.mixingCompletedAt || order.mixing?.completedAt || '-'}</td></tr>)} /></section>
+      </>
+    )
+    return (
+      <>
+        {renderKpis(reportKpis.qr)}
+        <section className="panel report-table-panel"><h2>QR hỗn hợp đã tạo</h2><SimpleTable tableClassName="report-wide-table" headers={['QR', 'Lệnh', 'Nhóm', 'Khối lượng', 'Trạng thái', 'Thời gian']} rows={weighedContainers.map((item) => <tr key={item.id || item.qrCode}><td>{item.qrCode || item.id}</td><td>{item.orderCode || item.orderId || '-'}</td><td>{item.materialGroup || '-'}</td><td>{kg(item.totalWeight || item.weight)}</td><td>{item.status || '-'}</td><td>{item.createdAt || item.confirmedAt || '-'}</td></tr>)} /></section>
+        <section className="panel report-table-panel"><h2>Lỗi xác nhận QR</h2><SimpleTable headers={['Thời gian', 'Nội dung']} rows={qrFailLogs.map((log) => <tr key={log.id}><td>{log.time || '-'}</td><td>{log.entry}</td></tr>)} /></section>
+      </>
+    )
+  }
+  return (
+    <div className="page-content reports-page">
+      <section className="panel report-shell">
+        <div className="section-heading-row">
+          <div><span className="section-kicker">Phân tích chi tiết</span><h2>Báo cáo sản xuất</h2></div>
+        </div>
+        <div className="log-tabs report-tabs">{tabs.map(([id, label]) => <button key={id} className={tab === id ? 'active' : ''} onClick={() => setTab(id)}>{label}</button>)}</div>
+      </section>
+      {renderTab()}
+    </div>
+  )
 }
 
 function AdminPage({ authData, setAuthData }) {
