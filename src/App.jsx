@@ -300,10 +300,10 @@ function LoginPage({ onLogin, error }) {
   )
 }
 
-function SimpleTable({ headers, rows, empty = 'Không có dữ liệu.' }) {
+function SimpleTable({ headers, rows, empty = 'Không có dữ liệu.', tableClassName = '' }) {
   return (
     <div className="table-wrapper">
-      <table>
+      <table className={tableClassName}>
         <thead><tr>{headers.map((header) => <th key={header}>{header}</th>)}</tr></thead>
         <tbody>
           {rows}
@@ -1584,11 +1584,11 @@ function QC1({ data, setData }) {
               </div>
 
               <div className="qc-trial-table-wrapper">
-                <SimpleTable headers={['Mã VT', 'Tên VT', 'Nhóm', 'Theo lệnh', 'Giá trị sau QC', 'Chênh lệch', 'Lý do điều chỉnh', 'Ghi chú']} rows={getEffectiveFormula(activeOrder).map((item) => {
+                <SimpleTable tableClassName="qc-trial-table" headers={['Mã VT', 'Tên VT', 'Nhóm', 'Theo lệnh', 'Giá trị sau QC', 'Chênh lệch', 'Lý do điều chỉnh']} rows={getEffectiveFormula(activeOrder).flatMap((item) => {
                   const adjustedValue = item.qcAdjustKg === '' || item.qcAdjustKg == null ? item.requiredKg : num(item.qcAdjustKg)
                   const diff = Number((adjustedValue - num(item.requiredKg)).toFixed(3))
                   return (
-                    <tr key={item.id}>
+                    [<tr key={`${item.id}-main`} className="qc-trial-main-row">
                       <td>{item.materialCode} {item.isQc1Added && <span className="qc-added-badge">NVL bổ sung</span>}</td>
                       <td>{item.materialName || item.materialCode}</td>
                       <td>{item.materialGroup}</td>
@@ -1596,8 +1596,10 @@ function QC1({ data, setData }) {
                       <td><input className="qc-value-input" type="number" value={item.qcAdjustKg === '' || item.qcAdjustKg == null ? item.requiredKg : item.qcAdjustKg} onChange={(event) => updateItem(activeOrder.id, item.id, 'qcAdjustKg', event.target.value)} /></td>
                       <td><span className={`qc-diff-badge ${diff > 0 ? 'diff-up' : diff < 0 ? 'diff-down' : 'diff-same'}`}>{diff > 0 ? '+' : ''}{kg(diff)}</span></td>
                       <td><input className="qc-reason-input" value={item.qcAdjustReason || ''} onChange={(event) => updateItem(activeOrder.id, item.id, 'qcAdjustReason', event.target.value)} /></td>
-                      <td><input className="qc-note-input" value={item.note} onChange={(event) => updateItem(activeOrder.id, item.id, 'note', event.target.value)} /></td>
-                    </tr>
+                    </tr>,
+                    <tr key={`${item.id}-note`} className="qc-trial-note-row">
+                      <td colSpan="7"><label><span>Ghi chú</span><input className="qc-note-input" value={item.note} onChange={(event) => updateItem(activeOrder.id, item.id, 'note', event.target.value)} /></label></td>
+                    </tr>]
                   )
                 })} />
               </div>
