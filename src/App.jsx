@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import * as XLSX from 'xlsx'
 import { jsPDF } from 'jspdf'
 import autoTable from 'jspdf-autotable'
@@ -1195,8 +1195,44 @@ function RawMaterialsPage({ data, setData }) {
   )
 }
 
+const emptyFormulaLine = () => ({
+  id: uid('fml'),
+  materialCode: '',
+  materialName: '',
+  materialGroup: CHEMICAL,
+  ratioPercent: 0,
+})
+
+const emptyMasterFormulaDraft = () => ({
+  code: '',
+  product: '',
+  productGroup: '',
+  version: 'V1.0',
+  effectiveDate: todayText(),
+  note: '',
+  items: [emptyFormulaLine()],
+})
+
+const formulaTotalPercent = (items = []) => Number(items.reduce((sum, item) => sum + num(item.ratioPercent), 0).toFixed(3))
+const formulaHasDuplicateMaterials = (items = []) => {
+  const codes = items.map((item) => String(item.materialCode || '').trim()).filter(Boolean)
+  return new Set(codes).size !== codes.length
+}
+
+const readExcelCell = (row, keys) => {
+  for (const key of keys) {
+    const value = row[key]
+    if (value !== undefined && value !== null && String(value).trim() !== '') return value
+  }
+  return ''
+}
+
 function FormulasPage({ data, setData }) {
   const [selectedId, setSelectedId] = useState(data.formulas[0]?.id || '')
+  const [createOpen, setCreateOpen] = useState(false)
+  const [formulaDraft, setFormulaDraft] = useState(emptyMasterFormulaDraft)
+  const [formulaMessage, setFormulaMessage] = useState('')
+  const importFormulaRef = useRef(null)
   const selected = data.formulas.find((item) => item.id === selectedId) || data.formulas[0]
   const versions = (data.formulaVersions || []).filter((version) => version.formulaId === selectedId)
   const approvedVersions = versions.filter((version) => version.status === 'Đã duyệt')
@@ -1213,6 +1249,148 @@ function FormulasPage({ data, setData }) {
   })
   const adjustedTotal = Number(comparisonItems.reduce((sum, item) => sum + num(item.adjustedPercent), 0).toFixed(3))
   const canApprove = adjustedTotal === 100
+  const draftTotal = formulaTotalPercent(formulaDraft.items)
+  const draftDuplicateMaterials = formulaHasDuplicateMaterials(formulaDraft.items)
+  const draftCodeExists = (data.formulas || []).some((formula) => formula.code?.trim().toLowerCase() === formulaDraft.code.trim().toLowerCase() || formula.id?.trim().toLowerCase() === formulaDraft.code.trim().toLowerCase())
+  const canSaveFormula = formulaDraft.code.trim()
+    && formulaDraft.product.trim()
+    && formulaDraft.items.length > 0
+    && formulaDraft.items.every((item) => item.materialCode.trim() && item.materialName.trim() && item.materialGroup.trim())
+    && draftTotal === 100
+    && !draftDuplicateMaterials
+    && !draftCodeExists
+
+  const openCreateFormula = () => {
+    setFormulaDraft(emptyMasterFormulaDraft())
+    setFormulaMessage('')
+    setCreateOpen(true)
+  }
+
+  const updateFormulaDraft = (field, value) => setFormulaDraft((current) => ({ ...current, [field]: value }))
+  const updateFormulaLine = (lineId, field, value) => setFormulaDraft((current) => ({
+    ...current,
+    items: current.items.map((item) => item.id === lineId ? { ...item, [field]: field === 'ratioPercent' ? num(value) : value } : item),
+  }))
+  const addFormulaLine = () => setFormulaDraft((current) => ({ ...current, items: [...current.items, emptyFormulaLine()] }))
+  const removeFormulaLine = (lineId) => setFormulaDraft((current) => ({
+    ...current,
+    items: current.items.length > 1 ? current.items.filter((item) => item.id !== lineId) : current.items,
+  }))
+
+  const saveMasterFormula = () => {
+    if (!canSaveFormula) return
+    const formula = {
+      id: formulaDraft.code.trim(),
+      code: formulaDraft.code.trim(),
+      product: formulaDraft.product.trim(),
+      productGroup: formulaDraft.productGroup.trim(),
+      version: formulaDraft.version.trim() || 'V1.0',
+      effectiveDate: formulaDraft.effectiveDate || todayText(),
+      note: formulaDraft.note.trim(),
+      createdBy: 'Phòng kỹ thuật',
+      checkedBy: '',
+      approvedBy: '',
+      createdAt: nowText(),
+      items: formulaDraft.items.map((item, index) => ({
+        id: uid('fml'),
+        no: index + 1,
+        materialCode: item.materialCode.trim(),
+        materialName: item.materialName.trim(),
+        materialGroup: item.materialGroup.trim(),
+        ratioPercent: num(item.ratioPercent),
+      })),
+    }
+    setData((current) => addLogToData({ ...current, formulas: [formula, ...(current.formulas || [])] }, `Tạo công thức gốc ${formula.code}.`))
+    setSelectedId(formula.id)
+    setSelectedVersionId('')
+    setDraft(null)
+    setCreateOpen(false)
+    setFormulaMessage(`Đã tạo công thức ${formula.code}.`)
+  }
+
+  const downloadFormulaTemplate = () => {
+    const rows = [
+      { 'Mã CT': 'HNS-NEW-001', 'Tên SP': 'HNS Demo', 'Nhóm sản phẩm': 'Sơn', Version: 'V1.0', 'Ngày hiệu lực': todayText(), 'Ghi chú': '', 'Mã VT': 'PASTE 02', 'Tên VT': 'Paste nền 02', 'Nhóm': CHEMICAL, 'Tỷ lệ %': 4.61 },
+      { 'Mã CT': 'HNS-NEW-001', 'Tên SP': 'HNS Demo', 'Nhóm sản phẩm': 'Sơn', Version: 'V1.0', 'Ngày hiệu lực': todayText(), 'Ghi chú': '', 'Mã VT': 'R91', 'Tên VT': 'Bột R91', 'Nhóm': SOLID, 'Tỷ lệ %': 95.39 },
+    ]
+    const book = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(book, XLSX.utils.json_to_sheet(rows), 'Cong thuc goc')
+    XLSX.writeFile(book, 'mau-cong-thuc-goc.xlsx')
+  }
+
+  const importFormulaExcel = (file) => {
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = (event) => {
+      try {
+        const workbook = XLSX.read(event.target.result, { type: 'array' })
+        const sheet = workbook.Sheets[workbook.SheetNames[0]]
+        const rows = XLSX.utils.sheet_to_json(sheet)
+        const grouped = rows.reduce((acc, row) => {
+          const code = String(readExcelCell(row, ['Mã CT', 'Ma CT', 'Mã công thức', 'Ma cong thuc'])).trim()
+          if (!code) return acc
+          if (!acc[code]) {
+            acc[code] = {
+              code,
+              product: String(readExcelCell(row, ['Tên SP', 'Ten SP', 'Tên sản phẩm', 'Ten san pham'])).trim(),
+              productGroup: String(readExcelCell(row, ['Nhóm sản phẩm', 'Nhom san pham'])).trim(),
+              version: String(readExcelCell(row, ['Version', 'Phiên bản', 'Phien ban'])).trim() || 'V1.0',
+              effectiveDate: String(readExcelCell(row, ['Ngày hiệu lực', 'Ngay hieu luc'])).trim() || todayText(),
+              note: String(readExcelCell(row, ['Ghi chú', 'Ghi chu'])).trim(),
+              items: [],
+            }
+          }
+          acc[code].items.push({
+            id: uid('fml'),
+            materialCode: String(readExcelCell(row, ['Mã VT', 'Ma VT', 'Mã vật tư', 'Ma vat tu'])).trim(),
+            materialName: String(readExcelCell(row, ['Tên VT', 'Ten VT', 'Tên vật tư', 'Ten vat tu'])).trim(),
+            materialGroup: String(readExcelCell(row, ['Nhóm', 'Nhom'])).trim(),
+            ratioPercent: num(readExcelCell(row, ['Tỷ lệ %', 'Ty le %', 'Tỉ lệ %', 'Ti le %'])),
+          })
+          return acc
+        }, {})
+        const existingCodes = new Set((data.formulas || []).flatMap((formula) => [formula.code, formula.id].filter(Boolean).map((value) => value.trim().toLowerCase())))
+        const imported = Object.values(grouped)
+        const errors = []
+        imported.forEach((formula) => {
+          if (existingCodes.has(formula.code.toLowerCase())) errors.push(`Trùng mã công thức ${formula.code}`)
+          if (!formula.product) errors.push(`Thiếu Tên SP cho ${formula.code}`)
+          if (formulaTotalPercent(formula.items) !== 100) errors.push(`Tổng tỷ lệ của ${formula.code} chưa bằng 100% (${formulaTotalPercent(formula.items)}%)`)
+          if (formulaHasDuplicateMaterials(formula.items)) errors.push(`Trùng vật tư trong ${formula.code}`)
+          if (formula.items.some((item) => !item.materialCode || !item.materialName || !item.materialGroup)) errors.push(`Thiếu thông tin vật tư trong ${formula.code}`)
+        })
+        if (!imported.length) errors.push('File không có dòng công thức hợp lệ.')
+        if (errors.length) {
+          setFormulaMessage(errors.join(' | '))
+          return
+        }
+        const formulas = imported.map((formula) => ({
+          id: formula.code,
+          code: formula.code,
+          product: formula.product,
+          productGroup: formula.productGroup,
+          version: formula.version,
+          effectiveDate: formula.effectiveDate,
+          note: formula.note,
+          createdBy: 'Phòng kỹ thuật',
+          checkedBy: '',
+          approvedBy: '',
+          createdAt: nowText(),
+          items: formula.items.map((item, index) => ({ ...item, id: uid('fml'), no: index + 1 })),
+        }))
+        setData((current) => addLogToData({ ...current, formulas: [...formulas, ...(current.formulas || [])] }, `Tải ${formulas.length} công thức gốc từ Excel.`))
+        setSelectedId(formulas[0].id)
+        setSelectedVersionId('')
+        setDraft(null)
+        setFormulaMessage(`Đã tải ${formulas.length} công thức từ Excel.`)
+      } catch (error) {
+        setFormulaMessage(`Không đọc được file Excel: ${error.message}`)
+      } finally {
+        if (importFormulaRef.current) importFormulaRef.current.value = ''
+      }
+    }
+    reader.readAsArrayBuffer(file)
+  }
 
   const startAdjustment = () => {
     if (!selected) return
@@ -1279,11 +1457,16 @@ function FormulasPage({ data, setData }) {
         <div className="panel-header-row">
           <div><h2>Công thức gốc</h2><p className="panel-text">Thư viện công thức chuẩn do Phòng Kỹ thuật ban hành. Tỷ lệ gốc không bị ghi đè; mọi thay đổi được lưu thành phiên bản điều chỉnh riêng để so sánh.</p></div>
           <div className="action-row">
+            <button className="primary-button" onClick={openCreateFormula}>Tạo công thức gốc</button>
+            <button className="secondary-button" onClick={() => importFormulaRef.current?.click()}>Tải công thức Excel</button>
+            <button className="secondary-button" onClick={downloadFormulaTemplate}>Tải file mẫu</button>
             <button className="primary-button" onClick={startAdjustment}>Tạo phiên bản điều chỉnh</button>
             <button className="secondary-button" onClick={() => setSelectedVersionId(latestApproved?.id || '')}>So sánh với công thức gốc</button>
             <button className="secondary-button" onClick={restoreBase}>Khôi phục về công thức gốc</button>
           </div>
         </div>
+        <input ref={importFormulaRef} type="file" accept=".xlsx,.xls" hidden onChange={(event) => importFormulaExcel(event.target.files?.[0])} />
+        {formulaMessage && <div className={formulaMessage.startsWith('Đã') ? 'formula-ratio-ok' : 'formula-ratio-alert'}>{formulaMessage}</div>}
         <div className="log-tabs">{data.formulas.map((formula) => <button className={formula.id === selectedId ? 'active' : ''} key={formula.id} onClick={() => { setSelectedId(formula.id); setSelectedVersionId(''); setDraft(null) }}>{formula.code}</button>)}</div>
       </section>
       <section className="panel">
@@ -1314,6 +1497,41 @@ function FormulasPage({ data, setData }) {
         ))} />
         {draft && <div className="modal-actions"><button className="secondary-button" onClick={() => setDraft(null)}>Hủy</button><button className="primary-button" disabled={!canApprove} onClick={saveDraft}>Lưu phiên bản điều chỉnh</button></div>}
       </section>
+      {createOpen && (
+        <div className="modal-backdrop" role="presentation">
+          <div className="production-modal formula-create-modal" role="dialog" aria-modal="true">
+            <div className="modal-header">
+              <div><h2>Tạo công thức gốc</h2><p className="panel-text">Nhập thông tin công thức và tỷ lệ vật tư. Chỉ lưu khi tổng tỷ lệ bằng 100%.</p></div>
+              <button className="secondary-button" onClick={() => setCreateOpen(false)}>Đóng</button>
+            </div>
+            <div className="production-form-grid">
+              <label>Mã công thức<input value={formulaDraft.code} onChange={(event) => updateFormulaDraft('code', event.target.value)} /></label>
+              <label>Tên sản phẩm<input value={formulaDraft.product} onChange={(event) => updateFormulaDraft('product', event.target.value)} /></label>
+              <label>Nhóm sản phẩm<input value={formulaDraft.productGroup} onChange={(event) => updateFormulaDraft('productGroup', event.target.value)} /></label>
+              <label>Version<input value={formulaDraft.version} onChange={(event) => updateFormulaDraft('version', event.target.value)} /></label>
+              <label>Ngày hiệu lực<input type="date" value={formulaDraft.effectiveDate} onChange={(event) => updateFormulaDraft('effectiveDate', event.target.value)} /></label>
+              <label className="wide-field">Ghi chú<input value={formulaDraft.note} onChange={(event) => updateFormulaDraft('note', event.target.value)} /></label>
+            </div>
+            <div className={draftTotal === 100 && !draftDuplicateMaterials && !draftCodeExists ? 'formula-ratio-ok' : 'formula-ratio-alert'}>
+              Tổng tỷ lệ: {draftTotal}%{draftCodeExists ? ' - Trùng mã công thức' : ''}{draftDuplicateMaterials ? ' - Trùng vật tư' : ''}
+            </div>
+            <SimpleTable headers={['Mã vật tư', 'Tên vật tư', 'Nhóm', 'Tỷ lệ %', '']} rows={formulaDraft.items.map((item) => (
+              <tr key={item.id}>
+                <td><input value={item.materialCode} onChange={(event) => updateFormulaLine(item.id, 'materialCode', event.target.value)} /></td>
+                <td><input value={item.materialName} onChange={(event) => updateFormulaLine(item.id, 'materialName', event.target.value)} /></td>
+                <td><input value={item.materialGroup} onChange={(event) => updateFormulaLine(item.id, 'materialGroup', event.target.value)} /></td>
+                <td><input type="number" value={item.ratioPercent} onChange={(event) => updateFormulaLine(item.id, 'ratioPercent', event.target.value)} /></td>
+                <td><button className="danger-button" onClick={() => removeFormulaLine(item.id)} disabled={formulaDraft.items.length === 1}>Xóa</button></td>
+              </tr>
+            ))} />
+            <div className="modal-actions">
+              <button className="secondary-button" onClick={addFormulaLine}>Thêm dòng</button>
+              <button className="secondary-button" onClick={() => setCreateOpen(false)}>Hủy</button>
+              <button className="primary-button" disabled={!canSaveFormula} onClick={saveMasterFormula}>Lưu công thức</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

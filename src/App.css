@@ -406,6 +406,21 @@ tbody tr:hover {
   padding: 22px;
 }
 
+.formula-create-modal {
+  display: grid;
+  gap: 16px;
+  padding: 22px;
+}
+
+.formula-create-modal .table-wrapper {
+  border: 1px solid rgba(7, 34, 26, 0.08);
+  border-radius: 8px;
+}
+
+.formula-create-modal table {
+  min-width: 860px;
+}
+
 .order-detail-modal {
   display: grid;
   gap: 18px;
