@@ -1722,6 +1722,23 @@ tbody tr:hover {
   padding: 8px 10px;
 }
 
+.user-admin-table {
+  min-width: 1100px;
+}
+
+.user-action-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.user-action-group button {
+  min-height: 34px;
+  padding: 7px 10px;
+  white-space: nowrap;
+}
+
 .permission-matrix-panel {
   display: grid;
   gap: 4px;
@@ -7879,4 +7896,3 @@ body,
   padding: 5px 8px !important;
   box-sizing: border-box !important;
 }
-

@@ -1,5 +1,6 @@
 export const defaultNavItems = [
   { id: 'dashboard', label: 'Dashboard' },
+  { id: 'raw-materials', label: 'Kho nguyên liệu' },
   { id: 'formulas', label: 'Công thức gốc' },
   { id: 'orders', label: 'Lệnh sản xuất' },
   { id: 'qc', label: 'QC sản xuất thử' },
