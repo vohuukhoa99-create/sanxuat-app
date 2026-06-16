@@ -1586,14 +1586,14 @@ function QC1({ data, setData }) {
               <div className="qc-trial-table-wrapper">
                 <table className="qc-trial-table compact-qc-table">
                   <colgroup>
-                    <col style={{ width: '9%' }} />
+                    <col style={{ width: '8%' }} />
                     <col style={{ width: '10%' }} />
                     <col style={{ width: '7%' }} />
                     <col style={{ width: '9%' }} />
-                    <col style={{ width: '12%' }} />
+                    <col style={{ width: '14%' }} />
                     <col style={{ width: '10%' }} />
+                    <col style={{ width: '20%' }} />
                     <col style={{ width: '22%' }} />
-                    <col style={{ width: '21%' }} />
                   </colgroup>
                   <thead>
                     <tr>

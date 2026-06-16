@@ -7443,3 +7443,61 @@ body,
   display: none !important;
 }
 
+/* QC trial desktop fit: narrower queue, wider table, readable headers. */
+.qc-trial-page .qc-sample-layout {
+  grid-template-columns: minmax(190px, 24%) minmax(0, 76%) !important;
+  gap: 8px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+}
+
+.qc-trial-page .qc-queue {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+}
+
+.qc-trial-page .qc-active-panel {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+
+.qc-trial-page .compact-qc-table {
+  font-size: 11px !important;
+}
+
+.qc-trial-page .compact-qc-table thead th {
+  height: 34px !important;
+  padding: 3px 4px !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  line-height: 1.2 !important;
+  text-align: center !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+}
+
+.qc-trial-page .compact-qc-table tbody td {
+  height: 28px !important;
+  padding: 3px 4px !important;
+  font-size: 11px !important;
+}
+
+.qc-trial-page .qc-trial-table input {
+  height: 26px !important;
+  min-height: 26px !important;
+  font-size: 11px !important;
+}
+
+.qc-trial-page .qc-diff-badge {
+  height: 24px !important;
+  min-height: 24px !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  padding: 3px 5px !important;
+  font-size: 11px !important;
+}
+
