@@ -3447,11 +3447,152 @@ function ReportsPage({ data }) {
 }
 
 function AdminPage({ authData, setAuthData }) {
-  const togglePermission = (role, id) => {
-    const permissions = authData.roles[role] || []
-    setAuthData({ ...authData, roles: { ...authData.roles, [role]: permissions.includes(id) ? permissions.filter((item) => item !== id) : [...permissions, id] } })
+  const [showCreateRole, setShowCreateRole] = useState(false)
+  const [newRoleName, setNewRoleName] = useState('')
+  const [notice, setNotice] = useState('')
+  const baseRoles = [
+    ['Admin', 'Admin'],
+    ['Kho nguyên liệu', 'Kho NL'],
+    ['Phòng kỹ thuật', 'Kỹ thuật'],
+    ['Phòng sản xuất', 'Sản xuất'],
+    ['QC', 'QC'],
+    ['Tổ cân hóa', 'Cân hóa'],
+    ['Tổ cân rắn', 'Cân rắn'],
+    ['Tổ phối trộn', 'Phối trộn'],
+    ['Đóng gói', 'Đóng gói'],
+    ['Kho thành phẩm', 'Kho TP'],
+  ]
+  const baseRoleNames = baseRoles.map(([role]) => role)
+  const extraRoles = Object.keys(authData.roles || {})
+    .filter((role) => !baseRoleNames.includes(role) && !['Quản đốc', 'Ban giám đốc'].includes(role))
+    .map((role) => [role, role])
+  const roles = [
+    ...baseRoles.filter(([role]) => authData.roles?.[role]),
+    ...extraRoles,
+  ]
+  const menuItems = defaultNavItems.filter((item) => item.id !== 'raw-materials')
+  const allPermissionIds = menuItems.map((item) => item.id)
+  const withAdminPermissions = (nextAuth) => ({
+    ...nextAuth,
+    roles: {
+      ...nextAuth.roles,
+      Admin: defaultNavItems.map((item) => item.id),
+    },
+  })
+  const updateAuth = (nextAuth, message = 'Đã cập nhật phân quyền.') => {
+    setAuthData(withAdminPermissions(nextAuth))
+    setNotice(message)
   }
-  return <div className="page-content admin-page"><section className="panel"><h2>Phân quyền V3</h2><div className="role-permission-grid">{Object.entries(authData.roles).map(([role, permissions]) => <article className="role-card" key={role}><strong>{role}</strong>{defaultNavItems.map((item) => <label key={item.id}><input type="checkbox" checked={permissions.includes(item.id)} onChange={() => togglePermission(role, item.id)} />{item.label}</label>)}</article>)}</div></section></div>
+  const togglePermission = (role, id) => {
+    if (role === 'Admin') return
+    const permissions = authData.roles[role] || []
+    const nextPermissions = permissions.includes(id) ? permissions.filter((item) => item !== id) : [...permissions, id]
+    updateAuth({ ...authData, roles: { ...authData.roles, [role]: nextPermissions } })
+  }
+  const setRolePermissions = (role, permissions) => {
+    if (role === 'Admin') return
+    updateAuth({ ...authData, roles: { ...authData.roles, [role]: permissions } })
+  }
+  const createRole = () => {
+    const role = newRoleName.trim()
+    if (!role || authData.roles[role]) return
+    updateAuth({ ...authData, roles: { ...authData.roles, [role]: [] } }, `Đã tạo vai trò ${role}.`)
+    setNewRoleName('')
+    setShowCreateRole(false)
+  }
+  const renameRole = (role) => {
+    if (role === 'Admin') return
+    const nextName = window.prompt('Tên vai trò mới:', role)?.trim()
+    if (!nextName || nextName === role || authData.roles[nextName]) return
+    const nextRoles = {}
+    Object.entries(authData.roles).forEach(([name, permissions]) => {
+      nextRoles[name === role ? nextName : name] = permissions
+    })
+    updateAuth({
+      ...authData,
+      roles: nextRoles,
+      users: (authData.users || []).map((user) => user.role === role ? { ...user, role: nextName, department: user.department === role ? nextName : user.department } : user),
+    }, `Đã đổi tên vai trò ${role} thành ${nextName}.`)
+  }
+  const deleteRole = (role) => {
+    if (role === 'Admin') return
+    if (!window.confirm(`Xóa vai trò ${role}? Người dùng thuộc vai trò này sẽ không còn quyền menu cho tới khi đổi vai trò.`)) return
+    const nextRoles = Object.fromEntries(Object.entries(authData.roles).filter(([name]) => name !== role))
+    updateAuth({ ...authData, roles: nextRoles }, `Đã xóa vai trò ${role}.`)
+  }
+  const savePermissions = () => {
+    localStorage.setItem(AUTH_KEY, JSON.stringify(withAdminPermissions(authData)))
+    setNotice('Đã lưu phân quyền. Thay đổi có hiệu lực khi người dùng đăng nhập lại.')
+  }
+  return (
+    <div className="page-content admin-page">
+      <section className="panel permission-matrix-panel">
+        <div className="section-heading-row">
+          <div><span className="section-kicker">Quản trị hệ thống</span><h2>Phân quyền V3</h2></div>
+          <div className="permission-toolbar">
+            <button className="secondary-button" type="button" onClick={() => setShowCreateRole(true)}>+ Vai trò</button>
+            <button className="primary-button" type="button" onClick={savePermissions}>Lưu phân quyền</button>
+          </div>
+        </div>
+        {notice && <p className="empty-alert">{notice}</p>}
+        <div className="permission-matrix-wrapper">
+          <table className="permission-matrix">
+            <thead>
+              <tr>
+                <th>Chức năng</th>
+                {roles.map(([role, label]) => (
+                  <th key={role}>
+                    <div className="role-column-header">
+                      <strong>{label}</strong>
+                      <span>
+                        <button type="button" className="icon-button" disabled={role === 'Admin'} onClick={() => renameRole(role)} aria-label={`Sửa ${role}`}>✎</button>
+                        <button type="button" className="icon-button danger-icon" disabled={role === 'Admin'} onClick={() => deleteRole(role)} aria-label={`Xóa ${role}`}>×</button>
+                      </span>
+                    </div>
+                    <div className="role-quick-actions">
+                      <button type="button" disabled={role === 'Admin'} onClick={() => setRolePermissions(role, allPermissionIds)}>✓ Chọn tất cả</button>
+                      <button type="button" disabled={role === 'Admin'} onClick={() => setRolePermissions(role, [])}>✕ Bỏ tất cả</button>
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {menuItems.map((item) => (
+                <tr key={item.id}>
+                  <td>{item.label}</td>
+                  {roles.map(([role]) => {
+                    const checked = role === 'Admin' || (authData.roles[role] || []).includes(item.id)
+                    const disabled = role === 'Admin'
+                    return (
+                      <td key={`${role}-${item.id}`}>
+                        <input type="checkbox" checked={checked} disabled={disabled} onChange={() => togglePermission(role, item.id)} />
+                      </td>
+                    )
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+      {showCreateRole && (
+        <div className="modal-backdrop" role="presentation">
+          <div className="mixing-modal role-modal" role="dialog" aria-modal="true">
+            <div className="modal-header">
+              <div><span className="section-kicker">Vai trò</span><h2>Tạo vai trò mới</h2></div>
+              <button type="button" className="icon-button" onClick={() => setShowCreateRole(false)} aria-label="Đóng">×</button>
+            </div>
+            <label>Tên vai trò mới<input value={newRoleName} onChange={(event) => setNewRoleName(event.target.value)} autoFocus /></label>
+            <div className="modal-actions">
+              <button type="button" className="secondary-button" onClick={() => setShowCreateRole(false)}>Hủy</button>
+              <button type="button" className="primary-button" onClick={createRole}>Tạo</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
 }
 
 const pageMeta = {

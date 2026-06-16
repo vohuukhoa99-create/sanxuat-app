@@ -812,3 +812,48 @@ warning: in the working copy of 'src/index.css', LF will be replaced by CRLF the
  }[m
  [m
  html {[m
+warning: in the working copy of 'src/App.jsx', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/src/App.jsx b/src/App.jsx[m
+[1mindex 98b8019..b449d3c 100644[m
+[1m--- a/src/App.jsx[m
+[1m+++ b/src/App.jsx[m
+[36m@@ -300,10 +300,10 @@[m [mfunction LoginPage({ onLogin, error }) {[m
+   )[m
+ }[m
+ [m
+[31m-function SimpleTable({ headers, rows, empty = 'Không có dữ liệu.' }) {[m
+[32m+[m[32mfunction SimpleTable({ headers, rows, empty = 'Không có dữ liệu.', tableClassName = '' }) {[m
+   return ([m
+     <div className="table-wrapper">[m
+[31m-      <table>[m
+[32m+[m[32m      <table className={tableClassName}>[m
+         <thead><tr>{headers.map((header) => <th key={header}>{header}</th>)}</tr></thead>[m
+         <tbody>[m
+           {rows}[m
+[36m@@ -1584,11 +1584,11 @@[m [mfunction QC1({ data, setData }) {[m
+               </div>[m
+ [m
+               <div className="qc-trial-table-wrapper">[m
+[31m-                <SimpleTable headers={['Mã VT', 'Tên VT', 'Nhóm', 'Theo lệnh', 'Giá trị sau QC', 'Chênh lệch', 'Lý do điều chỉnh', 'Ghi chú']} rows={getEffectiveFormula(activeOrder).map((item) => {[m
+[32m+[m[32m                <SimpleTable tableClassName="qc-trial-table" headers={['Mã VT', 'Tên VT', 'Nhóm', 'Theo lệnh', 'Giá trị sau QC', 'Chênh lệch', 'Lý do điều chỉnh']} rows={getEffectiveFormula(activeOrder).flatMap((item) => {[m
+                   const adjustedValue = item.qcAdjustKg === '' || item.qcAdjustKg == null ? item.requiredKg : num(item.qcAdjustKg)[m
+                   const diff = Number((adjustedValue - num(item.requiredKg)).toFixed(3))[m
+                   return ([m
+[31m-                    <tr key={item.id}>[m
+[32m+[m[32m                    [<tr key={`${item.id}-main`} className="qc-trial-main-row">[m
+                       <td>{item.materialCode} {item.isQc1Added && <span className="qc-added-badge">NVL bổ sung</span>}</td>[m
+                       <td>{item.materialName || item.materialCode}</td>[m
+                       <td>{item.materialGroup}</td>[m
+[36m@@ -1596,8 +1596,10 @@[m [mfunction QC1({ data, setData }) {[m
+                       <td><input className="qc-value-input" type="number" value={item.qcAdjustKg === '' || item.qcAdjustKg == null ? item.requiredKg : item.qcAdjustKg} onChange={(event) => updateItem(activeOrder.id, item.id, 'qcAdjustKg', event.target.value)} /></td>[m
+                       <td><span className={`qc-diff-badge ${diff > 0 ? 'diff-up' : diff < 0 ? 'diff-down' : 'diff-same'}`}>{diff > 0 ? '+' : ''}{kg(diff)}</span></td>[m
+                       <td><input className="qc-reason-input" value={item.qcAdjustReason || ''} onChange={(event) => updateItem(activeOrder.id, item.id, 'qcAdjustReason', event.target.value)} /></td>[m
+[31m-                      <td><input className="qc-note-input" value={item.note} onChange={(event) => updateItem(activeOrder.id, item.id, 'note', event.target.value)} /></td>[m
+[31m-                    </tr>[m
+[32m+[m[32m                    </tr>,[m
+[32m+[m[32m                    <tr key={`${item.id}-note`} className="qc-trial-note-row">[m
+[32m+[m[32m                      <td colSpan="7"><label><span>Ghi chú</span><input className="qc-note-input" value={item.note} onChange={(event) => updateItem(activeOrder.id, item.id, 'note', event.target.value)} /></label></td>[m
+[32m+[m[32m                    </tr>][m
+                   )[m
+                 })} />[m
+               </div>[m
