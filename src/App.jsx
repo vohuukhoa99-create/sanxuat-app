@@ -350,12 +350,6 @@ function qc2AttemptCount(order, data = {}) {
   return Math.max(resultLogs, getQc2Adjustments(order).length + (order.qc2 ? 1 : 0))
 }
 
-function qc2SupplementTotal(order) {
-  return getQc2Adjustments(order).reduce((sum, adjustment) => (
-    sum + getAdjustmentItems(adjustment).reduce((itemSum, item) => itemSum + Math.max(0, num(item.adjustmentKg ?? item.requiredKg)), 0)
-  ), 0)
-}
-
 function countBy(rows, keyFn, valueFn = () => 1) {
   const totals = rows.reduce((map, row) => {
     const key = keyFn(row) || 'Không xác định'
@@ -1569,11 +1563,11 @@ function QC1({ data, setData }) {
           {!activeOrder && <div className="empty-alert">Không có lệnh QC sản xuất thử đang chờ xử lý.</div>}
           {activeOrder && (
             <>
-              <div className="section-heading-row">
-                <div>
+              <div className="qc-trial-header">
+                <div className="qc-trial-info">
                   <span className="section-kicker">Đang QC sản xuất thử</span>
                   <h2>Đang QC sản xuất thử</h2>
-                  <div className="qc-order-summary">
+                  <div className="qc-trial-summary-grid">
                     <div><span>Mã lệnh SX</span><strong>{activeOrder.orderCode || activeOrder.id}</strong></div>
                     <div><span>Sản phẩm</span><strong>{activeOrder.productName || activeOrder.product}</strong></div>
                     <div><span>Công thức gốc</span><strong>{activeOrder.formulaCode || activeOrder.originalFormulaId} / {activeOrder.formulaVersion || activeOrder.originalFormulaVersion}</strong></div>
@@ -1582,14 +1576,14 @@ function QC1({ data, setData }) {
                     <div><span>Khách hàng</span><strong>{activeOrder.customer || '-'}</strong></div>
                   </div>
                 </div>
-                <div className="action-row touch-actions">
+                <div className="qc-trial-action-bar">
                   {!hasChanges && <button className="primary-button touch-button" onClick={() => approve(activeOrder, false)}>Xác nhận sản xuất thử đạt</button>}
                   {hasChanges && <button className="primary-button touch-button" onClick={() => approve(activeOrder, true)}>Lưu điều chỉnh và duyệt sản xuất</button>}
                   <button className="secondary-button touch-button" onClick={() => setShowAddMaterial(true)}>Thêm NVL</button>
                 </div>
               </div>
 
-              <div className="qc-sample-table">
+              <div className="qc-trial-table-wrapper">
                 <SimpleTable headers={['Mã VT', 'Tên VT', 'Nhóm', 'Theo lệnh', 'Giá trị sau QC', 'Chênh lệch', 'Lý do điều chỉnh', 'Ghi chú']} rows={getEffectiveFormula(activeOrder).map((item) => {
                   const adjustedValue = item.qcAdjustKg === '' || item.qcAdjustKg == null ? item.requiredKg : num(item.qcAdjustKg)
                   const diff = Number((adjustedValue - num(item.requiredKg)).toFixed(3))
@@ -1601,7 +1595,7 @@ function QC1({ data, setData }) {
                       <td>{kg(item.requiredKg)}</td>
                       <td><input className="qc-value-input" type="number" value={item.qcAdjustKg === '' || item.qcAdjustKg == null ? item.requiredKg : item.qcAdjustKg} onChange={(event) => updateItem(activeOrder.id, item.id, 'qcAdjustKg', event.target.value)} /></td>
                       <td><span className={`qc-diff-badge ${diff > 0 ? 'diff-up' : diff < 0 ? 'diff-down' : 'diff-same'}`}>{diff > 0 ? '+' : ''}{kg(diff)}</span></td>
-                      <td><input className="qc-note-input" value={item.qcAdjustReason || ''} onChange={(event) => updateItem(activeOrder.id, item.id, 'qcAdjustReason', event.target.value)} /></td>
+                      <td><input className="qc-reason-input" value={item.qcAdjustReason || ''} onChange={(event) => updateItem(activeOrder.id, item.id, 'qcAdjustReason', event.target.value)} /></td>
                       <td><input className="qc-note-input" value={item.note} onChange={(event) => updateItem(activeOrder.id, item.id, 'note', event.target.value)} /></td>
                     </tr>
                   )
@@ -3503,7 +3497,8 @@ function App() {
     return session ? loadStored(AUTH_KEY, defaultAuth).users.find((user) => user.username === session.username) : null
   })
   const [loginError, setLoginError] = useState('')
-  const [selectedPage, setSelectedPage] = useState('dashboard')
+  const initialPage = new URLSearchParams(window.location.search).get('page') || 'dashboard'
+  const [selectedPage, setSelectedPage] = useState(initialPage)
 
   useEffect(() => {
     const orders = normalizeProductionOrders(data.orders || [], data.formulas || [])
