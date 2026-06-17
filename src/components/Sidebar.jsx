@@ -17,14 +17,14 @@ export function Sidebar({
       {isMobile ? (
         <>
           <div className="mobile-drawer-header">
-            <div className="mobile-drawer-brand">
+            <div className="header-brand">
               <span className="mobile-logo-box">HB</span>
-              <div>
-                <div className="mobile-drawer-title">Sơn Hòa Bình</div>
-                <div className="mobile-drawer-subtitle">Hệ thống quản lý sản xuất V3</div>
+              <div className="header-brand-text mobile-title-box">
+                <div className="header-brand-title mobile-drawer-title">Sơn Hòa Bình</div>
+                <div className="header-brand-subtitle mobile-drawer-subtitle">Hệ thống quản lý sản xuất V3</div>
               </div>
+              <button type="button" className="mobile-drawer-close" onClick={onClose} aria-label="Đóng menu">×</button>
             </div>
-            <button type="button" className="mobile-drawer-close" onClick={onClose} aria-label="Đóng menu">×</button>
           </div>
           <div className="mobile-user-box">
             <div className="mobile-user-name">{user?.fullName || user?.username}</div>
