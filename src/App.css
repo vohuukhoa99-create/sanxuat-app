@@ -10153,3 +10153,232 @@ body,
     gap: 8px !important;
   }
 }
+
+@media (min-width: 769px) {
+  .qc-trial-page.qc-sample-page:not(.qc2-page) > .qc-trial-layout,
+  .qc-trial-page.qc-sample-page:not(.qc2-page) > .qc-trial-panel.qc-sample-layout,
+  .qc-trial-layout,
+  .qc-layout {
+    display: grid !important;
+    grid-template-columns: 280px minmax(0, 1fr) !important;
+    gap: 12px !important;
+    align-items: start !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .qc-trial-page.qc-sample-page:not(.qc2-page) > .qc-trial-layout > .qc-queue,
+  .qc-trial-page.qc-sample-page:not(.qc2-page) > .qc-trial-panel.qc-sample-layout > .qc-queue,
+  .qc-left-panel,
+  .qc-waiting-panel,
+  .qc-queue {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 280px !important;
+    padding: 12px !important;
+    overflow: visible !important;
+  }
+
+  .qc-left-panel h2,
+  .qc-left-panel h3,
+  .qc-waiting-panel h2,
+  .qc-waiting-panel h3,
+  .qc-queue h2,
+  .qc-queue h3 {
+    font-size: 15px !important;
+    line-height: 1.3 !important;
+    margin: 0 0 8px !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+  }
+
+  .qc-queue-group {
+    gap: 8px !important;
+    margin-top: 10px !important;
+  }
+
+  .qc-order-card,
+  .qc-queue-item {
+    display: block !important;
+    width: 100% !important;
+    min-height: auto !important;
+    height: auto !important;
+    padding: 10px 12px !important;
+    margin-bottom: 8px !important;
+    line-height: 1.35 !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+  }
+
+  .qc-order-card strong,
+  .qc-queue-item strong {
+    display: block !important;
+    font-size: 13px !important;
+    line-height: 1.3 !important;
+    margin-bottom: 4px !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+  }
+
+  .qc-order-card span,
+  .qc-order-card p,
+  .qc-queue-item span,
+  .qc-queue-item p {
+    display: block !important;
+    font-size: 12px !important;
+    line-height: 1.35 !important;
+    margin: 2px 0 !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+  }
+
+  .qc-active-panel {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .qc-trial-header {
+    gap: 12px !important;
+  }
+
+  .qc-summary-grid,
+  .qc-info-grid,
+  .qc-trial-page .qc-trial-info-grid,
+  .qc-trial-page .qc-trial-summary-grid,
+  .qc-trial-page.qc-sample-page:not(.qc2-page) .qc-trial-summary-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(150px, 1fr)) !important;
+    gap: 10px !important;
+    width: 100% !important;
+    max-width: 760px !important;
+  }
+
+  .qc-summary-card,
+  .qc-info-card,
+  .qc-trial-page .qc-info-card,
+  .qc-trial-page .qc-trial-summary-grid > div,
+  .qc-trial-page.qc-sample-page:not(.qc2-page) .qc-trial-summary-grid > div {
+    min-height: 64px !important;
+    height: auto !important;
+    padding: 10px 12px !important;
+    border-radius: 10px !important;
+    gap: 6px !important;
+  }
+
+  .qc-summary-card label,
+  .qc-info-card label,
+  .qc-summary-card .label,
+  .qc-trial-page .qc-info-card span,
+  .qc-trial-page .qc-trial-summary-grid span,
+  .qc-trial-page.qc-sample-page:not(.qc2-page) .qc-trial-summary-grid span {
+    font-size: 12px !important;
+    line-height: 1.25 !important;
+    margin-bottom: 0 !important;
+  }
+
+  .qc-summary-card strong,
+  .qc-info-card strong,
+  .qc-summary-card .value,
+  .qc-trial-page .qc-info-card strong,
+  .qc-trial-page .qc-trial-summary-grid strong,
+  .qc-trial-page.qc-sample-page:not(.qc2-page) .qc-trial-summary-grid strong {
+    font-size: 13px !important;
+    line-height: 1.3 !important;
+  }
+
+  .qc-trial-table-wrapper,
+  .qc-table-wrapper,
+  .qc-sample-table,
+  .qc-trial-page.qc-sample-page:not(.qc2-page) .qc-trial-table-wrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+  }
+
+  .qc-table,
+  .qc-trial-table,
+  .compact-qc-table,
+  .qc-trial-page.qc-sample-page:not(.qc2-page) .qc-trial-table-wrapper > table.qc-trial-table.compact-qc-table {
+    width: 100% !important;
+    min-width: 860px !important;
+    table-layout: fixed !important;
+  }
+
+  .qc-table th,
+  .qc-table td,
+  .qc-trial-table th,
+  .qc-trial-table td,
+  .compact-qc-table th,
+  .compact-qc-table td,
+  .qc-trial-page.qc-sample-page:not(.qc2-page) .qc-trial-table-wrapper > table.qc-trial-table.compact-qc-table thead th.qc-trial-th,
+  .qc-trial-page.qc-sample-page:not(.qc2-page) .qc-trial-table-wrapper > table.qc-trial-table.compact-qc-table tbody td {
+    height: auto !important;
+    padding: 7px 8px !important;
+    font-size: 12px !important;
+    line-height: 1.25 !important;
+  }
+
+  .qc-table input,
+  .qc-trial-table input,
+  .compact-qc-table input,
+  .qc-trial-page.qc-sample-page:not(.qc2-page) .qc-trial-table-wrapper > table.qc-trial-table.compact-qc-table input {
+    height: 32px !important;
+    min-height: 32px !important;
+    font-size: 12px !important;
+    padding: 6px 8px !important;
+  }
+
+  .qc-table .reason-input,
+  .qc-table .note-input,
+  .qc-reason-input,
+  .qc-note-input {
+    min-width: 130px !important;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .qc-trial-page.qc-sample-page:not(.qc2-page) > .qc-trial-layout,
+  .qc-trial-page.qc-sample-page:not(.qc2-page) > .qc-trial-panel.qc-sample-layout,
+  .qc-trial-layout,
+  .qc-layout {
+    grid-template-columns: 240px minmax(0, 1fr) !important;
+  }
+
+  .qc-trial-page.qc-sample-page:not(.qc2-page) > .qc-trial-layout > .qc-queue,
+  .qc-trial-page.qc-sample-page:not(.qc2-page) > .qc-trial-panel.qc-sample-layout > .qc-queue,
+  .qc-left-panel,
+  .qc-waiting-panel,
+  .qc-queue {
+    max-width: 240px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .qc-trial-layout,
+  .qc-layout,
+  .qc-sample-layout,
+  .qc-trial-page.qc-sample-page:not(.qc2-page) > .qc-trial-layout,
+  .qc-trial-page.qc-sample-page:not(.qc2-page) > .qc-trial-panel.qc-sample-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+  .qc-left-panel,
+  .qc-waiting-panel,
+  .qc-queue {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  .qc-summary-grid,
+  .qc-info-grid,
+  .qc-trial-summary-grid,
+  .qc-trial-info-grid {
+    grid-template-columns: 1fr !important;
+    max-width: 100% !important;
+  }
+}
