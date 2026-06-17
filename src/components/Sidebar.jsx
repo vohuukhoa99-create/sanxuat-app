@@ -20,7 +20,7 @@ export function Sidebar({
             <img
               src="/logo-sonhoabinh.png"
               alt="Sơn Hòa Bình"
-              className="mobile-sidebar-logo"
+              className="sidebar-brand-logo mobile-sidebar-logo"
             />
             <div className="mobile-sidebar-brand mobile-title-box">
               <h2 className="mobile-drawer-title">Sơn Hòa Bình</h2>
@@ -41,7 +41,10 @@ export function Sidebar({
             alt="Sơn Hòa Bình"
             className="sidebar-brand-logo"
           />
-          <span className="sidebar-brand-text">SƠN HÒA BÌNH</span>
+          <div className="sidebar-brand-text">
+            <span className="sidebar-brand-title">SƠN HÒA BÌNH</span>
+            <span className="sidebar-brand-subtitle">Hệ thống quản lý sản xuất</span>
+          </div>
         </div>
       )}
 

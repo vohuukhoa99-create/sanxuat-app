@@ -22,25 +22,40 @@
   color: #fff;
   font-size: 1.2rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
   white-space: nowrap;
   margin-bottom: 28px;
 }
 
 .sidebar-brand-logo {
-  width: 36px;
-  height: 36px;
+  width: 46px;
+  height: 46px;
   object-fit: contain;
-  flex-shrink: 0;
   background: #fff;
-  border-radius: 8px;
-  padding: 3px;
+  border-radius: 10px;
+  padding: 4px;
+  flex-shrink: 0;
 }
 
 .sidebar-brand-text {
-  overflow: hidden;
-  text-overflow: ellipsis;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.sidebar-brand-title {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.sidebar-brand-subtitle {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 12px;
+  line-height: 1.3;
   white-space: nowrap;
 }
 
@@ -9518,21 +9533,42 @@ body,
   font-weight: 700 !important;
   white-space: nowrap !important;
   min-width: 0 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
 }
 
 .sidebar-brand-logo {
-  width: 36px !important;
-  height: 36px !important;
+  width: 46px !important;
+  height: 46px !important;
   object-fit: contain !important;
   flex-shrink: 0 !important;
   background: #fff !important;
-  border-radius: 8px !important;
-  padding: 3px !important;
+  border-radius: 10px !important;
+  padding: 4px !important;
 }
 
 .sidebar-brand-text {
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  min-width: 0 !important;
+}
+
+.sidebar-brand-title {
+  color: #fff !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.02em !important;
+  line-height: 1.2 !important;
+  white-space: nowrap !important;
+  word-break: normal !important;
+  overflow-wrap: normal !important;
+}
+
+.sidebar-brand-subtitle {
+  color: rgba(255, 255, 255, 0.75) !important;
+  font-size: 12px !important;
+  line-height: 1.3 !important;
   white-space: nowrap !important;
   word-break: normal !important;
   overflow-wrap: normal !important;
@@ -9569,5 +9605,13 @@ body,
     white-space: nowrap !important;
     word-break: normal !important;
     overflow-wrap: normal !important;
+  }
+
+  .mobile-sidebar-logo.sidebar-brand-logo {
+    width: 64px !important;
+    height: 64px !important;
+    flex: 0 0 64px !important;
+    border-radius: 12px !important;
+    padding: 4px !important;
   }
 }
