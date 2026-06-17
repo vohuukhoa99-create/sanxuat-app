@@ -1182,16 +1182,28 @@ function RawMaterialsPage({ data, setData }) {
     <div className="page-content">
       <section className="panel">
         <div className="panel-header-row"><div><h2>Kho nguyên liệu</h2><p className="panel-text">Nhập NVL, sinh QR/Barcode demo, in QR và lưu localStorage.</p></div></div>
-        <div className="v3-grid two">
-          <div className="v3-form">
-            {[
-              ['Mã vật tư', 'materialCode'], ['Tên vật tư', 'materialName'], ['Lô nhập', 'lot'], ['Nhà cung cấp', 'supplier'], ['Khối lượng', 'weight'], ['Đơn vị tính', 'unit'],
-            ].map(([label, field]) => <label key={field}>{label}<input type={field === 'weight' ? 'number' : 'text'} value={form[field]} onChange={(event) => setForm({ ...form, [field]: event.target.value })} /></label>)}
-            <label>Nhóm vật tư<select value={form.materialGroup} onChange={(event) => setForm({ ...form, materialGroup: event.target.value })}><option>{CHEMICAL}</option><option>{SOLID}</option></select></label>
-            <label>Ngày nhập<input type="date" value={form.importDate} onChange={(event) => setForm({ ...form, importDate: event.target.value })} /></label>
-            <div className="action-row"><button className="primary-button" onClick={save}>Lưu nhập kho</button><button className="secondary-button" onClick={printQr}>In QR demo</button></div>
+        <div className="material-entry-layout">
+          <div className="material-form-area">
+            <div className="material-form-grid">
+              <div className="material-form-column">
+                <label className="material-form-field">Mã vật tư *<input value={form.materialCode} onChange={(event) => setForm({ ...form, materialCode: event.target.value })} /></label>
+                <label className="material-form-field">Lô nhập<input value={form.lot} onChange={(event) => setForm({ ...form, lot: event.target.value })} /></label>
+                <label className="material-form-field">Nhà cung cấp *<input value={form.supplier} onChange={(event) => setForm({ ...form, supplier: event.target.value })} /></label>
+                <label className="material-form-field">Nhóm vật tư *<select value={form.materialGroup} onChange={(event) => setForm({ ...form, materialGroup: event.target.value })}><option>{CHEMICAL}</option><option>{SOLID}</option></select></label>
+              </div>
+              <div className="material-form-column">
+                <label className="material-form-field">Tên vật tư *<input value={form.materialName} onChange={(event) => setForm({ ...form, materialName: event.target.value })} /></label>
+                <label className="material-form-field">Khối lượng *<input type="number" value={form.weight} onChange={(event) => setForm({ ...form, weight: event.target.value })} /></label>
+                <label className="material-form-field">Đơn vị tính *<input value={form.unit} onChange={(event) => setForm({ ...form, unit: event.target.value })} /></label>
+                <label className="material-form-field">Ngày nhập *<input type="date" value={form.importDate} onChange={(event) => setForm({ ...form, importDate: event.target.value })} /></label>
+              </div>
+            </div>
+            <div className="material-form-actions">
+              <button className="primary-button" onClick={save}>Lưu nhập kho</button>
+              <button className="secondary-button" onClick={printQr}>In QR demo</button>
+            </div>
           </div>
-          <div className="qr-preview-panel"><PseudoQr value={qrValue} /><code>{qrValue}</code></div>
+          <div className="qr-preview-panel material-qr-panel"><PseudoQr value={qrValue} /><code>{qrValue}</code></div>
         </div>
       </section>
       <section className="panel">
