@@ -3399,25 +3399,47 @@ function FinishedGoodsPage({ data, setData }) {
           <button className="primary-button" onClick={createDemoData}>Tạo dữ liệu demo kho TP</button>
         </div>
         {notice && <div className="process-alert success-alert">{notice}</div>}
-        <SimpleTable headers={['Mã lệnh SX', 'Sản phẩm', 'LOT', 'Khách hàng', 'Khối lượng sau QC thành phẩm', 'Tổng khối lượng đã đóng gói', 'Quy cách đóng gói', 'Số thùng', 'Người đóng gói', 'Thời gian hoàn tất đóng gói', 'Hành động']} rows={waitingOrders.map((order) => {
-          const packingLog = getLatestPackingLog(order, packingLogs)
-          const details = packingLog?.packingDetails || order.packaging?.details || []
-          return (
-            <tr key={order.id}>
-              <td>{order.orderCode || order.id}</td>
-              <td>{order.productName || order.product}</td>
-              <td>{order.lot}</td>
-              <td>{order.customer || '-'}</td>
-              <td>{kg(qc2FinalWeight(order))}</td>
-              <td>{kg(packingLog?.totalPackedWeight || order.packaging?.totalPackedWeight || 0)}</td>
-              <td>{packingSpecSummary(details)}</td>
-              <td>{totalPackingBoxes(details)}</td>
-              <td>{packingLog?.packer || order.packaging?.packer || '-'}</td>
-              <td>{packingLog?.completedAt || order.packaging?.completedAt || '-'}</td>
-              <td><button className="primary-button" onClick={() => openImportForm(order)}>Nhập kho thành phẩm</button></td>
-            </tr>
-          )
-        })} empty="Không có lệnh chờ nhập kho thành phẩm." />
+        <div className="finished-warehouse-table-wrapper warehouse-table-wrapper">
+          <table className="finished-warehouse-table warehouse-table">
+            <thead>
+              <tr>
+                <th>Mã lệnh SX</th>
+                <th>Sản phẩm</th>
+                <th>LOT</th>
+                <th>Khách hàng</th>
+                <th><span>Khối lượng sau</span><span>QC thành phẩm</span></th>
+                <th><span>Tổng khối lượng</span><span>đã đóng gói</span></th>
+                <th><span>Quy cách</span><span>đóng gói</span></th>
+                <th>Số thùng</th>
+                <th>Người đóng gói</th>
+                <th><span>Thời gian</span><span>hoàn thành</span></th>
+                <th>Hành động</th>
+              </tr>
+            </thead>
+            <tbody>
+              {waitingOrders.map((order) => {
+                const packingLog = getLatestPackingLog(order, packingLogs)
+                const details = packingLog?.packingDetails || order.packaging?.details || []
+                return (
+                  <tr key={order.id}>
+                    <td>{order.orderCode || order.id}</td>
+                    <td>{order.productName || order.product}</td>
+                    <td>{order.lot}</td>
+                    <td>{order.customer || '-'}</td>
+                    <td>{kg(qc2FinalWeight(order))}</td>
+                    <td>{kg(packingLog?.totalPackedWeight || order.packaging?.totalPackedWeight || 0)}</td>
+                    <td>{packingSpecSummary(details)}</td>
+                    <td>{totalPackingBoxes(details)}</td>
+                    <td>{packingLog?.packer || order.packaging?.packer || '-'}</td>
+                    <td>{packingLog?.completedAt || order.packaging?.completedAt || '-'}</td>
+                    <td><button className="primary-button warehouse-import-button" onClick={() => openImportForm(order)}>Nhập kho thành phẩm</button></td>
+                  </tr>
+                )
+              })}
+              {waitingOrders.length === 0 && <tr><td className="empty-row" colSpan="11">Không có lệnh chờ nhập kho thành phẩm.</td></tr>}
+            </tbody>
+          </table>
+        </div>
       </section>
 
       <section className="panel">
@@ -3436,21 +3458,43 @@ function FinishedGoodsPage({ data, setData }) {
           <label>LOT<input value={filters.lot} onChange={(event) => setFilters({ ...filters, lot: event.target.value })} /></label>
           <label>Vị trí kho<input value={filters.location} onChange={(event) => setFilters({ ...filters, location: event.target.value })} /></label>
         </div>
-        <SimpleTable headers={['Mã TP', 'Mã lệnh SX', 'Sản phẩm', 'LOT', 'Quy cách', 'Số thùng', 'Khối lượng', 'Ngày nhập', 'Vị trí kho', 'Người nhập', 'Trạng thái']} rows={filteredFinishedGoods.map((item) => (
-          <tr key={item.id}>
-            <td>{item.finishedCode}</td>
-            <td>{item.orderCode || item.orderId}</td>
-            <td>{item.productName || item.product}</td>
-            <td>{item.lot}</td>
-            <td>{item.spec}</td>
-            <td>{item.boxes}</td>
-            <td>{kg(item.weight)}</td>
-            <td>{item.importDate}</td>
-            <td>{item.location}</td>
-            <td>{item.receiver || '-'}</td>
-            <td>{item.status}</td>
-          </tr>
-        ))} empty="Chưa có thành phẩm nhập kho." />
+        <div className="finished-goods-table-wrapper warehouse-table-wrapper">
+          <table className="finished-goods-table warehouse-table">
+            <thead>
+              <tr>
+                <th>Mã TP</th>
+                <th>Mã lệnh SX</th>
+                <th>Sản phẩm</th>
+                <th>LOT</th>
+                <th>Quy cách</th>
+                <th>Số thùng</th>
+                <th>Khối lượng</th>
+                <th>Ngày nhập</th>
+                <th>Vị trí kho</th>
+                <th>Người nhập</th>
+                <th>Trạng thái</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredFinishedGoods.map((item) => (
+                <tr key={item.id}>
+                  <td>{item.finishedCode}</td>
+                  <td>{item.orderCode || item.orderId}</td>
+                  <td>{item.productName || item.product}</td>
+                  <td>{item.lot}</td>
+                  <td>{item.spec}</td>
+                  <td>{item.boxes}</td>
+                  <td>{kg(item.weight)}</td>
+                  <td>{item.importDate}</td>
+                  <td>{item.location}</td>
+                  <td>{item.receiver || '-'}</td>
+                  <td>{item.status}</td>
+                </tr>
+              ))}
+              {filteredFinishedGoods.length === 0 && <tr><td className="empty-row" colSpan="11">Chưa có thành phẩm nhập kho.</td></tr>}
+            </tbody>
+          </table>
+        </div>
       </section>
 
       {form && activeOrder && (
