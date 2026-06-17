@@ -8275,7 +8275,7 @@ body,
   .nav-item,
   .sidebar a,
   .sidebar button {
-    white-space: nowrap !important;
+    white-space: normal !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
     width: 100% !important;
@@ -8761,7 +8761,7 @@ body,
   .nav-item,
   .sidebar a,
   .sidebar button {
-    white-space: nowrap;
+    white-space: normal;
     overflow: hidden;
     text-overflow: ellipsis;
     width: 100%;
@@ -9173,7 +9173,6 @@ body,
     font-weight: 800;
     font-size: 20px;
     flex: 0 0 auto;
-    white-space: nowrap;
   }
 
   .header-brand-text {
@@ -9188,9 +9187,9 @@ body,
     font-weight: 700;
     color: #ffffff;
     line-height: 1.2;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
     word-break: normal !important;
     overflow-wrap: normal !important;
   }
@@ -9202,9 +9201,9 @@ body,
     opacity: 0.8;
     margin-top: 4px;
     line-height: 1.4;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
     word-break: normal !important;
     overflow-wrap: normal !important;
   }
@@ -9410,10 +9409,12 @@ body,
 @media (max-width: 768px) {
   .sidebar,
   .sidebar *,
+  .mobile-sidebar-header,
+  .mobile-sidebar-header *,
   .mobile-drawer-header,
   .mobile-drawer-header *,
   .mobile-title-box,
-  .header-brand-text,
+  .mobile-sidebar-brand,
   .mobile-drawer-title,
   .mobile-drawer-subtitle,
   .nav-item,
@@ -9422,59 +9423,66 @@ body,
     overflow-wrap: normal !important;
   }
 
+  .mobile-sidebar-header,
   .mobile-drawer-header {
     display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
-    gap: 12px !important;
+    gap: 16px !important;
     width: 100% !important;
   }
 
-  .header-brand {
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    gap: 12px !important;
-    width: 100% !important;
-    min-width: 0 !important;
-    flex-wrap: nowrap !important;
-  }
-
+  .mobile-sidebar-logo,
   .mobile-logo-box {
-    flex: 0 0 52px !important;
-    width: 52px !important;
-    height: 52px !important;
+    width: 64px !important;
+    height: 64px !important;
+    object-fit: contain !important;
+    flex: 0 0 64px !important;
+    flex-shrink: 0 !important;
+    background: #ffffff !important;
+    border-radius: 12px !important;
+    padding: 4px !important;
   }
 
+  .mobile-sidebar-brand,
   .mobile-title-box,
   .header-brand-text {
-    flex: 1 1 auto !important;
+    flex: 1 !important;
     min-width: 0 !important;
-    max-width: calc(100% - 110px) !important;
   }
 
+  .mobile-sidebar-brand h2,
   .mobile-drawer-title {
+    margin: 0 !important;
     display: block !important;
-    font-size: 18px !important;
-    font-weight: 800 !important;
+    font-size: 28px !important;
+    font-weight: 700 !important;
     line-height: 1.2 !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
+    white-space: normal !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
   }
 
+  .mobile-sidebar-brand p,
   .mobile-drawer-subtitle {
+    margin: 4px 0 0 !important;
     display: block !important;
-    font-size: 13px !important;
-    line-height: 1.35 !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+    white-space: normal !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
   }
 
+  .mobile-sidebar-close,
   .mobile-drawer-close {
-    flex: 0 0 42px !important;
-    width: 42px !important;
-    height: 42px !important;
+    flex: 0 0 44px !important;
+    width: 44px !important;
+    height: 44px !important;
+    flex-shrink: 0 !important;
   }
 }

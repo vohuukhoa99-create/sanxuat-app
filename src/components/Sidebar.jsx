@@ -16,15 +16,17 @@ export function Sidebar({
     <aside className={`sidebar ${className}`}>
       {isMobile ? (
         <>
-          <div className="mobile-drawer-header">
-            <div className="header-brand">
-              <span className="mobile-logo-box">HB</span>
-              <div className="header-brand-text mobile-title-box">
-                <div className="header-brand-title mobile-drawer-title">Sơn Hòa Bình</div>
-                <div className="header-brand-subtitle mobile-drawer-subtitle">Hệ thống quản lý sản xuất V3</div>
-              </div>
-              <button type="button" className="mobile-drawer-close" onClick={onClose} aria-label="Đóng menu">×</button>
+          <div className="mobile-sidebar-header mobile-drawer-header">
+            <img
+              src="/logo-sonhoabinh.png"
+              alt="Sơn Hòa Bình"
+              className="mobile-sidebar-logo"
+            />
+            <div className="mobile-sidebar-brand mobile-title-box">
+              <h2 className="mobile-drawer-title">Sơn Hòa Bình</h2>
+              <p className="mobile-drawer-subtitle">Hệ thống quản lý sản xuất V3</p>
             </div>
+            <button type="button" className="mobile-sidebar-close mobile-drawer-close" onClick={onClose} aria-label="Đóng menu">×</button>
           </div>
           <div className="mobile-user-box">
             <div className="mobile-user-name">{user?.fullName || user?.username}</div>
