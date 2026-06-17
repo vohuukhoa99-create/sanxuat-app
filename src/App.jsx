@@ -2935,55 +2935,111 @@ function MixingPage({ data, setData }) {
           <button className="primary-button" onClick={createDemoQrData}>Tạo dữ liệu demo QR</button>
         </div>
         {warning && <div className="process-alert">{warning}</div>}
-        <SimpleTable headers={['Máy', 'Trạng thái', 'Lệnh', 'Tiến độ']} rows={machineRows.map((machine) => (
-          <tr key={machine.machineCode}>
-            <td><strong>{machine.machineCode}</strong> - {machine.machineName} ({kg(machine.capacityKg)})</td>
-            <td><span className={`dispatch-badge ${machine.activeOrder ? 'mixing' : 'ready'}`}>{machine.status}</span></td>
-            <td>{machine.activeOrder ? (machine.activeOrder.orderCode || machine.activeOrder.id) : '-'}</td>
-            <td><div className="mix-progress"><div><i style={{ width: `${machine.activeOrder ? getMixingProgress(machine.activeOrder) : 0}%` }} /></div><strong>{machine.activeOrder ? getMixingProgress(machine.activeOrder) : 0}%</strong></div></td>
-          </tr>
-        ))} />
+        <div className="table-wrapper mixing-machine-table-wrapper">
+          <table className="mixing-machine-table">
+            <thead>
+              <tr>
+                <th>Máy</th>
+                <th>Trạng thái</th>
+                <th>Lệnh</th>
+                <th>Tiến độ</th>
+              </tr>
+            </thead>
+            <tbody>
+              {machineRows.map((machine) => {
+                const progress = machine.activeOrder ? getMixingProgress(machine.activeOrder) : 0
+                return (
+                  <tr key={machine.machineCode}>
+                    <td><strong>{machine.machineCode}</strong> - {machine.machineName} ({kg(machine.capacityKg)})</td>
+                    <td><span className={`dispatch-badge ${machine.activeOrder ? 'mixing' : 'ready'}`}>{machine.status}</span></td>
+                    <td>{machine.activeOrder ? (machine.activeOrder.orderCode || machine.activeOrder.id) : '-'}</td>
+                    <td><div className="mix-progress mixing-progress"><div className="mixing-progress-bar"><i style={{ width: `${progress}%` }} /></div><strong>{progress}%</strong></div></td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
       </section>
       <section className="mixing-sections-grid">
         <section className="panel">
           <h3>Máy đang phối trộn</h3>
-          <SimpleTable headers={['Lệnh', 'Sản phẩm', 'LOT', 'Máy phối trộn', 'Giờ bắt đầu', 'Trạng thái', 'Hành động']} rows={activeMixingOrders.map((order) => {
-            const supplement = order.stage === 'mixing-supplement' || order.mixing?.supplement
-            return (
-              <tr key={order.id}>
-                <td>{order.orderCode || order.id}</td>
-                <td>{order.productName || order.product}</td>
-                <td>{order.lot}</td>
-                <td>{order.mixingMachine || order.mixing?.machineCode}</td>
-                <td>{order.mixingStartAt || order.mixing?.startedAt || '-'}</td>
-                <td><span className="dispatch-badge mixing">Đang phối trộn</span></td>
-                <td><button className="secondary-button" onClick={() => completeMixing(order, supplement)}>{supplement ? 'Hoàn thành bổ sung' : 'Hoàn thành phối trộn'}</button></td>
-              </tr>
-            )
-          })} empty="Không có máy đang phối trộn." />
+          <div className="table-wrapper mixing-active-table-wrapper">
+            <table className="mixing-active-table">
+              <thead>
+                <tr>
+                  <th>Lệnh</th>
+                  <th>Sản phẩm</th>
+                  <th>LOT</th>
+                  <th>Máy phối trộn</th>
+                  <th>Giờ bắt đầu</th>
+                  <th>Trạng thái</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody>
+                {activeMixingOrders.map((order) => {
+                  const supplement = order.stage === 'mixing-supplement' || order.mixing?.supplement
+                  return (
+                    <tr key={order.id}>
+                      <td>{order.orderCode || order.id}</td>
+                      <td>{order.productName || order.product}</td>
+                      <td>{order.lot}</td>
+                      <td>{order.mixingMachine || order.mixing?.machineCode}</td>
+                      <td>{order.mixingStartAt || order.mixing?.startedAt || '-'}</td>
+                      <td><span className="dispatch-badge mixing">Đang phối trộn</span></td>
+                      <td><button className="secondary-button" onClick={() => completeMixing(order, supplement)}>{supplement ? 'Hoàn thành bổ sung' : 'Hoàn thành phối trộn'}</button></td>
+                    </tr>
+                  )
+                })}
+                {activeMixingOrders.length === 0 && <tr><td className="empty-row" colSpan="7">Không có máy đang phối trộn.</td></tr>}
+              </tbody>
+            </table>
+          </div>
         </section>
         <section className="panel">
           <h3>Lệnh sẵn sàng phối trộn</h3>
-          <SimpleTable headers={['Lệnh', 'Sản phẩm', 'LOT', 'Loại phối trộn', 'QR hỗn hợp Hóa', 'QR hỗn hợp Rắn', 'Xác nhận QR', 'Máy phối trộn', 'Trạng thái', 'Hành động']} rows={readyOrders.map((order) => {
-            const supplement = order.stage === 'mixing-supplement' || order.mixing?.supplement
-            const qrForm = getQrForm(order)
-            const qrStatus = order.mixingQrConfirmation?.status || 'Chưa xác nhận'
-            const qrConfirmed = qrStatus === 'Đã xác nhận'
-            return (
-              <tr key={order.id}>
-                <td>{order.orderCode || order.id}</td>
-                <td>{order.productName || order.product}</td>
-                <td>{order.lot}</td>
-                <td>{supplement ? 'Phối trộn bổ sung QC2' : 'Phối trộn chính'}</td>
-                <td><input className="mixing-qr-input" value={qrForm.chemicalQr} onChange={(event) => updateQrForm(order.id, 'chemicalQr', event.target.value)} /></td>
-                <td><input className="mixing-qr-input" value={qrForm.solidQr} onChange={(event) => updateQrForm(order.id, 'solidQr', event.target.value)} /></td>
-                <td><div className="mixing-qr-confirm"><button className="secondary-button" onClick={() => confirmMixingQr(order)}>Xác nhận QR hỗn hợp</button><span className={`dispatch-badge ${qrConfirmed ? 'ready' : qrStatus === 'Không đạt' ? 'fail' : 'waiting'}`}>{qrStatus}</span></div></td>
-                <td><select value={selectedMachines[order.id] || ''} onChange={(event) => setSelectedMachines((current) => ({ ...current, [order.id]: event.target.value }))}><option value="">Chọn máy</option>{machines.map((machine) => <option key={machine.machineCode} value={machine.machineCode}>{machine.machineCode} - {machine.machineName} - {kg(machine.capacityKg)}</option>)}</select></td>
-                <td><span className="dispatch-badge ready">Sẵn sàng phối trộn</span></td>
-                <td><button className="primary-button" disabled={!qrConfirmed} onClick={() => startMixing(order)}>{supplement ? 'Bắt đầu phối trộn bổ sung QC2' : 'Bắt đầu phối trộn'}</button></td>
-              </tr>
-            )
-          })} empty="Không có lệnh sẵn sàng phối trộn." />
+          <div className="ready-mixing-table-wrapper">
+            <table className="ready-mixing-table">
+              <thead>
+                <tr>
+                  <th>Lệnh</th>
+                  <th>Sản phẩm</th>
+                  <th>LOT</th>
+                  <th>Loại phối trộn</th>
+                  <th><span>QR hỗn hợp</span><span>Hóa</span></th>
+                  <th><span>QR hỗn hợp</span><span>Rắn</span></th>
+                  <th><span>Xác nhận</span><span>QR</span></th>
+                  <th><span>Máy</span><span>phối trộn</span></th>
+                  <th>Trạng thái</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody>
+                {readyOrders.map((order) => {
+                  const supplement = order.stage === 'mixing-supplement' || order.mixing?.supplement
+                  const qrForm = getQrForm(order)
+                  const qrStatus = order.mixingQrConfirmation?.status || 'Chưa xác nhận'
+                  const qrConfirmed = qrStatus === 'Đã xác nhận'
+                  return (
+                    <tr key={order.id}>
+                      <td>{order.orderCode || order.id}</td>
+                      <td>{order.productName || order.product}</td>
+                      <td>{order.lot}</td>
+                      <td>{supplement ? 'Phối trộn bổ sung QC2' : 'Phối trộn chính'}</td>
+                      <td><input className="mixing-qr-input qr-input" value={qrForm.chemicalQr} onChange={(event) => updateQrForm(order.id, 'chemicalQr', event.target.value)} /></td>
+                      <td><input className="mixing-qr-input qr-input" value={qrForm.solidQr} onChange={(event) => updateQrForm(order.id, 'solidQr', event.target.value)} /></td>
+                      <td><div className="mixing-qr-confirm"><button className="secondary-button confirm-qr-button" onClick={() => confirmMixingQr(order)}>Xác nhận QR hỗn hợp</button><span className={`dispatch-badge ${qrConfirmed ? 'ready' : qrStatus === 'Không đạt' ? 'fail' : 'waiting'}`}>{qrStatus}</span></div></td>
+                      <td><select value={selectedMachines[order.id] || ''} onChange={(event) => setSelectedMachines((current) => ({ ...current, [order.id]: event.target.value }))}><option value="">Chọn máy</option>{machines.map((machine) => <option key={machine.machineCode} value={machine.machineCode}>{machine.machineCode} - {machine.machineName} - {kg(machine.capacityKg)}</option>)}</select></td>
+                      <td><span className="dispatch-badge ready">Sẵn sàng phối trộn</span></td>
+                      <td><button className="primary-button start-mixing-button" disabled={!qrConfirmed} onClick={() => startMixing(order)}>{supplement ? 'Bắt đầu phối trộn bổ sung QC2' : 'Bắt đầu phối trộn'}</button></td>
+                    </tr>
+                  )
+                })}
+                {readyOrders.length === 0 && <tr><td className="empty-row" colSpan="10">Không có lệnh sẵn sàng phối trộn.</td></tr>}
+              </tbody>
+            </table>
+          </div>
         </section>
         <section className="panel mixing-dispatch">
           <h3>Danh sách lệnh sản xuất</h3>

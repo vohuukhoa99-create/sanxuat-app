@@ -10614,3 +10614,206 @@ body,
     min-width: 900px !important;
   }
 }
+
+/* Mixing team compact layout */
+@media (min-width: 769px) {
+  .mixing-page-v2 {
+    gap: 12px;
+  }
+
+  .mixing-page-v2 > .panel,
+  .mixing-sections-grid > .panel {
+    padding: 12px !important;
+  }
+
+  .mixing-sections-grid {
+    gap: 12px !important;
+  }
+
+  .mixing-machine-table-wrapper,
+  .mixing-active-table-wrapper,
+  .ready-mixing-table-wrapper {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden !important;
+  }
+
+  .mixing-machine-table,
+  .mixing-active-table,
+  .ready-mixing-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+  }
+
+  .mixing-machine-table th,
+  .mixing-machine-table td,
+  .mixing-active-table th,
+  .mixing-active-table td {
+    padding: 7px 10px !important;
+    font-size: 12px !important;
+    line-height: 1.25 !important;
+    vertical-align: middle;
+  }
+
+  .mixing-machine-table th:nth-child(1),
+  .mixing-machine-table td:nth-child(1) {
+    width: 34%;
+  }
+
+  .mixing-machine-table th:nth-child(2),
+  .mixing-machine-table td:nth-child(2) {
+    width: 12%;
+    text-align: left;
+  }
+
+  .mixing-machine-table th:nth-child(3),
+  .mixing-machine-table td:nth-child(3) {
+    width: 12%;
+  }
+
+  .mixing-machine-table th:nth-child(4),
+  .mixing-machine-table td:nth-child(4) {
+    width: 42%;
+  }
+
+  .mixing-progress,
+  .mix-progress.mixing-progress {
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .mixing-progress-bar,
+  .mix-progress.mixing-progress > div {
+    flex: 1 1 auto !important;
+    width: auto !important;
+    max-width: 260px;
+    height: 8px !important;
+    border-radius: 999px;
+    background: #e4ebe8;
+    overflow: hidden;
+  }
+
+  .mix-progress.mixing-progress i {
+    display: block;
+    height: 100% !important;
+  }
+
+  .mix-progress.mixing-progress strong {
+    flex: 0 0 38px;
+    font-size: 11.5px !important;
+    text-align: right;
+  }
+
+  .mixing-active-table .empty-row,
+  .ready-mixing-table .empty-row {
+    text-align: center;
+    color: #60766b;
+    padding: 10px !important;
+    height: auto;
+  }
+
+  .ready-mixing-table th,
+  .ready-mixing-table td {
+    padding: 6px 7px !important;
+    font-size: 11.5px !important;
+    line-height: 1.2 !important;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+
+  .ready-mixing-table th span {
+    display: block;
+  }
+
+  .ready-mixing-table input,
+  .ready-mixing-table select,
+  .ready-mixing-table button {
+    height: 28px !important;
+    min-height: 28px !important;
+    font-size: 11.5px !important;
+    padding: 4px 7px !important;
+    border-radius: 7px !important;
+  }
+
+  .ready-mixing-table .qr-input,
+  .ready-mixing-table input[type="text"],
+  .ready-mixing-table .mixing-qr-input {
+    max-width: 140px;
+    width: 100%;
+  }
+
+  .ready-mixing-table .mixing-qr-confirm {
+    display: flex !important;
+    align-items: center;
+    gap: 5px;
+    min-width: 0;
+  }
+
+  .ready-mixing-table .confirm-qr-button {
+    min-width: 110px;
+    max-width: 120px;
+    white-space: normal;
+    line-height: 1.15;
+  }
+
+  .ready-mixing-table .start-mixing-button {
+    min-width: 92px;
+    max-width: 105px;
+    white-space: normal;
+    line-height: 1.15;
+    font-weight: 700;
+  }
+
+  .ready-mixing-table th:nth-child(1),
+  .ready-mixing-table td:nth-child(1) { width: 9%; }
+
+  .ready-mixing-table th:nth-child(2),
+  .ready-mixing-table td:nth-child(2) { width: 8%; }
+
+  .ready-mixing-table th:nth-child(3),
+  .ready-mixing-table td:nth-child(3) { width: 12%; }
+
+  .ready-mixing-table th:nth-child(4),
+  .ready-mixing-table td:nth-child(4) { width: 10%; }
+
+  .ready-mixing-table th:nth-child(5),
+  .ready-mixing-table td:nth-child(5) { width: 13%; }
+
+  .ready-mixing-table th:nth-child(6),
+  .ready-mixing-table td:nth-child(6) { width: 13%; }
+
+  .ready-mixing-table th:nth-child(7),
+  .ready-mixing-table td:nth-child(7) { width: 12%; }
+
+  .ready-mixing-table th:nth-child(8),
+  .ready-mixing-table td:nth-child(8) { width: 8%; }
+
+  .ready-mixing-table th:nth-child(9),
+  .ready-mixing-table td:nth-child(9) { width: 8%; }
+
+  .ready-mixing-table th:nth-child(10),
+  .ready-mixing-table td:nth-child(10) { width: 7%; }
+}
+
+@media (max-width: 768px) {
+  .ready-mixing-table-wrapper,
+  .mixing-machine-table-wrapper,
+  .mixing-active-table-wrapper {
+    overflow-x: auto;
+  }
+
+  .ready-mixing-table {
+    min-width: 980px;
+  }
+
+  .mixing-machine-table {
+    min-width: 620px;
+  }
+
+  .mixing-active-table {
+    min-width: 760px;
+  }
+}
