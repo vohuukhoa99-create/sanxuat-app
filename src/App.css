@@ -9858,3 +9858,298 @@ body,
 .ceo-bar-row i {
   background: linear-gradient(90deg, #0074bc, #00a9e0) !important;
 }
+
+@media (min-width: 769px) {
+  :root {
+    --compact-font: 12px;
+    --compact-font-sm: 11px;
+    --compact-gap: 8px;
+    --compact-radius: 8px;
+  }
+
+  body {
+    font-size: 13px !important;
+  }
+
+  .app-shell {
+    grid-template-columns: 220px minmax(0, 1fr) !important;
+  }
+
+  .sidebar {
+    width: 220px !important;
+    min-width: 220px !important;
+    max-width: 220px !important;
+    padding: 14px 10px !important;
+  }
+
+  .main-content,
+  .content-area,
+  .page-content {
+    margin-left: 0 !important;
+  }
+
+  .main-content {
+    padding: 12px 14px !important;
+    gap: 10px !important;
+  }
+
+  .page-content,
+  .dashboard-grid,
+  .reports-grid,
+  .settings-grid,
+  .formulas-grid,
+  .mixing-page,
+  .mixing-page-v2,
+  .finished-goods-page,
+  .packaging-page {
+    gap: 10px !important;
+  }
+
+  .sidebar-brand {
+    gap: 8px !important;
+    padding: 12px 8px 14px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .sidebar-brand-logo {
+    width: 34px !important;
+    height: 34px !important;
+    flex: 0 0 34px !important;
+    border-radius: 8px !important;
+    padding: 3px !important;
+  }
+
+  .sidebar-brand-text {
+    max-width: calc(100% - 42px) !important;
+  }
+
+  .sidebar-brand-title {
+    font-size: 12px !important;
+    line-height: 1.15 !important;
+  }
+
+  .sidebar-brand-subtitle {
+    font-size: 10px !important;
+    line-height: 1.25 !important;
+    margin-top: 2px !important;
+  }
+
+  .sidebar nav,
+  .sidebar .nav-list,
+  .sidebar-nav {
+    gap: 4px !important;
+  }
+
+  .sidebar .nav-item,
+  .sidebar button,
+  .sidebar a,
+  .nav-item {
+    font-size: 12px !important;
+    min-height: 36px !important;
+    padding: 7px 10px !important;
+    gap: 6px !important;
+    line-height: 1.25 !important;
+    border-radius: 8px !important;
+  }
+
+  .topbar {
+    padding: 12px 14px !important;
+    border-radius: 10px !important;
+    gap: 10px !important;
+  }
+
+  .topbar h1 {
+    font-size: 18px !important;
+    line-height: 1.2 !important;
+  }
+
+  .topbar-chip,
+  .section-kicker,
+  .status-pill,
+  .flow-pill {
+    font-size: 11px !important;
+    padding: 4px 8px !important;
+  }
+
+  .panel,
+  .card,
+  .table-card,
+  .stat-card,
+  .report-card,
+  .setting-card,
+  .formula-card,
+  .dashboard-table-panel,
+  .alert-panel,
+  .pipeline-panel,
+  .report-table-panel,
+  .order-queue,
+  .weighing-board,
+  .weighing-order-list,
+  .packaging-list,
+  .packaging-detail {
+    padding: 10px 12px !important;
+    border-radius: 10px !important;
+  }
+
+  .panel-header-row,
+  .section-heading-row,
+  .modal-header,
+  .modal-actions,
+  .action-row,
+  .permission-toolbar {
+    gap: 8px !important;
+  }
+
+  .panel-text {
+    margin-bottom: 10px !important;
+    line-height: 1.35 !important;
+    font-size: 12px !important;
+  }
+
+  table th,
+  table td,
+  th,
+  td {
+    padding: 6px 8px !important;
+    font-size: 12px !important;
+    line-height: 1.2 !important;
+  }
+
+  table {
+    font-size: 12px !important;
+  }
+
+  input,
+  select,
+  textarea,
+  .production-form-grid input,
+  .production-form-grid select,
+  .production-form-grid textarea,
+  .settings-form-grid input,
+  .settings-form-grid select,
+  .mixing-form-grid input,
+  .mixing-form-grid textarea,
+  td input {
+    min-height: 32px !important;
+    height: auto !important;
+    font-size: 12px !important;
+    padding: 6px 8px !important;
+    border-radius: 6px !important;
+  }
+
+  button,
+  .primary-button,
+  .secondary-button,
+  .danger-button {
+    min-height: 32px !important;
+    font-size: 12px !important;
+    padding: 6px 10px !important;
+  }
+
+  .icon-button {
+    width: 34px !important;
+    height: 34px !important;
+    min-height: 34px !important;
+    padding: 0 !important;
+    font-size: 1rem !important;
+  }
+
+  .production-form-grid,
+  .settings-form-grid,
+  .mixing-form-grid,
+  .finished-goods-filters {
+    gap: 8px !important;
+  }
+
+  .chemical-layout,
+  .weighing-dispatch-layout,
+  .packaging-layout {
+    grid-template-columns: 260px minmax(0, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  .order-queue,
+  .weighing-order-list,
+  .packaging-list {
+    width: 260px !important;
+    min-width: 0 !important;
+    max-width: 260px !important;
+  }
+
+  .weighing-active-board,
+  .qc-active-panel,
+  .packaging-detail,
+  .finished-goods-page .panel,
+  .mixing-dispatch,
+  .mixing-history-panel {
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .qc-layout,
+  .qc-sample-layout,
+  .qc-trial-layout,
+  .qc2-layout,
+  .qc-trial-page.qc-sample-page:not(.qc2-page) > .qc-trial-layout,
+  .qc-trial-page.qc-sample-page:not(.qc2-page) > .qc-trial-panel.qc-sample-layout {
+    grid-template-columns: 260px minmax(0, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  .qc-sidebar-panel,
+  .qc-queue,
+  .qc-trial-page.qc-sample-page:not(.qc2-page) > .qc-trial-layout > .qc-queue,
+  .qc-trial-page.qc-sample-page:not(.qc2-page) > .qc-trial-panel.qc-sample-layout > .qc-queue {
+    width: 260px !important;
+    min-width: 0 !important;
+    max-width: 260px !important;
+  }
+
+  .qc-table,
+  .qc-trial-table,
+  .compact-qc-table,
+  .qc-trial-page .compact-qc-table,
+  .qc-trial-page.qc-sample-page:not(.qc2-page) .qc-trial-table-wrapper > table.qc-trial-table.compact-qc-table {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .qc-table th,
+  .qc-table td,
+  .qc-trial-table th,
+  .qc-trial-table td,
+  .compact-qc-table th,
+  .compact-qc-table td,
+  .qc-trial-page.qc-sample-page:not(.qc2-page) .qc-trial-table-wrapper > table.qc-trial-table.compact-qc-table thead th.qc-trial-th,
+  .qc-trial-page.qc-sample-page:not(.qc2-page) .qc-trial-table-wrapper > table.qc-trial-table.compact-qc-table tbody td {
+    padding: 6px 8px !important;
+    font-size: 12px !important;
+    line-height: 1.2 !important;
+  }
+
+  .qc-table input,
+  .qc-trial-table input,
+  .compact-qc-table input,
+  .qc-trial-page.qc-sample-page:not(.qc2-page) .qc-trial-table-wrapper > table.qc-trial-table.compact-qc-table input {
+    min-height: 30px !important;
+    height: 30px !important;
+    font-size: 12px !important;
+    padding: 4px 6px !important;
+  }
+
+  .table-wrapper {
+    max-width: 100% !important;
+  }
+
+  .weighing-order-card {
+    min-height: 58px !important;
+    padding: 7px 8px !important;
+  }
+
+  .active-operation,
+  .weighing-order-summary,
+  .weighing-stats,
+  .finished-goods-summary-grid {
+    gap: 8px !important;
+  }
+}
