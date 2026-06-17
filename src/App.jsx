@@ -4307,8 +4307,11 @@ function App() {
         <header className="mobile-header">
           <button type="button" className="mobile-menu-button" onClick={() => setMobileMenuOpen(true)} aria-label="Mở menu">☰</button>
           <div className="mobile-brand">
-            <strong>SƠN HÒA BÌNH</strong>
-            <span>{title}</span>
+            <img src="/logo-sonhoabinh.png" alt="Sơn Hòa Bình" className="mobile-brand-logo" />
+            <div className="mobile-brand-text">
+              <strong>SƠN HÒA BÌNH</strong>
+              <span>{title}</span>
+            </div>
           </div>
           <div className="mobile-user">
             <span>{user.fullName || user.username}</span>

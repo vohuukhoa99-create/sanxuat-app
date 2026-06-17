@@ -36,7 +36,12 @@ export function Sidebar({
         </>
       ) : (
         <div className="sidebar-brand">
-          <span>Sơn Hòa Bình</span>
+          <img
+            src="/logo-sonhoabinh.png"
+            alt="Sơn Hòa Bình"
+            className="sidebar-brand-logo"
+          />
+          <span className="sidebar-brand-text">SƠN HÒA BÌNH</span>
         </div>
       )}
 

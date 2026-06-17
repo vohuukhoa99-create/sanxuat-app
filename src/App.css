@@ -15,11 +15,33 @@
 }
 
 .sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 14px;
+  color: #fff;
   font-size: 1.2rem;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+  white-space: nowrap;
   margin-bottom: 28px;
+}
+
+.sidebar-brand-logo {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  flex-shrink: 0;
+  background: #fff;
+  border-radius: 8px;
+  padding: 3px;
+}
+
+.sidebar-brand-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .sidebar-nav {
@@ -9484,5 +9506,68 @@ body,
     width: 44px !important;
     height: 44px !important;
     flex-shrink: 0 !important;
+  }
+}
+
+.sidebar-brand {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 16px 14px !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  white-space: nowrap !important;
+  min-width: 0 !important;
+}
+
+.sidebar-brand-logo {
+  width: 36px !important;
+  height: 36px !important;
+  object-fit: contain !important;
+  flex-shrink: 0 !important;
+  background: #fff !important;
+  border-radius: 8px !important;
+  padding: 3px !important;
+}
+
+.sidebar-brand-text {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  word-break: normal !important;
+  overflow-wrap: normal !important;
+}
+
+@media (max-width: 768px) {
+  .mobile-brand {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    min-width: 0 !important;
+  }
+
+  .mobile-brand-logo {
+    width: 32px !important;
+    height: 32px !important;
+    object-fit: contain !important;
+    flex: 0 0 32px !important;
+    background: #fff !important;
+    border-radius: 8px !important;
+    padding: 2px !important;
+  }
+
+  .mobile-brand-text {
+    min-width: 0 !important;
+    display: grid !important;
+    gap: 3px !important;
+  }
+
+  .mobile-brand-text strong,
+  .mobile-brand-text span {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
   }
 }
