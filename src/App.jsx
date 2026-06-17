@@ -2258,8 +2258,8 @@ function FinishedProductQcPage({ data, setData, user }) {
 
   return (
     <div className="page-content qc-sample-page qc2-page">
-      <section className="panel qc-sample-layout qc2-layout">
-        <aside className="qc-queue">
+      <section className="panel qc-sample-layout qc2-layout finished-qc-layout qc-finished-layout">
+        <aside className="qc-queue finished-qc-left qc-finished-left qc-waiting-panel">
           <div>
             <span className="section-kicker">Danh sách chờ</span>
             <h2>Danh sách lệnh chờ QC thành phẩm</h2>
@@ -2294,16 +2294,16 @@ function FinishedProductQcPage({ data, setData, user }) {
                     <button className={qc2Tab === 'analysis' ? 'active' : ''} onClick={() => setQc2Tab('analysis')}>Phân tích chất lượng</button>
                   </div>
                 </div>
-                <div className="qc-order-summary">
-                  <div><span>Mã lệnh SX</span><strong>{activeOrder.orderCode || activeOrder.id}</strong></div>
-                  <div><span>Khách hàng</span><strong>{activeOrder.customer || '-'}</strong></div>
-                  <div><span>Sản phẩm</span><strong>{activeOrder.productName || activeOrder.product}</strong></div>
-                  <div><span>LOT</span><strong>{activeOrder.lot}</strong></div>
-                  <div><span>Công thức gốc</span><strong>{activeOrder.formulaCode || activeOrder.originalFormulaId}</strong></div>
-                  <div><span>Khối lượng yêu cầu</span><strong>{kg(activeOrder.requestedWeight ?? activeOrder.quantityKg)}</strong></div>
-                  <div><span>Khối lượng sau phối trộn</span><strong>{kg(activeOrder.mixing?.finalWeightKg || activeOrder.quantityKg)}</strong></div>
-                  <div><span>Máy phối trộn</span><strong>{activeOrder.mixingMachine || activeOrder.mixing?.machineCode || '-'}</strong></div>
-                  <div><span>Hoàn thành phối trộn</span><strong>{activeOrder.mixingCompletedAt || activeOrder.mixing?.completedAt || '-'}</strong></div>
+                <div className="qc-order-summary finished-qc-info-grid qc-finished-info-grid">
+                  <div className="finished-qc-info-card qc-finished-info-card"><span className="label">Mã lệnh SX</span><strong className="value">{activeOrder.orderCode || activeOrder.id}</strong></div>
+                  <div className="finished-qc-info-card qc-finished-info-card"><span className="label">Khách hàng</span><strong className="value">{activeOrder.customer || '-'}</strong></div>
+                  <div className="finished-qc-info-card qc-finished-info-card"><span className="label">Sản phẩm</span><strong className="value">{activeOrder.productName || activeOrder.product}</strong></div>
+                  <div className="finished-qc-info-card qc-finished-info-card"><span className="label">LOT</span><strong className="value">{activeOrder.lot}</strong></div>
+                  <div className="finished-qc-info-card qc-finished-info-card"><span className="label">Công thức gốc</span><strong className="value">{activeOrder.formulaCode || activeOrder.originalFormulaId}</strong></div>
+                  <div className="finished-qc-info-card qc-finished-info-card"><span className="label">Khối lượng yêu cầu</span><strong className="value">{kg(activeOrder.requestedWeight ?? activeOrder.quantityKg)}</strong></div>
+                  <div className="finished-qc-info-card qc-finished-info-card"><span className="label">Khối lượng sau phối trộn</span><strong className="value">{kg(activeOrder.mixing?.finalWeightKg || activeOrder.quantityKg)}</strong></div>
+                  <div className="finished-qc-info-card qc-finished-info-card"><span className="label">Máy phối trộn</span><strong className="value">{activeOrder.mixingMachine || activeOrder.mixing?.machineCode || '-'}</strong></div>
+                  <div className="finished-qc-info-card qc-finished-info-card"><span className="label">Hoàn thành phối trộn</span><strong className="value">{activeOrder.mixingCompletedAt || activeOrder.mixing?.completedAt || '-'}</strong></div>
                 </div>
               </div>
 
@@ -2314,20 +2314,38 @@ function FinishedProductQcPage({ data, setData, user }) {
                       <h3>Bảng QC thành phẩm</h3>
                       <button className="secondary-button" onClick={addNewMaterial}>Thêm NVL bổ sung</button>
                     </div>
-                    <div className="qc2-material-table">
-                      <SimpleTable headers={['Mã VT', 'Tên vật tư', 'Nhóm', 'Khối lượng gốc', 'Khối lượng sau QC1', 'QC2 bổ sung', 'Khối lượng sau QC2', 'Lý do điều chỉnh', 'Ghi chú']} rows={qc2Rows.map((row) => (
-                        <tr key={row.id}>
-                          <td>{row.materialCode}</td>
-                          <td>{row.materialName}</td>
-                          <td>{row.materialGroup}</td>
-                          <td>{kg(row.originalKg)}</td>
-                          <td>{kg(row.qc1Kg)}</td>
-                          <td><input type="number" step="0.001" value={row.supplementKg} onChange={(event) => updateExistingAdjustment(row, 'adjustmentKg', event.target.value)} /></td>
-                          <td>{kg(row.afterQc2Kg)}</td>
-                          <td><input value={row.reason} onChange={(event) => updateExistingAdjustment(row, 'reason', event.target.value)} /></td>
-                          <td><input value={row.note} onChange={(event) => updateExistingAdjustment(row, 'note', event.target.value)} /></td>
-                        </tr>
-                      ))} />
+                    <div className="qc2-material-table finished-qc-table-wrapper qc-finished-table-wrapper">
+                      <table className="finished-qc-table qc-finished-table">
+                        <thead>
+                          <tr>
+                            <th>Mã VT</th>
+                            <th>Tên vật tư</th>
+                            <th>Nhóm</th>
+                            <th><span>Khối lượng</span><span>gốc</span></th>
+                            <th><span>Khối lượng</span><span>sau QC1</span></th>
+                            <th>QC2 bổ sung</th>
+                            <th><span>Khối lượng</span><span>sau QC2</span></th>
+                            <th><span>Lý do</span><span>điều chỉnh</span></th>
+                            <th>Ghi chú</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {qc2Rows.map((row) => (
+                            <tr key={row.id}>
+                              <td>{row.materialCode}</td>
+                              <td>{row.materialName}</td>
+                              <td>{row.materialGroup}</td>
+                              <td>{kg(row.originalKg)}</td>
+                              <td>{kg(row.qc1Kg)}</td>
+                              <td><input type="number" step="0.001" value={row.supplementKg} onChange={(event) => updateExistingAdjustment(row, 'adjustmentKg', event.target.value)} /></td>
+                              <td>{kg(row.afterQc2Kg)}</td>
+                              <td><input value={row.reason} onChange={(event) => updateExistingAdjustment(row, 'reason', event.target.value)} /></td>
+                              <td><input value={row.note} onChange={(event) => updateExistingAdjustment(row, 'note', event.target.value)} /></td>
+                            </tr>
+                          ))}
+                          {!qc2Rows.length && <tr><td className="empty-row" colSpan="9">Không có dữ liệu QC thành phẩm.</td></tr>}
+                        </tbody>
+                      </table>
                     </div>
                   </section>
 

@@ -10382,3 +10382,235 @@ body,
     max-width: 100% !important;
   }
 }
+
+@media (min-width: 769px) {
+  .qc-finished-layout,
+  .finished-qc-layout,
+  .qc-pham-layout,
+  .qc2-page > .qc2-layout {
+    display: grid !important;
+    grid-template-columns: 260px minmax(0, 1fr) !important;
+    gap: 12px !important;
+    align-items: start !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .qc-finished-left,
+  .finished-qc-left,
+  .qc-waiting-panel,
+  .qc2-page .qc-queue {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 260px !important;
+    padding: 12px !important;
+    border-radius: 12px !important;
+    overflow: visible !important;
+  }
+
+  .qc-finished-left h2,
+  .qc-finished-left h3,
+  .finished-qc-left h2,
+  .finished-qc-left h3,
+  .qc-waiting-panel h2,
+  .qc-waiting-panel h3,
+  .qc2-page .qc-queue h2,
+  .qc2-page .qc-queue h3 {
+    font-size: 15px !important;
+    line-height: 1.3 !important;
+    margin: 0 0 10px !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+  }
+
+  .qc-finished-left .list-card,
+  .finished-qc-left .list-card,
+  .qc-waiting-panel .list-card,
+  .qc-order-card,
+  .qc2-page .qc-queue-item {
+    display: block !important;
+    padding: 10px 12px !important;
+    border-radius: 10px !important;
+    line-height: 1.35 !important;
+    margin-bottom: 8px !important;
+    min-height: auto !important;
+    height: auto !important;
+    overflow: visible !important;
+    white-space: normal !important;
+  }
+
+  .qc2-page .qc-queue-item strong,
+  .qc2-page .qc-queue-item span {
+    display: block !important;
+    font-size: 12px !important;
+    line-height: 1.35 !important;
+    margin: 2px 0 !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+  }
+
+  .qc2-page .qc-queue-item strong {
+    font-size: 13px !important;
+    line-height: 1.3 !important;
+    margin-bottom: 4px !important;
+  }
+
+  .finished-qc-info-grid,
+  .qc-finished-info-grid {
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(130px, 1fr)) !important;
+    gap: 10px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .finished-qc-info-card,
+  .qc-finished-info-card {
+    min-height: 62px !important;
+    height: auto !important;
+    padding: 10px 12px !important;
+    border-radius: 10px !important;
+  }
+
+  .finished-qc-info-card .label,
+  .qc-finished-info-card .label {
+    font-size: 12px !important;
+    line-height: 1.25 !important;
+    color: #60766b !important;
+  }
+
+  .finished-qc-info-card .value,
+  .qc-finished-info-card .value {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    line-height: 1.3 !important;
+    color: #073723 !important;
+  }
+
+  .finished-qc-table-wrapper,
+  .qc-finished-table-wrapper,
+  .qc2-page .qc2-material-table {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  .finished-qc-table,
+  .qc-finished-table,
+  .qc2-page .finished-qc-table {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: collapse !important;
+  }
+
+  .finished-qc-table th,
+  .finished-qc-table td,
+  .qc-finished-table th,
+  .qc-finished-table td {
+    padding: 6px 8px !important;
+    font-size: 12px !important;
+    line-height: 1.25 !important;
+    vertical-align: middle !important;
+    white-space: normal !important;
+    overflow-wrap: normal !important;
+  }
+
+  .finished-qc-table th,
+  .qc-finished-table th {
+    text-align: center !important;
+    font-weight: 700 !important;
+    background: #eaf6f0 !important;
+  }
+
+  .finished-qc-table th span,
+  .qc-finished-table th span {
+    display: block !important;
+  }
+
+  .finished-qc-table input,
+  .qc-finished-table input {
+    height: 30px !important;
+    min-height: 30px !important;
+    font-size: 12px !important;
+    padding: 4px 8px !important;
+    border-radius: 7px !important;
+  }
+
+  .finished-qc-table th:nth-child(1),
+  .finished-qc-table td:nth-child(1),
+  .qc-finished-table th:nth-child(1),
+  .qc-finished-table td:nth-child(1) { width: 8% !important; }
+
+  .finished-qc-table th:nth-child(2),
+  .finished-qc-table td:nth-child(2),
+  .qc-finished-table th:nth-child(2),
+  .qc-finished-table td:nth-child(2) { width: 10% !important; }
+
+  .finished-qc-table th:nth-child(3),
+  .finished-qc-table td:nth-child(3),
+  .qc-finished-table th:nth-child(3),
+  .qc-finished-table td:nth-child(3) { width: 7% !important; }
+
+  .finished-qc-table th:nth-child(4),
+  .finished-qc-table td:nth-child(4),
+  .qc-finished-table th:nth-child(4),
+  .qc-finished-table td:nth-child(4) { width: 11% !important; }
+
+  .finished-qc-table th:nth-child(5),
+  .finished-qc-table td:nth-child(5),
+  .qc-finished-table th:nth-child(5),
+  .qc-finished-table td:nth-child(5) { width: 11% !important; }
+
+  .finished-qc-table th:nth-child(6),
+  .finished-qc-table td:nth-child(6),
+  .qc-finished-table th:nth-child(6),
+  .qc-finished-table td:nth-child(6) { width: 10% !important; }
+
+  .finished-qc-table th:nth-child(7),
+  .finished-qc-table td:nth-child(7),
+  .qc-finished-table th:nth-child(7),
+  .qc-finished-table td:nth-child(7) { width: 11% !important; }
+
+  .finished-qc-table th:nth-child(8),
+  .finished-qc-table td:nth-child(8),
+  .qc-finished-table th:nth-child(8),
+  .qc-finished-table td:nth-child(8) { width: 16% !important; }
+
+  .finished-qc-table th:nth-child(9),
+  .finished-qc-table td:nth-child(9),
+  .qc-finished-table th:nth-child(9),
+  .qc-finished-table td:nth-child(9) { width: 16% !important; }
+}
+
+@media (max-width: 768px) {
+  .qc-finished-layout,
+  .finished-qc-layout,
+  .qc-pham-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+  .qc-finished-left,
+  .finished-qc-left,
+  .qc-waiting-panel {
+    max-width: 100% !important;
+  }
+
+  .finished-qc-info-grid,
+  .qc-finished-info-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .finished-qc-table-wrapper,
+  .qc-finished-table-wrapper {
+    overflow-x: auto !important;
+  }
+
+  .finished-qc-table,
+  .qc-finished-table {
+    min-width: 900px !important;
+  }
+}
