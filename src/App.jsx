@@ -236,6 +236,18 @@ function seedData() {
   }
 }
 
+function ensureQcDemoOrders(orders = [], seedOrders = []) {
+  const hasQcTrial = orders.some((order) => order.stage === 'qc1')
+  const hasFinishedQc = orders.some((order) => order.stage === 'finished-qc' || ['Chờ QC thành phẩm', 'Đang QC thành phẩm', 'Cần điều chỉnh', 'QC thành phẩm không đạt'].includes(order.status))
+  const requiredSeeds = [
+    !hasQcTrial && seedOrders.find((order) => order.stage === 'qc1'),
+    !hasFinishedQc && seedOrders.find((order) => order.stage === 'finished-qc' || order.status === 'Chờ QC thành phẩm'),
+  ].filter(Boolean)
+  if (!requiredSeeds.length) return orders
+  const seedIds = new Set(requiredSeeds.map((order) => order.id))
+  return [...requiredSeeds, ...orders.filter((order) => !seedIds.has(order.id))]
+}
+
 const defaultRoles = {
   Admin: defaultNavItems.map((item) => item.id),
   'Kho NL': ['dashboard', 'raw-materials', 'logs'],
@@ -4502,7 +4514,10 @@ function App() {
     const rawMaterials = normalizeRawMaterialLots(nonEmptyArray(saved.rawMaterials, seed.rawMaterials))
     const storedOrders = loadStored(PRODUCTION_ORDERS_KEY, null)
     const orderSource = nonEmptyArray(storedOrders, saved.productionOrders, saved.orders, seed.orders)
-    const orders = normalizeProductionOrders(orderSource, formulas)
+    const orders = ensureQcDemoOrders(
+      normalizeProductionOrders(orderSource, formulas),
+      normalizeProductionOrders(seed.orders, formulas),
+    )
     const baseData = {
       ...seed,
       ...saved,
