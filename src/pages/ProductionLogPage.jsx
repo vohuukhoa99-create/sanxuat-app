@@ -9,7 +9,7 @@ function isChemicalGroup(group = '') {
     || value.includes('hoa che')
     || value.includes('hoa chat')
     || value.includes('chemical')
-    || value.includes('hÃ³a')
+    || value.includes('hóa')
 }
 
 function isSolidGroup(group = '') {
@@ -19,7 +19,7 @@ function isSolidGroup(group = '') {
     || value.includes('nguyen lieu ran')
     || value.includes('nl ran')
     || value.includes('solid')
-    || value.includes('ráº¯n')
+    || value.includes('rắn')
 }
 
 function formatKg(value) {

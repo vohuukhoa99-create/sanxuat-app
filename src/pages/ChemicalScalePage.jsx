@@ -10,7 +10,7 @@ function isChemicalGroup(group = '') {
     || value.includes('hoa che')
     || value.includes('hoa chat')
     || value.includes('chemical')
-    || value.includes('hÃ³a')
+    || value.includes('hóa')
 }
 
 function getChemicalIngredients(order) {

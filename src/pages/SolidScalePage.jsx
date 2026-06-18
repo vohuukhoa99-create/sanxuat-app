@@ -10,7 +10,7 @@ function isSolidGroup(group = '') {
     || value.includes('nguyen lieu ran')
     || value.includes('nl ran')
     || value.includes('solid')
-    || value.includes('ráº¯n')
+    || value.includes('rắn')
 }
 
 function getSolidIngredients(order) {

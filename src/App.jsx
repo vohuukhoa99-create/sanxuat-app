@@ -23,6 +23,7 @@ const SESSION_KEY = 'sonhoabinh-v3-session'
 
 const CHEMICAL = 'Hóa'
 const SOLID = 'Rắn'
+const nonEmptyArray = (...items) => items.find((item) => Array.isArray(item) && item.length > 0) || []
 const nowText = () => new Date().toISOString().slice(0, 16).replace('T', ' ')
 const todayText = () => new Date().toISOString().slice(0, 10)
 const num = (value) => Number(value) || 0
@@ -4489,17 +4490,19 @@ function App() {
   const [data, setData] = useState(() => {
     const seed = seedData()
     const saved = loadStored(DATA_KEY, seed)
-    const formulas = loadStored(FORMULAS_KEY, saved.formulas || seed.formulas)
-    const productionLogs = loadStored(PRODUCTION_LOGS_KEY, saved.productionLogs || saved.logs || seed.productionLogs || [])
-    const qc2Logs = loadStored(QC2_LOGS_KEY, saved.qc2Logs || [])
-    const qc2AdjustmentTickets = loadStored(QC2_ADJUSTMENTS_KEY, saved.qc2AdjustmentTickets || saved.qc2Adjustments || [])
-    const supplementalWeighing = loadStored(SUPPLEMENTAL_WEIGHING_KEY, saved.supplementalWeighing || [])
-    const weighedContainers = normalizeWeighedContainers(loadStored(WEIGHED_CONTAINERS_KEY, saved.weighedContainers || []))
-    const packingLogs = loadStored(PACKING_LOGS_KEY, saved.packingLogs || [])
-    const finishedGoods = normalizeFinishedGoodsData(loadStored(FINISHED_GOODS_KEY, saved.finishedGoods || []))
-    const rawMaterials = normalizeRawMaterialLots(saved.rawMaterials || seed.rawMaterials || [])
+    const storedFormulas = loadStored(FORMULAS_KEY, null)
+    const formulas = nonEmptyArray(storedFormulas, saved.formulas, seed.formulas)
+    const productionLogs = nonEmptyArray(loadStored(PRODUCTION_LOGS_KEY, null), saved.productionLogs, saved.logs, seed.productionLogs)
+    const qc2Logs = nonEmptyArray(loadStored(QC2_LOGS_KEY, null), saved.qc2Logs)
+    const qc2AdjustmentTickets = nonEmptyArray(loadStored(QC2_ADJUSTMENTS_KEY, null), saved.qc2AdjustmentTickets, saved.qc2Adjustments)
+    const supplementalWeighing = nonEmptyArray(loadStored(SUPPLEMENTAL_WEIGHING_KEY, null), saved.supplementalWeighing)
+    const weighedContainers = normalizeWeighedContainers(nonEmptyArray(loadStored(WEIGHED_CONTAINERS_KEY, null), saved.weighedContainers))
+    const packingLogs = nonEmptyArray(loadStored(PACKING_LOGS_KEY, null), saved.packingLogs)
+    const finishedGoods = normalizeFinishedGoodsData(nonEmptyArray(loadStored(FINISHED_GOODS_KEY, null), saved.finishedGoods))
+    const rawMaterials = normalizeRawMaterialLots(nonEmptyArray(saved.rawMaterials, seed.rawMaterials))
     const storedOrders = loadStored(PRODUCTION_ORDERS_KEY, null)
-    const orders = normalizeProductionOrders(storedOrders || saved.productionOrders || saved.orders || seed.orders || [], formulas)
+    const orderSource = nonEmptyArray(storedOrders, saved.productionOrders, saved.orders, seed.orders)
+    const orders = normalizeProductionOrders(orderSource, formulas)
     const baseData = {
       ...seed,
       ...saved,
