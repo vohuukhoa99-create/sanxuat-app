@@ -483,6 +483,7 @@ function normalizeProductionOrders(orders = [], formulas = []) {
       assignedMachineMotorPower: order.assignedMachineMotorPower || assignedMachine?.motorPower || '',
       assignedMachineDepartment: order.assignedMachineDepartment || assignedMachine?.department || assignedMachine?.productionTeam || '',
       machineChangeHistory: order.machineChangeHistory || [],
+      machineAssignmentHistory: order.machineAssignmentHistory || [],
       mixingMachine: normalizeMixingMachineCode(order.mixingMachine || order.mixing?.machineCode || ''),
       mixingStartAt: order.mixingStartAt || order.mixing?.startedAt || '',
       mixingCompletedAt: order.mixingCompletedAt || order.mixing?.completedAt || '',
@@ -1804,6 +1805,17 @@ function OrdersPage({ data, setData }) {
       assignedMachineMotorPower: assignedMachine.motorPower,
       assignedMachineDepartment: assignedMachine.department || assignedMachine.productionTeam,
       machineChangeHistory: [],
+      machineAssignmentHistory: [{
+        id: uid('MCH'),
+        orderId: id,
+        orderCode: id,
+        lot: form.lot || `LOT-${id}`,
+        assignedMachine: assignedMachine.machineCode,
+        performedMachine: '',
+        changedBy: 'Phòng SX',
+        changedAt: createdAt,
+        reason: 'Chỉ định máy khi tạo lệnh sản xuất',
+      }],
       productionRequestNo: form.productionRequestNo,
       note: form.note,
       requestedWeight: num(form.quantityKg),
@@ -3046,14 +3058,15 @@ function getMixingDispatchState(order) {
   const chemicalCompleted = order.scaleStatus?.chemical === 'Completed' || order.chemicalStatus === 'completed'
   const solidCompleted = order.scaleStatus?.solid === 'Completed' || order.solidStatus === 'completed'
   if (order.stage === 'completed') return { label: 'Hoàn thành', className: 'done', canStart: false }
-  if (order.stage === 'finished-goods') return { label: 'Kho thành phẩm', className: 'done', canStart: false }
-  if (order.stage === 'packaging') return { label: 'Đóng gói', className: 'packing', canStart: false }
-  if (order.stage === 'finished-qc') return { label: 'Chờ QC thành phẩm', className: 'qc2', canStart: false }
-  if (order.mixing?.status === 'Active' || order.mixingStatus === 'Active') return { label: 'Đang phối trộn', className: 'mixing', canStart: false }
+  if (order.stage === 'finished-goods') return { label: 'HOÀN THÀNH', className: 'done', canStart: false }
+  if (order.stage === 'packaging') return { label: 'HOÀN THÀNH', className: 'packing', canStart: false }
+  if (order.stage === 'finished-qc') return { label: 'CHỜ QC THÀNH PHẨM', className: 'qc2', canStart: false }
+  if (order.mixing?.status === 'Active' || order.mixingStatus === 'Active') return { label: 'ĐANG PHỐI TRỘN', className: 'mixing', canStart: false }
   if (order.stage === 'mixing-supplement') return { label: 'Chờ phối trộn bổ sung', className: 'ready', canStart: true, supplement: true }
-  if (chemicalCompleted && solidCompleted) return { label: 'Sẵn sàng phối trộn', className: 'ready', canStart: true }
+  if (chemicalCompleted && solidCompleted) return { label: 'SẴN SÀNG PHỐI TRỘN', className: 'ready', canStart: true }
+  if (chemicalCompleted && !solidCompleted) return { label: 'CHỜ CÂN RẮN', className: 'waiting', canStart: false }
   if (order.stage === 'weighing' || order.stage === 'supplement-weighing' || order.scaleStatus?.chemical === 'Active' || order.scaleStatus?.solid === 'Active') return { label: 'Đang cân', className: 'weighing', canStart: false }
-  return { label: 'Chờ', className: 'waiting', canStart: false }
+  return { label: 'CHỜ CÂN', className: 'waiting', canStart: false }
 }
 
 function getMixingProgress(order) {
@@ -3078,7 +3091,7 @@ function MixingPage({ data, setData }) {
   const [changeRequestDraft, setChangeRequestDraft] = useState(null)
   const [warning, setWarning] = useState('')
   const activeMixingOrders = orders.filter((order) => order.mixing?.status === 'Active' || order.mixingStatus === 'Active')
-  const readyOrders = orders.filter((order) => getMixingDispatchState(order).canStart)
+  const readyOrders = orders.filter((order) => getOrderAssignedMachineCode(order))
   const mixingHistory = orders.filter((order) => order.mixingStatus === 'completed' || order.mixing?.status === 'Completed' || order.mixingCompletedAt)
   const getMachineActiveOrder = (machineCode) => activeMixingOrders.find((order) => (order.mixingMachine || order.mixing?.machineCode) === machineCode)
   const machineRows = activeMachines.map((machine) => {
@@ -3194,16 +3207,21 @@ function MixingPage({ data, setData }) {
   const startMixing = (order) => {
     const supplement = order.stage === 'mixing-supplement'
     const machineCode = getAssignedMachineCode(order)
-    if (order.mixingQrConfirmation?.status !== 'Đã xác nhận') {
-      setWarning('Vui lòng xác nhận QR hỗn hợp Hóa và Rắn trước khi bắt đầu phối trộn.')
-      return
-    }
     if (!machineCode) {
       setWarning('Chưa được Phòng SX chỉ định máy.')
       return
     }
     if (!activeMachines.some((machine) => machine.machineCode === machineCode)) {
       setWarning(`Máy ${machineCode} không ở trạng thái READY.`)
+      return
+    }
+    const dispatchState = getMixingDispatchState(order)
+    if (!dispatchState.canStart) {
+      setWarning(`Lệnh ${order.orderCode || order.id} đang ở trạng thái ${dispatchState.label}.`)
+      return
+    }
+    if (order.mixingQrConfirmation?.status !== 'Đã xác nhận') {
+      setWarning('Vui lòng xác nhận QR hỗn hợp Hóa và Rắn trước khi bắt đầu phối trộn.')
       return
     }
     const runningOrder = getMachineActiveOrder(machineCode)
@@ -3227,6 +3245,20 @@ function MixingPage({ data, setData }) {
         mixingCompletedAt: '',
         mixingStatus: 'Active',
         mixing: { ...(item.mixing || {}), status: 'Active', machineCode, startedAt, operator: 'Tổ phối trộn', supplement },
+        machineAssignmentHistory: (item.machineAssignmentHistory || []).length ? item.machineAssignmentHistory.map((history, index, list) => (
+          index === list.length - 1 ? { ...history, performedMachine: machineCode, performedAt: startedAt } : history
+        )) : [{
+          id: uid('MCH'),
+          orderId: item.id,
+          orderCode: item.orderCode || item.id,
+          lot: item.lot,
+          assignedMachine: machineCode,
+          performedMachine: machineCode,
+          performedAt: startedAt,
+          changedBy: 'Phòng SX',
+          changedAt: item.createdAt || startedAt,
+          reason: 'Máy chỉ định trên lệnh sản xuất',
+        }],
         updatedAt: startedAt,
       } : item),
     }, supplement ? `Bắt đầu phối trộn bổ sung sau khi xác nhận QR hỗn hợp lệnh ${order.id} trên máy ${machineCode}.` : `Bắt đầu phối trộn sau khi xác nhận QR hỗn hợp lệnh ${order.id} trên máy ${machineCode}.`))
@@ -3346,6 +3378,7 @@ function MixingPage({ data, setData }) {
                   const assignedMachineCode = getAssignedMachineCode(order)
                   const assignedMachine = machines.find((machine) => machine.machineCode === assignedMachineCode)
                   const pendingChange = order.machineChangeRequest?.status === 'PENDING'
+                  const state = getMixingDispatchState(order)
                   return (
                     <tr key={order.id}>
                       <td>{order.orderCode || order.id}</td>
@@ -3362,8 +3395,8 @@ function MixingPage({ data, setData }) {
                           {pendingChange && <span className="dispatch-badge waiting">Chờ xác nhận đổi máy</span>}
                         </div>
                       </td>
-                      <td><span className="dispatch-badge ready">Sẵn sàng phối trộn</span></td>
-                      <td><button className="primary-button start-mixing-button" disabled={!qrConfirmed || !assignedMachineCode || pendingChange} onClick={() => startMixing(order)}>{supplement ? 'Bắt đầu phối trộn bổ sung QC2' : 'Bắt đầu phối trộn'}</button></td>
+                      <td><span className={`dispatch-badge ${state.className}`}>{state.label}</span></td>
+                      <td><button className="primary-button start-mixing-button" disabled={!state.canStart || !qrConfirmed || !assignedMachineCode || pendingChange} onClick={() => startMixing(order)}>{supplement ? 'Bắt đầu phối trộn bổ sung QC2' : 'Bắt đầu phối trộn'}</button></td>
                     </tr>
                   )
                 })}
@@ -4488,17 +4521,37 @@ function MixingMachineCatalogPage({ data, setData, user }) {
             id: uid('MCH'),
             orderId: item.id,
             orderCode: item.orderCode || item.id,
+            lot: item.lot,
             oldMachine: request.currentMachine || '',
             newMachine: request.requestedMachine,
+            assignedMachine: approved ? nextMachine.machineCode : getOrderAssignedMachineCode(item),
+            performedMachine: item.mixingMachine || item.mixing?.machineCode || '',
             reason: request.reason,
             requestedBy: request.requestedBy,
             requestedAt: request.requestedAt,
             approved,
             approvedBy,
             approvedAt: resolvedAt,
+            changedBy: approvedBy,
+            changedAt: resolvedAt,
             rejectedReason: rejectReason,
           },
         ],
+        machineAssignmentHistory: approved ? [
+          ...(item.machineAssignmentHistory || []),
+          {
+            id: uid('MCH'),
+            orderId: item.id,
+            orderCode: item.orderCode || item.id,
+            lot: item.lot,
+            assignedMachine: nextMachine.machineCode,
+            performedMachine: item.mixingMachine || item.mixing?.machineCode || '',
+            changedBy: approvedBy,
+            changedAt: resolvedAt,
+            reason: request.reason,
+            requestedBy: request.requestedBy,
+          },
+        ] : (item.machineAssignmentHistory || []),
         machineChangeRequest: {
           ...request,
           status: approved ? 'APPROVED' : 'REJECTED',
