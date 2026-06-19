@@ -19,6 +19,7 @@ const SUPPLEMENTAL_WEIGHING_KEY = 'supplementalWeighing'
 const WEIGHED_CONTAINERS_KEY = 'weighedContainers'
 const PACKING_LOGS_KEY = 'packingLogs'
 const FINISHED_GOODS_KEY = 'finishedGoods'
+const MATERIAL_CATALOG_KEY = 'materialCatalog'
 const AUTH_KEY = 'sonhoabinh-v3-auth'
 const SESSION_KEY = 'sonhoabinh-v3-session'
 
@@ -86,6 +87,37 @@ function normalizeRawMaterialLot(item = {}) {
 
 function normalizeRawMaterialLots(items = []) {
   return items.map(normalizeRawMaterialLot)
+}
+
+function normalizeMaterialCatalogItem(item = {}) {
+  const materialCode = String(item.materialCode || item.code || item['Mã vật tư'] || item['Ma vat tu'] || item['Mã VT'] || item['Ma VT'] || '').trim()
+  if (!materialCode) return null
+  return {
+    id: item.id || `MAT-${materialCode}`,
+    materialCode,
+    materialName: String(item.materialName || item.name || item['Tên vật tư'] || item['Ten vat tu'] || item['Tên VT'] || item['Ten VT'] || materialCode).trim(),
+    materialGroup: String(item.materialGroup || item.group || item['Nhóm vật tư'] || item['Nhom vat tu'] || item['Nhóm'] || item['Nhom'] || CHEMICAL).trim(),
+    unit: String(item.unit || item['Đơn vị tính'] || item['Don vi tinh'] || item['Đơn vị'] || item['Don vi'] || 'kg').trim(),
+  }
+}
+
+function normalizeMaterialCatalog(items = []) {
+  const byCode = new Map()
+  ;(items || []).forEach((item) => {
+    const normalized = normalizeMaterialCatalogItem(item)
+    if (normalized) byCode.set(normalized.materialCode.toUpperCase(), normalized)
+  })
+  return Array.from(byCode.values()).sort((a, b) => a.materialCode.localeCompare(b.materialCode, 'vi', { numeric: true }))
+}
+
+function deriveMaterialCatalog(data = {}) {
+  const fromFormulas = (data.formulas || []).flatMap((formula) => formula.items || [])
+  const fromRawMaterials = normalizeRawMaterialLots(data.rawMaterials || [])
+  return normalizeMaterialCatalog([...fromFormulas, ...fromRawMaterials, ...(data.materialCatalog || [])])
+}
+
+function mergeMaterialCatalog(current = [], incoming = []) {
+  return normalizeMaterialCatalog([...current, ...incoming])
 }
 
 function parseRawMaterialQr(value) {
@@ -1347,7 +1379,10 @@ function PseudoQr({ value }) {
 }
 
 function RawMaterialsPage({ data, setData }) {
+  const importMaterialCatalogRef = useRef(null)
   const [form, setForm] = useState({ materialCode: '', materialName: '', materialGroup: CHEMICAL, lot: '', importDate: todayText(), supplier: '', weight: 0, unit: 'kg' })
+  const materialCatalog = deriveMaterialCatalog(data)
+  const selectedCatalogMaterial = materialCatalog.find((item) => item.materialCode === form.materialCode)
   const previewLot = normalizeRawMaterialLot({
     materialCode: form.materialCode,
     materialName: form.materialName,
@@ -1360,10 +1395,24 @@ function RawMaterialsPage({ data, setData }) {
     unit: form.unit,
   })
   const qrValue = buildRawMaterialLotQr(previewLot)
+  const selectMaterial = (materialCode) => {
+    const material = materialCatalog.find((item) => item.materialCode === materialCode)
+    setForm((current) => ({
+      ...current,
+      materialCode,
+      materialName: material?.materialName || '',
+      materialGroup: material?.materialGroup || CHEMICAL,
+      unit: material?.unit || 'kg',
+    }))
+  }
   const save = () => {
-    if (!form.materialCode || !form.materialName || !form.lot || !form.supplier || !form.materialGroup || !form.weight || !form.unit || !form.importDate) return
+    if (!selectedCatalogMaterial || !form.lot || !form.supplier || !form.weight || !form.importDate) return
     const item = normalizeRawMaterialLot({ ...form, id: uid('RM'), lotCode: form.lot, initialQty: form.weight, remainingQty: form.weight, qrCode: qrValue })
-    setData((current) => addLogToData({ ...current, rawMaterials: [item, ...normalizeRawMaterialLots(current.rawMaterials || [])] }, `Tạo QR nguyên liệu khi nhập kho: ${item.materialCode} - lô ${item.lotCode}.`))
+    setData((current) => addLogToData({
+      ...current,
+      materialCatalog: mergeMaterialCatalog(current.materialCatalog || [], [selectedCatalogMaterial]),
+      rawMaterials: [item, ...normalizeRawMaterialLots(current.rawMaterials || [])],
+    }, `Tạo QR nguyên liệu khi nhập kho: ${item.materialCode} - lô ${item.lotCode}.`))
     setForm({ materialCode: '', materialName: '', materialGroup: CHEMICAL, lot: '', importDate: todayText(), supplier: '', weight: 0, unit: 'kg' })
   }
   const printQr = () => {
@@ -1372,23 +1421,70 @@ function RawMaterialsPage({ data, setData }) {
     win.document.write(html)
     win.document.close()
   }
+  const downloadMaterialCatalogTemplate = () => {
+    const rows = [
+      { 'Mã vật tư': 'PASTE 02', 'Tên vật tư': 'Paste nền 02', 'Nhóm vật tư': CHEMICAL, 'Đơn vị tính': 'kg' },
+      { 'Mã vật tư': 'R91', 'Tên vật tư': 'Bột R91', 'Nhóm vật tư': SOLID, 'Đơn vị tính': 'kg' },
+    ]
+    const sheet = XLSX.utils.json_to_sheet(rows)
+    const book = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(book, sheet, 'Danh muc vat tu')
+    XLSX.writeFile(book, 'mau-danh-muc-vat-tu.xlsx')
+  }
+  const importMaterialCatalogExcel = (file) => {
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = (event) => {
+      try {
+        const workbook = XLSX.read(event.target.result, { type: 'array' })
+        const sheet = workbook.Sheets[workbook.SheetNames[0]]
+        const rows = XLSX.utils.sheet_to_json(sheet, { defval: '' })
+        const imported = normalizeMaterialCatalog(rows.map((row) => ({
+          materialCode: readExcelCell(row, ['Mã vật tư', 'Ma vat tu', 'Mã VT', 'Ma VT']),
+          materialName: readExcelCell(row, ['Tên vật tư', 'Ten vat tu', 'Tên VT', 'Ten VT']),
+          materialGroup: readExcelCell(row, ['Nhóm vật tư', 'Nhom vat tu', 'Nhóm', 'Nhom']),
+          unit: readExcelCell(row, ['Đơn vị tính', 'Don vi tinh', 'Đơn vị', 'Don vi']),
+        })))
+        if (!imported.length) return
+        setData((current) => addLogToData({
+          ...current,
+          materialCatalog: mergeMaterialCatalog(deriveMaterialCatalog(current), imported),
+        }, `Tải danh mục vật tư Excel: cập nhật ${imported.length} mã vật tư.`))
+      } catch (error) {
+        console.error(error)
+      } finally {
+        if (importMaterialCatalogRef.current) importMaterialCatalogRef.current.value = ''
+      }
+    }
+    reader.readAsArrayBuffer(file)
+  }
   return (
     <div className="page-content">
       <section className="panel">
-        <div className="panel-header-row"><div><h2>Kho nguyên liệu</h2><p className="panel-text">Nhập NVL, sinh QR/Barcode demo, in QR và lưu localStorage.</p></div></div>
+        <div className="panel-header-row">
+          <div><h2>Kho nguyên liệu</h2><p className="panel-text">Nhập NVL, sinh QR/Barcode demo, in QR và lưu localStorage.</p></div>
+          <div className="action-row">
+            <button className="secondary-button" onClick={() => importMaterialCatalogRef.current?.click()}>Tải danh mục vật tư Excel</button>
+            <button className="secondary-button" onClick={downloadMaterialCatalogTemplate}>Tải file mẫu</button>
+          </div>
+        </div>
+        <input ref={importMaterialCatalogRef} type="file" accept=".xlsx,.xls" hidden onChange={(event) => importMaterialCatalogExcel(event.target.files?.[0])} />
         <div className="material-entry-layout">
           <div className="material-form-area">
             <div className="material-form-grid">
               <div className="material-form-column">
-                <label className="material-form-field">Mã vật tư *<input value={form.materialCode} onChange={(event) => setForm({ ...form, materialCode: event.target.value })} /></label>
+                <label className="material-form-field">Mã vật tư *
+                  <input list="raw-material-catalog" value={form.materialCode} onChange={(event) => selectMaterial(event.target.value)} placeholder="Tìm hoặc chọn mã vật tư" />
+                  <datalist id="raw-material-catalog">{materialCatalog.map((item) => <option key={item.materialCode} value={item.materialCode}>{item.materialName}</option>)}</datalist>
+                </label>
                 <label className="material-form-field">Lô nhập<input value={form.lot} onChange={(event) => setForm({ ...form, lot: event.target.value })} /></label>
                 <label className="material-form-field">Nhà cung cấp *<input value={form.supplier} onChange={(event) => setForm({ ...form, supplier: event.target.value })} /></label>
-                <label className="material-form-field">Nhóm vật tư *<select value={form.materialGroup} onChange={(event) => setForm({ ...form, materialGroup: event.target.value })}><option>{CHEMICAL}</option><option>{SOLID}</option></select></label>
+                <label className="material-form-field">Nhóm vật tư *<input value={form.materialGroup} readOnly /></label>
               </div>
               <div className="material-form-column">
-                <label className="material-form-field">Tên vật tư *<input value={form.materialName} onChange={(event) => setForm({ ...form, materialName: event.target.value })} /></label>
+                <label className="material-form-field">Tên vật tư *<input value={form.materialName} readOnly /></label>
                 <label className="material-form-field">Khối lượng *<input type="number" value={form.weight} onChange={(event) => setForm({ ...form, weight: event.target.value })} /></label>
-                <label className="material-form-field">Đơn vị tính *<input value={form.unit} onChange={(event) => setForm({ ...form, unit: event.target.value })} /></label>
+                <label className="material-form-field">Đơn vị tính *<input value={form.unit} readOnly /></label>
                 <label className="material-form-field">Ngày nhập *<input type="date" value={form.importDate} onChange={(event) => setForm({ ...form, importDate: event.target.value })} /></label>
               </div>
             </div>
@@ -5020,6 +5116,11 @@ function App() {
     const packingLogs = nonEmptyArray(loadStored(PACKING_LOGS_KEY, null), saved.packingLogs)
     const finishedGoods = normalizeFinishedGoodsData(nonEmptyArray(loadStored(FINISHED_GOODS_KEY, null), saved.finishedGoods))
     const rawMaterials = normalizeRawMaterialLots(nonEmptyArray(saved.rawMaterials, seed.rawMaterials))
+    const materialCatalog = deriveMaterialCatalog({
+      formulas,
+      rawMaterials,
+      materialCatalog: nonEmptyArray(loadStored(MATERIAL_CATALOG_KEY, null), saved.materialCatalog),
+    })
     const storedOrders = loadStored(PRODUCTION_ORDERS_KEY, null)
     const orderSource = nonEmptyArray(storedOrders, saved.productionOrders, saved.orders, seed.orders)
     const orders = ensureQcDemoOrders(
@@ -5039,6 +5140,7 @@ function App() {
       packingLogs,
       finishedGoods,
       rawMaterials,
+      materialCatalog,
       stockTransactions: saved.stockTransactions || [],
       mixingMachines: normalizeMixingMachines(saved.mixingMachines),
       productionLogs,
@@ -5068,7 +5170,8 @@ function App() {
     localStorage.setItem(WEIGHED_CONTAINERS_KEY, JSON.stringify(normalizeWeighedContainers(data.weighedContainers || [])))
     localStorage.setItem(PACKING_LOGS_KEY, JSON.stringify(data.packingLogs || []))
     localStorage.setItem(FINISHED_GOODS_KEY, JSON.stringify(normalizeFinishedGoodsData(data.finishedGoods || [])))
-    localStorage.setItem(DATA_KEY, JSON.stringify({ ...data, rawMaterials: normalizeRawMaterialLots(data.rawMaterials || []), orders, productionOrders: orders }))
+    localStorage.setItem(MATERIAL_CATALOG_KEY, JSON.stringify(deriveMaterialCatalog(data)))
+    localStorage.setItem(DATA_KEY, JSON.stringify({ ...data, materialCatalog: deriveMaterialCatalog(data), rawMaterials: normalizeRawMaterialLots(data.rawMaterials || []), orders, productionOrders: orders }))
   }, [data])
   useEffect(() => { localStorage.setItem(AUTH_KEY, JSON.stringify(authData)) }, [authData])
 
