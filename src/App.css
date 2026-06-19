@@ -1019,10 +1019,29 @@ tbody tr:hover {
   background: #f7fbf8;
 }
 
+.weighed-container-card.compact {
+  margin-top: 0;
+}
+
 .weighed-container-card h3 {
   margin: 2px 0 0;
   font-size: 1.05rem;
   overflow-wrap: anywhere;
+}
+
+.weighed-container-history-table {
+  min-width: 1120px;
+}
+
+.table-action-row {
+  flex-wrap: nowrap;
+  gap: 8px;
+}
+
+.table-action-row button {
+  min-height: 38px;
+  padding: 7px 10px;
+  white-space: nowrap;
 }
 
 .weighed-container-grid,

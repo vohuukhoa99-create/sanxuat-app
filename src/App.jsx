@@ -258,7 +258,7 @@ function seedData() {
         customer: 'Đơn hàng demo',
         quantityKg: 1000,
         stage: 'qc1',
-        status: 'Chờ QC1',
+        status: 'Chờ QC sản xuất thử',
         createdAt: '2026-06-13 08:15',
         updatedAt: '2026-06-13 08:15',
         originalFormulaId: formula.id,
@@ -451,7 +451,7 @@ function normalizeProductionOrders(orders = [], formulas = []) {
       lot: order.lot || `LOT-${fallbackCode}`,
       requestedWeight,
       quantityKg: requestedWeight,
-      status: order.status || 'Chờ QC1',
+      status: order.status || 'Chờ QC sản xuất thử',
       stage: order.stage || 'qc1',
       createdAt: order.createdAt || nowText(),
       updatedAt: order.updatedAt || order.createdAt || nowText(),
@@ -494,7 +494,7 @@ function normalizeProductionOrders(orders = [], formulas = []) {
         confirmedAt: '',
         note: '',
       },
-      qc1Status: order.qc1Status || order.qc1Result || 'Chờ QC1',
+      qc1Status: order.qc1Status || order.qc1Result || 'Chờ QC sản xuất thử',
       qc2Status: order.qc2Status || order.qc2?.result || 'Pending',
       packagingStatus: order.packagingStatus || order.packingStatus || (order.packaging ? 'Completed' : 'Pending'),
       packingStatus: order.packingStatus || order.packagingStatus || (order.packaging ? 'Completed' : 'Pending'),
@@ -735,7 +735,10 @@ function buildWeighedContainer(order, group, items, containers = [], weighingTyp
     requiredKg: num(item.requiredKg),
     actualWeight: num(item.actualWeight || item.requiredKg),
     qrScanned: item.qrScanned || '',
+    qrStatus: item.qrStatus || '',
+    qrMatchStatus: item.qrMatchStatus || '',
     confirmedAt: item.confirmedAt || completedAt,
+    weighedBy: group === CHEMICAL ? 'Tổ cân hóa' : 'Tổ cân rắn',
   }))
   return {
     containerId: `CNT-${qrCode}`,
@@ -1301,7 +1304,7 @@ function createQc2DemoPayload(current = {}) {
     buildQc2DemoOrder({ id: 'LSX-QC2-DEMO-003', customer: 'Nhà máy Đông Á', lot: 'LOT-QC2-G1-003', quantityKg: 1200, finalWeightKg: 1201.1, machineCode: 'M03', createdAt: '2026-06-13 08:10', mixingCompletedAt: '2026-06-13 12:15', qc1Changes: { 'PASTE 02': 0.8, IN03: 0.05 }, qc2Status: 'waiting', qc2: adjustmentTicket.qc2Record, qc2Adjustments: [adjustmentTicket], qc2SupplementTickets: [supplementTicket] }),
     buildQc2DemoOrder({ id: 'LSX-QC2-DEMO-004', customer: 'Công ty Việt Sơn', lot: 'LOT-QC2-G1-004', quantityKg: 500, finalWeightKg: 499.7, machineCode: 'M04', createdAt: '2026-06-13 08:35', mixingCompletedAt: '2026-06-13 12:40', qc2Status: 'pending' }),
     buildQc2DemoOrder({ id: 'LSX-QC2-DEMO-005', customer: 'Công ty Nam Hải', lot: 'LOT-QC2-G1-005', quantityKg: 900, finalWeightKg: 900.4, machineCode: 'M05', createdAt: '2026-06-13 08:55', mixingCompletedAt: '2026-06-13 13:00', qc1Changes: { KT01: 0.1 }, qc2Status: 'waiting' }),
-    buildQc2DemoOrder({ id: 'LSX-QC2-DEMO-006', customer: 'Công ty Bình Minh', lot: 'LOT-QC2-G1-006', quantityKg: 650, finalWeightKg: 649.8, machineCode: 'M06', createdAt: '2026-06-13 09:15', mixingCompletedAt: '2026-06-13 13:20', stage: 'packaging', status: 'Chờ đóng gói', qc2Status: 'Đạt', qc2: { result: 'Đạt', color: 'Đạt', ph: '7.1', viscosity: '95 KU', density: '1.30', coverage: 'Đạt', fineness: 'Đạt', note: 'Đạt QC2 lần đầu', checkedAt: '2026-06-13 13:45', orderId: 'LSX-QC2-DEMO-006' } }),
+    buildQc2DemoOrder({ id: 'LSX-QC2-DEMO-006', customer: 'Công ty Bình Minh', lot: 'LOT-QC2-G1-006', quantityKg: 650, finalWeightKg: 649.8, machineCode: 'M06', createdAt: '2026-06-13 09:15', mixingCompletedAt: '2026-06-13 13:20', stage: 'packaging', status: 'Hoàn thành', qc2Status: 'Đạt', qc2: { result: 'Đạt', color: 'Đạt', ph: '7.1', viscosity: '95 KU', density: '1.30', coverage: 'Đạt', fineness: 'Đạt', note: 'Đạt QC2 lần đầu', checkedAt: '2026-06-13 13:45', orderId: 'LSX-QC2-DEMO-006' } }),
   ]
   const existingIds = new Set((current.orders || []).map((order) => order.id))
   const newOrders = demoOrders.filter((order) => !existingIds.has(order.id))
@@ -1821,7 +1824,7 @@ function OrdersPage({ data, setData }) {
       requestedWeight: num(form.quantityKg),
       quantityKg: num(form.quantityKg),
       stage: 'qc1',
-      status: 'Chờ QC1',
+      status: 'Chờ QC sản xuất thử',
       createdAt,
       updatedAt: createdAt,
       originalFormulaId: formula.id,
@@ -1842,7 +1845,7 @@ function OrdersPage({ data, setData }) {
       mixingMachine: '',
       mixingStartAt: '',
       mixingCompletedAt: '',
-      qc1Status: 'Chờ QC1',
+      qc1Status: 'Chờ QC sản xuất thử',
       qc2Status: 'Pending',
       packagingStatus: 'Pending',
       finishedGoodsStatus: 'Pending',
@@ -2040,7 +2043,7 @@ function QC1({ data, setData }) {
       return {
         ...current,
         stage: 'weighing',
-        status: adjusted ? 'QC1 đã điều chỉnh & duyệt' : 'QC1 đạt',
+        status: 'Chờ cân',
         qc1Result: adjusted ? 'QC1 đã điều chỉnh & duyệt' : 'QC1 đạt',
         qc1Status: adjusted ? 'QC1 đã điều chỉnh & duyệt' : 'QC1 đạt',
         activeProductionFormula: nextFormula,
@@ -2221,7 +2224,7 @@ function QC2({ data, setData }) {
     setData((current) => {
       const orders = current.orders.map((item) => {
         if (item.id !== order.id) return item
-        if (form.result === 'OK') return { ...item, stage: 'packaging', status: 'Đóng gói', qc2: form, updatedAt: nowText() }
+        if (form.result === 'OK') return { ...item, stage: 'packaging', status: 'Hoàn thành', qc2: form, updatedAt: nowText() }
         if (form.result === 'Không đạt') return { ...item, stage: 'qc2', status: 'QC2 không đạt', qc2: form, updatedAt: nowText() }
         const ticket = { id: uid('BS'), status: 'Pending', items: [{ id: uid('add'), materialCode: form.materialCode, materialName: form.materialName, materialGroup: form.materialGroup, requiredKg: num(form.addKg), toleranceKg: form.materialGroup === CHEMICAL ? 0.01 : 0.1, qrScanned: '', qrStatus: 'Chờ quét', actualWeight: '', weighStatus: 'Chờ cân', reason: form.reason, note: form.note }] }
         return { ...item, stage: 'supplement-weighing', status: 'Cân bổ sung', qc2: form, qc2AdjustedFormula: [...(item.qc2AdjustedFormula || []), ticket], updatedAt: nowText() }
@@ -2352,7 +2355,7 @@ function FinishedProductQcPage({ data, setData, user }) {
           orders: current.orders.map((item) => item.id === activeOrder.id ? {
             ...item,
             stage: 'packaging',
-            status: 'Chờ đóng gói',
+            status: 'Hoàn thành',
             qc2: qc2Record,
             qc2Status: 'Đạt',
             updatedAt: checkedAt,
@@ -2672,9 +2675,10 @@ function WeighingPage({ data, setData, group }) {
   const completedOrders = relevantOrders.filter((order) => groupCompleted(order))
   const [activeOrderId, setActiveOrderId] = useState('')
   const [warning, setWarning] = useState('')
-  const [selectedContainer, setSelectedContainer] = useState(null)
+  const [printQrModal, setPrintQrModal] = useState(null)
+  const [weighingDetailModal, setWeighingDetailModal] = useState(null)
   const activeOrder = pendingOrders.find((order) => order.id === activeOrderId)
-  const waitingOrders = pendingOrders.filter((order) => order.id !== activeOrder?.id)
+  const waitingOrders = pendingOrders.filter((order) => order.id !== activeOrder?.id && order.status === 'Chờ cân')
   const activeItems = activeOrder ? getItems(activeOrder) : []
   const doneCount = activeItems.filter(isDone).length
   const progress = activeItems.length ? Math.round((doneCount / activeItems.length) * 100) : 0
@@ -2682,11 +2686,17 @@ function WeighingPage({ data, setData, group }) {
   const canFinish = Boolean(activeOrder && activeItems.length && doneCount === activeItems.length)
   const activeWeighingType = activeOrder?.stage === 'supplement-weighing' ? 'Cân bổ sung QC thành phẩm' : 'Cân chính'
   const activeContainers = activeOrder ? getOrderGroupContainers(data.weighedContainers || [], activeOrder, activeWeighingType).filter((item) => item.materialGroup === group) : []
-  const recentContainers = normalizeWeighedContainers(data.weighedContainers || []).filter((item) => item.materialGroup === group).slice(-5).reverse()
+  const completedWeighingContainers = normalizeWeighedContainers(data.weighedContainers || []).filter((item) => item.materialGroup === group).reverse()
+  const latestContainer = completedWeighingContainers[0]
 
-  const openPrintContainer = (container) => {
-    setSelectedContainer(container)
-    setData((current) => addLogToData(current, `Xem chi tiết QR hỗn hợp ${container.materialGroup} ${container.qrCode} cho lệnh ${container.orderCode}.`))
+  const handleViewWeighingDetail = (container) => {
+    setWeighingDetailModal(container)
+    setData((current) => addLogToData(current, `Xem chi tiết cân ${container.materialGroup} ${container.qrCode} cho lệnh ${container.orderCode}.`))
+  }
+  const handlePrintQr = (container) => {
+    setPrintQrModal(container)
+    setData((current) => addLogToData(current, `In QR hỗn hợp ${container.materialGroup} ${container.qrCode} cho lệnh ${container.orderCode}.`))
+    setTimeout(() => window.print(), 80)
   }
   const printSelectedContainer = (container) => {
     setData((current) => addLogToData(current, `In QR hỗn hợp ${container.materialGroup} ${container.qrCode} cho lệnh ${container.orderCode}.`))
@@ -2774,16 +2784,17 @@ function WeighingPage({ data, setData, group }) {
       const effective = getEffectiveFormula(item)
       const chemDone = effective.filter((row) => row.materialGroup === CHEMICAL).every((row) => row.qrStatus === 'PASS' && row.weighStatus === 'PASS')
       const solidDone = effective.filter((row) => row.materialGroup === SOLID).every((row) => row.qrStatus === 'PASS' && row.weighStatus === 'PASS')
+      const bothGroupsDone = chemDone && solidDone
       return {
         ...item,
         ChemicalCompleted: chemDone,
         SolidCompleted: solidDone,
-        ReadyMixing: chemDone && solidDone,
+        ReadyMixing: bothGroupsDone,
         chemicalStatus: chemDone ? 'Completed' : item.chemicalStatus,
         solidStatus: solidDone ? 'Completed' : item.solidStatus,
         scaleStatus: { chemical: chemDone ? 'Completed' : item.scaleStatus.chemical, solid: solidDone ? 'Completed' : item.scaleStatus.solid },
-        stage: chemDone && solidDone ? 'mixing' : item.stage,
-        status: chemDone && solidDone ? 'Chờ phối trộn' : item.status,
+        stage: bothGroupsDone ? 'mixing' : item.stage,
+        status: bothGroupsDone ? 'Sẵn sàng phối trộn' : 'Đang cân',
         updatedAt: nowText(),
       }
     })
@@ -2809,6 +2820,26 @@ function WeighingPage({ data, setData, group }) {
       return
     }
     if (!groupCompleted(order)) {
+      const startedAt = nowText()
+      setData((current) => addLogToData({
+        ...current,
+        orders: current.orders.map((item) => {
+          if (item.id !== order.id) return item
+          const supplement = item.stage === 'supplement-weighing'
+          const currentScaleStatus = item.scaleStatus || {}
+          return {
+            ...item,
+            stage: supplement ? item.stage : 'weighing',
+            status: supplement ? 'Đang cân bổ sung' : 'Đang cân',
+            [statusKey]: item[statusKey] === 'Completed' ? 'Completed' : 'Active',
+            scaleStatus: {
+              ...currentScaleStatus,
+              [scaleKey]: currentScaleStatus[scaleKey] === 'Completed' ? 'Completed' : 'Active',
+            },
+            updatedAt: startedAt,
+          }
+        }),
+      }, `${label} bắt đầu cân lệnh ${order.id}.`))
       setActiveOrderId(order.id)
       setWarning('')
     }
@@ -2830,14 +2861,7 @@ function WeighingPage({ data, setData, group }) {
       <section className="panel weighing-dispatch-layout">
         <aside className="weighing-order-list">
           <h2>Danh sách lệnh sản xuất</h2>
-          <WeighingOrderGroup title="Lệnh đang cân" orders={activeOrder ? [activeOrder] : []} activeId={activeOrder?.id} onStart={startOrder} />
           <WeighingOrderGroup title="Danh sách lệnh chờ cân" orders={waitingOrders} activeId={activeOrder?.id} onStart={startOrder} showStart />
-          <WeighingOrderGroup title="Lệnh đã hoàn thành" orders={completedOrders.slice(-12).reverse()} activeId={activeOrder?.id} onStart={startOrder} />
-          <div className="weighing-order-group">
-            <h3>QR hỗn hợp đã cân</h3>
-            {recentContainers.slice(0, 3).map((container) => <WeighedContainerCard key={container.containerId} container={container} onPrint={openPrintContainer} onDetail={openPrintContainer} />)}
-            {recentContainers.length === 0 && <p className="muted-text">Chưa có QR hỗn hợp.</p>}
-          </div>
         </aside>
         <main className="weighing-active-board">
           <div className="section-heading-row">
@@ -2869,31 +2893,95 @@ function WeighingPage({ data, setData, group }) {
               <SimpleTable headers={['STT', 'Mã VT yêu cầu', 'Tên VT', 'Cần cân', 'QR lô đã quét', 'Lô nhập', 'Tồn trước', 'Thực cân', 'Tồn sau', 'Khớp QR', 'Trạng thái']} rows={activeItems.map((item, index) => (
                 <WeighingRow key={`${activeOrder.id}-${item.id}`} order={activeOrder} item={item} index={index} active={item.id === activeItem?.id} updateWeight={updateWeight} rawMaterialLots={normalizeRawMaterialLots(data.rawMaterials || [])} scaleType={scaleKey} setWarning={setWarning} />
               ))} empty={`Không có vật tư nhóm ${group}.`} />
-              {activeContainers.map((container) => <WeighedContainerCard key={container.containerId} container={container} onPrint={openPrintContainer} onDetail={openPrintContainer} />)}
+              {activeContainers.map((container) => <WeighedContainerCard key={container.containerId} container={container} onPrint={handlePrintQr} onDetail={handleViewWeighingDetail} />)}
             </>
           )}
-          {!activeOrder && recentContainers.length > 0 && (
-            <section className="weighed-container-list">
-              <h3>QR hỗn hợp đã cân gần đây</h3>
-              {recentContainers.map((container) => <WeighedContainerCard key={container.containerId} container={container} onPrint={openPrintContainer} onDetail={openPrintContainer} />)}
-            </section>
-          )}
+          <section className="weighed-container-list">
+            <h3>Lệnh cân gần nhất</h3>
+            {latestContainer
+              ? <WeighedContainerCard container={latestContainer} title="Lệnh cân gần nhất" compact onPrint={handlePrintQr} onDetail={handleViewWeighingDetail} />
+              : <p className="muted-text">Chưa có lệnh đã cân của tổ hiện tại.</p>}
+          </section>
+          <section className="weighed-container-list">
+            <h3>Danh sách lệnh đã cân</h3>
+            <SimpleTable
+              tableClassName="weighed-container-history-table"
+              headers={['Mã QR hỗn hợp', 'Mã lệnh SX', 'Sản phẩm', 'LOT', 'Nhóm hỗn hợp', 'Tổng kg', 'Thời gian cân', 'Trạng thái', 'Hành động']}
+              rows={completedWeighingContainers.map((container) => (
+                <tr key={container.containerId || container.qrCode}>
+                  <td>{container.qrCode}</td>
+                  <td>{container.orderCode}</td>
+                  <td>{container.productName}</td>
+                  <td>{container.lot}</td>
+                  <td>{container.materialGroup}</td>
+                  <td>{kg(container.totalWeight)}</td>
+                  <td>{container.completedAt || '-'}</td>
+                  <td>{container.status || '-'}</td>
+                  <td>
+                    <div className="action-row table-action-row">
+                      <button type="button" className="secondary-button" onClick={() => handlePrintQr(container)}>In QR</button>
+                      <button type="button" className="primary-button" onClick={() => handleViewWeighingDetail(container)}>Xem chi tiết</button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+              empty="Chưa có lệnh đã cân của tổ hiện tại."
+            />
+          </section>
         </main>
       </section>
-      {selectedContainer && (
+      {printQrModal && (
         <div className="modal-backdrop" role="presentation">
           <div className="mixing-modal weighed-container-modal" role="dialog" aria-modal="true">
             <div className="modal-header">
               <div><span className="section-kicker">Phiếu in</span><h2>QR HỖN HỢP ĐÃ CÂN</h2></div>
-              <button type="button" className="icon-button" onClick={() => setSelectedContainer(null)} aria-label="Đóng">×</button>
+              <button type="button" className="icon-button" onClick={() => setPrintQrModal(null)} aria-label="Đóng">×</button>
             </div>
-            <QrPrintTicket container={selectedContainer} />
-            <SimpleTable headers={['Mã VT', 'Tên vật tư', 'Nhóm', 'Khối lượng yêu cầu', 'Thực cân', 'QR quét', 'Thời gian cân']} rows={(selectedContainer.materials || []).map((item) => (
-              <tr key={item.id || item.materialCode}><td>{item.materialCode}</td><td>{item.materialName}</td><td>{item.materialGroup}</td><td>{kg(item.requiredKg)}</td><td>{kg(item.actualWeight)}</td><td>{item.qrScanned || '-'}</td><td>{item.confirmedAt || '-'}</td></tr>
-            ))} />
+            <QrPrintTicket container={printQrModal} />
             <div className="modal-actions">
-              <button type="button" className="secondary-button" onClick={() => printSelectedContainer(selectedContainer)}>In QR</button>
-              <button type="button" className="primary-button" onClick={() => setSelectedContainer(null)}>Đóng</button>
+              <button type="button" className="secondary-button" onClick={() => printSelectedContainer(printQrModal)}>In QR</button>
+              <button type="button" className="primary-button" onClick={() => setPrintQrModal(null)}>Đóng</button>
+            </div>
+          </div>
+        </div>
+      )}
+      {weighingDetailModal && (
+        <div className="modal-backdrop" role="presentation">
+          <div className="mixing-modal weighed-container-modal" role="dialog" aria-modal="true">
+            <div className="modal-header">
+              <div><span className="section-kicker">Chi tiết cân</span><h2>{weighingDetailModal.orderCode}</h2></div>
+              <button type="button" className="icon-button" onClick={() => setWeighingDetailModal(null)} aria-label="Đóng">×</button>
+            </div>
+            <div className="weighed-container-detail-grid">
+              <div><span>Mã lệnh SX</span><strong>{weighingDetailModal.orderCode}</strong></div>
+              <div><span>Sản phẩm</span><strong>{weighingDetailModal.productName}</strong></div>
+              <div><span>LOT</span><strong>{weighingDetailModal.lot}</strong></div>
+              <div><span>Nhóm hỗn hợp</span><strong>{weighingDetailModal.materialGroup}</strong></div>
+              <div><span>Tổng kg</span><strong>{kg(weighingDetailModal.totalWeight)}</strong></div>
+              <div><span>Thời gian cân</span><strong>{weighingDetailModal.completedAt || '-'}</strong></div>
+              <div><span>Người cân</span><strong>{weighingDetailModal.weighedBy || '-'}</strong></div>
+              <div><span>Trạng thái</span><strong>{weighingDetailModal.status || '-'}</strong></div>
+            </div>
+            <SimpleTable headers={['STT', 'Mã vật tư', 'Tên vật tư', 'Khối lượng theo lệnh', 'QR/Lô đã quét', 'Thực cân', 'Sai lệch', 'Trạng thái khớp QR']} rows={(weighingDetailModal.materials || []).map((item, index) => {
+              const requiredKg = num(item.requiredKg)
+              const actualWeight = num(item.actualWeight)
+              const diff = Number((actualWeight - requiredKg).toFixed(3))
+              const qrMatchStatus = item.qrMatchStatus || (item.qrStatus === 'PASS' || item.qrScanned ? 'Khớp QR' : '-')
+              return (
+                <tr key={item.id || item.materialCode}>
+                  <td>{index + 1}</td>
+                  <td>{item.materialCode}</td>
+                  <td>{item.materialName}</td>
+                  <td>{kg(requiredKg)}</td>
+                  <td>{item.qrScanned || '-'}</td>
+                  <td>{kg(actualWeight)}</td>
+                  <td>{kg(diff)}</td>
+                  <td>{qrMatchStatus}</td>
+                </tr>
+              )
+            })} />
+            <div className="modal-actions">
+              <button type="button" className="primary-button" onClick={() => setWeighingDetailModal(null)}>Đóng</button>
             </div>
           </div>
         </div>
@@ -2902,12 +2990,12 @@ function WeighingPage({ data, setData, group }) {
   )
 }
 
-function WeighedContainerCard({ container, onPrint, onDetail }) {
+function WeighedContainerCard({ container, onPrint, onDetail, title = 'QR hỗn hợp đã cân', compact = false }) {
   return (
-    <article className="weighed-container-card">
+    <article className={`weighed-container-card ${compact ? 'compact' : ''}`}>
       <div className="section-heading-row">
         <div>
-          <span className="section-kicker">QR hỗn hợp đã cân</span>
+          <span className="section-kicker">{title}</span>
           <h3>{container.qrCode}</h3>
         </div>
         <span className="dispatch-badge ready">{container.status}</span>
@@ -3055,18 +3143,20 @@ function WeighingRow({ order, item, index, active, updateWeight, rawMaterialLots
 }
 
 function getMixingDispatchState(order) {
-  const chemicalCompleted = order.scaleStatus?.chemical === 'Completed' || order.chemicalStatus === 'completed'
-  const solidCompleted = order.scaleStatus?.solid === 'Completed' || order.solidStatus === 'completed'
+  const chemicalCompleted = order.scaleStatus?.chemical === 'Completed' || order.chemicalStatus === 'Completed' || order.chemicalStatus === 'completed'
+  const solidCompleted = order.scaleStatus?.solid === 'Completed' || order.solidStatus === 'Completed' || order.solidStatus === 'completed'
+  const chemicalActive = order.scaleStatus?.chemical === 'Active' || order.chemicalStatus === 'Active' || order.chemicalStatus === 'active'
+  const solidActive = order.scaleStatus?.solid === 'Active' || order.solidStatus === 'Active' || order.solidStatus === 'active'
+  const weighingStarted = chemicalActive || solidActive || chemicalCompleted || solidCompleted || order.status === 'Đang cân'
   if (order.stage === 'completed') return { label: 'Hoàn thành', className: 'done', canStart: false }
   if (order.stage === 'finished-goods') return { label: 'HOÀN THÀNH', className: 'done', canStart: false }
   if (order.stage === 'packaging') return { label: 'HOÀN THÀNH', className: 'packing', canStart: false }
   if (order.stage === 'finished-qc') return { label: 'CHỜ QC THÀNH PHẨM', className: 'qc2', canStart: false }
   if (order.mixing?.status === 'Active' || order.mixingStatus === 'Active') return { label: 'ĐANG PHỐI TRỘN', className: 'mixing', canStart: false }
   if (order.stage === 'mixing-supplement') return { label: 'Chờ phối trộn bổ sung', className: 'ready', canStart: true, supplement: true }
-  if (chemicalCompleted && solidCompleted) return { label: 'SẴN SÀNG PHỐI TRỘN', className: 'ready', canStart: true }
-  if (chemicalCompleted && !solidCompleted) return { label: 'CHỜ CÂN RẮN', className: 'waiting', canStart: false }
-  if (order.stage === 'weighing' || order.stage === 'supplement-weighing' || order.scaleStatus?.chemical === 'Active' || order.scaleStatus?.solid === 'Active') return { label: 'Đang cân', className: 'weighing', canStart: false }
-  return { label: 'CHỜ CÂN', className: 'waiting', canStart: false }
+  if (chemicalCompleted && solidCompleted) return { label: 'Sẵn sàng phối trộn', className: 'ready', canStart: true }
+  if (weighingStarted || order.stage === 'supplement-weighing') return { label: 'Đang cân', className: 'weighing', canStart: false }
+  return { label: 'Chờ cân', className: 'waiting', canStart: false }
 }
 
 function getMixingProgress(order) {
