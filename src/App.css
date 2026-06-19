@@ -10694,11 +10694,17 @@ body,
   }
 
   .mixing-machine-table-wrapper,
-  .mixing-active-table-wrapper,
-  .ready-mixing-table-wrapper {
+  .mixing-active-table-wrapper {
     width: 100%;
     max-width: 100%;
     overflow-x: hidden !important;
+  }
+
+  .ready-mixing-table-wrapper {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto !important;
+    overflow-y: hidden;
   }
 
   .mixing-machine-table,
