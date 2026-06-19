@@ -199,7 +199,20 @@ const normalizeMixingMachines = (items = []) => {
 const isActiveMixingMachine = (machine = {}) => normalizeMixingMachineStatus(machine.status) === 'READY'
 const getActiveMixingMachines = (machines = []) => machines.filter(isActiveMixingMachine)
 const kgPerBatch = (value) => `${num(value).toLocaleString('vi-VN', { maximumFractionDigits: 3 })}kg/mẻ`
-const mixingMachineOptionLabel = (machine) => `${machine.machineCode} - ${machine.machineName} - ${kgPerBatch(machine.capacityKg)}`
+const formatMachineCapacityKg = (value) => `${num(value).toLocaleString('vi-VN', { maximumFractionDigits: 3 })}kg`
+const formatMixingMachineLabel = (machine = {}) => {
+  const name = machine.machineName || machine.assignedMachineName || machine.name || ''
+  const capacity = machine.capacityKg ?? machine.assignedMachineCapacityKg
+  if (name && capacity) return `${name} - ${formatMachineCapacityKg(capacity)}`
+  return name || machine.machineCode || '-'
+}
+const mixingMachineOptionLabel = formatMixingMachineLabel
+const getMixingMachineLabelByCode = (code = '', machines = []) => {
+  const normalizedCode = normalizeMixingMachineCode(code)
+  if (!normalizedCode) return '-'
+  const machine = machines.find((item) => item.machineCode === normalizedCode)
+  return machine ? formatMixingMachineLabel(machine) : normalizedCode
+}
 const getOrderAssignedMachineCode = (order = {}) => order.assignedMachineCode || order.mixerMachine || order.assignedMixingMachine || order.mixingMachine || order.mixing?.machineCode || ''
 const getOrderAssignedMachineLabel = (order = {}, machines = []) => {
   const code = getOrderAssignedMachineCode(order)
@@ -207,7 +220,7 @@ const getOrderAssignedMachineLabel = (order = {}, machines = []) => {
   const machine = machines.find((item) => item.machineCode === code)
   const name = order.assignedMachineName || machine?.machineName
   const capacity = order.assignedMachineCapacityKg ?? machine?.capacityKg
-  return name && capacity ? `${code} - ${name} - ${kgPerBatch(capacity)}` : code
+  return formatMixingMachineLabel({ machineCode: code, machineName: name, capacityKg: capacity })
 }
 
 const initialData = {
@@ -1851,7 +1864,7 @@ function OrdersPage({ data, setData }) {
       finishedGoodsStatus: 'Pending',
       scaleStatus: { chemical: 'Pending', solid: 'Pending' },
     }
-    setData((current) => addLogToData({ ...current, orders: [order, ...current.orders] }, `Sử dụng ${sourceLabel} của ${formula.code} để tạo lệnh SX ${id}, chỉ định máy ${assignedMachine.machineCode}.`))
+    setData((current) => addLogToData({ ...current, orders: [order, ...current.orders] }, `Sử dụng ${sourceLabel} của ${formula.code} để tạo lệnh SX ${id}, chỉ định máy ${formatMixingMachineLabel(assignedMachine)}.`))
     setMessage('Tạo lệnh sản xuất thành công')
     setForm((current) => ({ ...current, lot: '', customer: '', mixerMachine: '', productionRequestNo: '', note: '' }))
   }
@@ -2531,7 +2544,7 @@ function FinishedProductQcPage({ data, setData, user }) {
                   <div className="finished-qc-info-card qc-finished-info-card"><span className="label">Công thức gốc</span><strong className="value">{activeOrder.formulaCode || activeOrder.originalFormulaId}</strong></div>
                   <div className="finished-qc-info-card qc-finished-info-card"><span className="label">Khối lượng yêu cầu</span><strong className="value">{kg(activeOrder.requestedWeight ?? activeOrder.quantityKg)}</strong></div>
                   <div className="finished-qc-info-card qc-finished-info-card"><span className="label">Khối lượng sau phối trộn</span><strong className="value">{kg(activeOrder.mixing?.finalWeightKg || activeOrder.quantityKg)}</strong></div>
-                  <div className="finished-qc-info-card qc-finished-info-card"><span className="label">Máy phối trộn</span><strong className="value">{activeOrder.mixingMachine || activeOrder.mixing?.machineCode || '-'}</strong></div>
+                  <div className="finished-qc-info-card qc-finished-info-card"><span className="label">Máy phối trộn</span><strong className="value">{getOrderAssignedMachineLabel(activeOrder, data.mixingMachines)}</strong></div>
                   <div className="finished-qc-info-card qc-finished-info-card"><span className="label">Hoàn thành phối trộn</span><strong className="value">{activeOrder.mixingCompletedAt || activeOrder.mixing?.completedAt || '-'}</strong></div>
                 </div>
               </div>
@@ -3188,6 +3201,7 @@ function MixingPage({ data, setData }) {
     const activeOrder = getMachineActiveOrder(machine.machineCode)
     return { ...machine, status: activeOrder ? 'Đang chạy' : 'Rảnh', activeOrder }
   })
+  const machineLabelByCode = (machineCode) => getMixingMachineLabelByCode(machineCode, machines)
   const durationText = (order) => {
     const start = order.mixingStartAt || order.mixing?.startedAt
     const end = order.mixingCompletedAt || order.mixing?.completedAt
@@ -3290,7 +3304,7 @@ function MixingPage({ data, setData }) {
         },
         updatedAt: requestedAt,
       } : item),
-    }, `Tổ phối trộn đề nghị đổi máy lệnh ${changeRequestDraft.orderCode} từ ${changeRequestDraft.currentMachine || '-'} sang ${changeRequestDraft.requestedMachine}. Lý do: ${changeRequestDraft.reason.trim()}`))
+    }, `Tổ phối trộn đề nghị đổi máy lệnh ${changeRequestDraft.orderCode} từ ${machineLabelByCode(changeRequestDraft.currentMachine)} sang ${machineLabelByCode(changeRequestDraft.requestedMachine)}. Lý do: ${changeRequestDraft.reason.trim()}`))
     setChangeRequestDraft(null)
     setWarning('Đã gửi đề nghị đổi máy, chờ Phòng SX/Admin xác nhận.')
   }
@@ -3302,7 +3316,7 @@ function MixingPage({ data, setData }) {
       return
     }
     if (!activeMachines.some((machine) => machine.machineCode === machineCode)) {
-      setWarning(`Máy ${machineCode} không ở trạng thái READY.`)
+      setWarning(`Máy ${machineLabelByCode(machineCode)} không ở trạng thái READY.`)
       return
     }
     const dispatchState = getMixingDispatchState(order)
@@ -3316,7 +3330,7 @@ function MixingPage({ data, setData }) {
     }
     const runningOrder = getMachineActiveOrder(machineCode)
     if (runningOrder) {
-      setWarning(`Máy ${machineCode} đang thực hiện ${runningOrder.orderCode || runningOrder.id}`)
+      setWarning(`Máy ${machineLabelByCode(machineCode)} đang thực hiện ${runningOrder.orderCode || runningOrder.id}`)
       return
     }
     setWarning('')
@@ -3351,7 +3365,7 @@ function MixingPage({ data, setData }) {
         }],
         updatedAt: startedAt,
       } : item),
-    }, supplement ? `Bắt đầu phối trộn bổ sung sau khi xác nhận QR hỗn hợp lệnh ${order.id} trên máy ${machineCode}.` : `Bắt đầu phối trộn sau khi xác nhận QR hỗn hợp lệnh ${order.id} trên máy ${machineCode}.`))
+    }, supplement ? `Bắt đầu phối trộn bổ sung sau khi xác nhận QR hỗn hợp lệnh ${order.id} trên máy ${machineLabelByCode(machineCode)}.` : `Bắt đầu phối trộn sau khi xác nhận QR hỗn hợp lệnh ${order.id} trên máy ${machineLabelByCode(machineCode)}.`))
   }
   const completeMixing = (order, supplement) => setData((current) => addLogToData({
     ...current,
@@ -3394,7 +3408,7 @@ function MixingPage({ data, setData }) {
                 const progress = machine.activeOrder ? getMixingProgress(machine.activeOrder) : 0
                 return (
                   <tr key={machine.machineCode}>
-                    <td><strong>{machine.machineCode}</strong> - {machine.machineName} ({kgPerBatch(machine.capacityKg)} - {machine.motorPower || '-'})</td>
+                    <td>{formatMixingMachineLabel(machine)}</td>
                     <td><span className={`dispatch-badge ${machine.activeOrder ? 'mixing' : 'ready'}`}>{machine.status}</span></td>
                     <td>{machine.activeOrder ? (machine.activeOrder.orderCode || machine.activeOrder.id) : '-'}</td>
                     <td><div className="mix-progress mixing-progress"><div className="mixing-progress-bar"><i style={{ width: `${progress}%` }} /></div><strong>{progress}%</strong></div></td>
@@ -3480,7 +3494,7 @@ function MixingPage({ data, setData }) {
                       <td><div className="mixing-qr-confirm"><button className="secondary-button confirm-qr-button" onClick={() => confirmMixingQr(order)}>Xác nhận QR hỗn hợp</button><span className={`dispatch-badge ${qrConfirmed ? 'ready' : qrStatus === 'Không đạt' ? 'fail' : 'waiting'}`}>{qrStatus}</span></div></td>
                       <td>
                         <div className="mixing-qr-confirm">
-                          {assignedMachineCode ? <strong>{assignedMachine ? mixingMachineOptionLabel(assignedMachine) : assignedMachineCode}</strong> : <span className="process-alert">Chưa được Phòng SX chỉ định máy</span>}
+                          {assignedMachineCode ? <strong>{assignedMachine ? formatMixingMachineLabel(assignedMachine) : getOrderAssignedMachineLabel(order, machines)}</strong> : <span className="process-alert">Chưa được Phòng SX chỉ định máy</span>}
                           <button type="button" className="secondary-button" onClick={() => openMachineChangeRequest(order)}>Đề nghị đổi máy</button>
                           {pendingChange && <span className="dispatch-badge waiting">Chờ xác nhận đổi máy</span>}
                         </div>
@@ -3536,7 +3550,7 @@ function MixingPage({ data, setData }) {
               <button type="button" className="icon-button" onClick={() => setChangeRequestDraft(null)} aria-label="Đóng">×</button>
             </div>
             <div className="production-form-grid order-create-form">
-              <label>Máy hiện tại<input value={changeRequestDraft.currentMachine || 'Chưa được Phòng SX chỉ định máy'} disabled /></label>
+              <label>Máy hiện tại<input value={changeRequestDraft.currentMachine ? machineLabelByCode(changeRequestDraft.currentMachine) : 'Chưa được Phòng SX chỉ định máy'} disabled /></label>
               <label>Máy đề nghị<select value={changeRequestDraft.requestedMachine} onChange={(event) => updateChangeRequestDraft('requestedMachine', event.target.value)}><option value="">Chọn máy</option>{activeMachines.map((machine) => <option key={machine.machineCode} value={machine.machineCode}>{mixingMachineOptionLabel(machine)}</option>)}</select></label>
               <label>Người đề nghị<input value={changeRequestDraft.requestedBy} onChange={(event) => updateChangeRequestDraft('requestedBy', event.target.value)} /></label>
               <label>Thời gian đề nghị<input value={changeRequestDraft.requestedAt} disabled /></label>
@@ -4071,7 +4085,7 @@ function DashboardPage({ data }) {
   const outputByTime = countBy(filteredOrders, (order) => String(order.updatedAt || order.createdAt || '').slice(5, 10) || 'N/A', (order) => num(order.quantityKg || order.requestedWeight)).slice(-5)
   const capacityByMachine = activeMachines.map((machine) => {
     const active = filteredOrders.filter((order) => (order.mixingMachine || order.mixing?.machineCode) === machine.machineCode).reduce((sum, order) => sum + num(order.quantityKg || order.requestedWeight), 0)
-    return [machine.machineCode, Math.min(100, Math.round((active / Math.max(1, num(machine.capacityKg))) * 100))]
+    return [formatMixingMachineLabel(machine), Math.min(100, Math.round((active / Math.max(1, num(machine.capacityKg))) * 100))]
   })
   const outputByGroup = countBy(filteredOrders, getOrderGroup, (order) => num(order.quantityKg || order.requestedWeight)).slice(0, 4)
   const lossRows = [
@@ -4120,6 +4134,7 @@ function DashboardPage({ data }) {
 
 function normalizeProductionHistory(data = {}) {
   const orders = normalizeProductionOrders(data.orders || [], data.formulas || [])
+  const machines = normalizeMixingMachines(data.mixingMachines || [])
   const productionLogs = data.productionLogs || data.logs || []
   const qc2Logs = data.qc2Logs || []
   const supplementalWeighing = data.supplementalWeighing || []
@@ -4134,6 +4149,7 @@ function normalizeProductionHistory(data = {}) {
     const supplementRows = supplementalWeighing.filter((ticket) => ticket.orderId === order.id || ticket.orderCode === orderKey)
     const relatedLogs = productionLogs.filter((log) => String(log.entry || '').includes(orderKey) || log.orderId === order.id)
     const totalSupplementKg = qc2Rows.reduce((sum, ticket) => sum + getAdjustmentItems(ticket).reduce((lineSum, item) => lineSum + Math.max(0, num(item.adjustmentKg ?? item.requiredKg)), 0), 0)
+    const mixingMachineLabel = getMixingMachineLabelByCode(order.mixingMachine || order.mixing?.machineCode || getOrderAssignedMachineCode(order), machines)
     const currentStage = ({
       qc1: 'QC sản xuất thử',
       weighing: 'Cân',
@@ -4148,7 +4164,7 @@ function normalizeProductionHistory(data = {}) {
     const timeline = [
       { time: order.createdAt, stage: 'Tạo lệnh SX', actor: order.createdBy || '-', content: `Tạo lệnh ${orderKey}`, status: order.qc1Status || order.status },
       ...qc1Rows.map((row, index) => ({ time: row.time || row.createdAt, stage: 'QC sản xuất thử', actor: row.createdBy || row.operator || 'QC', content: `QC sản xuất thử lần ${index + 1}: ${displayQcTrialText(row.result)}`, status: displayQcTrialText(row.result) })),
-      ...(order.mixingStartAt || order.mixing?.startedAt ? [{ time: order.mixingStartAt || order.mixing?.startedAt, stage: 'Phối trộn', actor: order.mixing?.operator || 'Tổ phối trộn', content: `Bắt đầu phối trộn trên ${order.mixingMachine || order.mixing?.machineCode || '-'}`, status: 'Bắt đầu' }] : []),
+      ...(order.mixingStartAt || order.mixing?.startedAt ? [{ time: order.mixingStartAt || order.mixing?.startedAt, stage: 'Phối trộn', actor: order.mixing?.operator || 'Tổ phối trộn', content: `Bắt đầu phối trộn trên ${mixingMachineLabel}`, status: 'Bắt đầu' }] : []),
       ...(order.mixingCompletedAt || order.mixing?.completedAt ? [{ time: order.mixingCompletedAt || order.mixing?.completedAt, stage: 'Phối trộn', actor: order.mixing?.operator || 'Tổ phối trộn', content: 'Hoàn thành phối trộn', status: 'Hoàn thành' }] : []),
       ...qc2Rows.map((ticket) => ({ time: ticket.createdAt, stage: 'QC thành phẩm', actor: ticket.createdBy || 'QC', content: `${ticket.adjustmentId || ticket.id}: ${ticket.reason || 'Điều chỉnh QC2'}`, status: displayQc2Status(ticket.status) })),
       ...qc2Logs.filter((log) => log.orderId === order.id).map((log) => ({ time: log.time, stage: 'QC thành phẩm', actor: log.actor || 'QC', content: log.action || '-', status: log.result || '-' })),
@@ -4157,7 +4173,7 @@ function normalizeProductionHistory(data = {}) {
       ...finishedRows.map((item) => ({ time: item.importDate, stage: 'Nhập kho TP', actor: item.receiver || '-', content: `Nhập kho ${item.finishedCode}`, status: item.status })),
       ...relatedLogs.map((log) => ({ time: log.time, stage: 'Nhật ký hệ thống', actor: log.actor || '-', content: log.entry || log.action || '-', status: log.status || '-' })),
     ].filter((item) => item.time || item.content).sort((a, b) => String(a.time || '').localeCompare(String(b.time || ''), 'vi', { numeric: true }))
-    return { order, qc1Rows, qc2Rows, supplementRows, packingLog, finishedRows, timeline, totalSupplementKg, currentStage }
+    return { order, machines, qc1Rows, qc2Rows, supplementRows, packingLog, finishedRows, timeline, totalSupplementKg, currentStage }
   })
 }
 
@@ -4198,7 +4214,7 @@ function getHistoryMixingRows(record) {
   return (order.mixing || order.mixingStatus || order.mixingCompletedAt) ? [{
     no: 1,
     type: order.mixing?.supplement ? 'Bổ sung QC2' : 'Chính',
-    machine: order.mixingMachine || order.mixing?.machineCode || '-',
+    machine: getMixingMachineLabelByCode(order.mixingMachine || order.mixing?.machineCode || getOrderAssignedMachineCode(order), record.machines || []),
     operator: order.mixing?.operator || 'Tổ phối trộn',
     startedAt: order.mixingStartAt || order.mixing?.startedAt || '-',
     completedAt: order.mixingCompletedAt || order.mixing?.completedAt || '-',
@@ -4496,9 +4512,9 @@ function ReportsPage({ data }) {
         {renderKpis(reportKpis.machines)}
         <section className="panel report-table-panel"><h2>Máy phối trộn</h2><SimpleTable headers={['Mã máy', 'Tên máy', 'Công suất motor', 'Công suất kg/mẻ', 'Trạng thái', 'Lệnh đang chạy']} rows={machines.map((machine) => {
           const activeOrder = orders.find((order) => (order.mixingMachine || order.mixing?.machineCode) === machine.machineCode && (order.mixing?.status === 'Active' || order.mixingStatus === 'Active'))
-          return <tr key={machine.machineCode}><td>{machine.machineCode}</td><td>{machine.machineName}</td><td>{machine.motorPower || '-'}</td><td>{machine.capacityKg}</td><td>{machine.status}</td><td>{activeOrder?.id || '-'}</td></tr>
+          return <tr key={machine.machineCode}><td>{machine.machineCode}</td><td>{formatMixingMachineLabel(machine)}</td><td>{machine.motorPower || '-'}</td><td>{machine.capacityKg}</td><td>{machine.status}</td><td>{activeOrder?.id || '-'}</td></tr>
         })} /></section>
-        <section className="panel report-table-panel"><h2>Lệnh phối trộn</h2><SimpleTable tableClassName="report-wide-table" headers={['Lệnh', 'Sản phẩm', 'LOT', 'Máy', 'Trạng thái phối trộn', 'Bắt đầu', 'Hoàn thành']} rows={orders.filter((order) => order.mixing || order.mixingStatus || ['mixing', 'mixing-supplement'].includes(order.stage)).map((order) => <tr key={order.id}><td>{order.id}</td><td>{order.product}</td><td>{order.lot}</td><td>{order.mixingMachine || order.mixing?.machineCode || '-'}</td><td>{order.mixingStatus || order.mixing?.status || '-'}</td><td>{order.mixingStartAt || order.mixing?.startedAt || '-'}</td><td>{order.mixingCompletedAt || order.mixing?.completedAt || '-'}</td></tr>)} /></section>
+        <section className="panel report-table-panel"><h2>Lệnh phối trộn</h2><SimpleTable tableClassName="report-wide-table" headers={['Lệnh', 'Sản phẩm', 'LOT', 'Máy', 'Trạng thái phối trộn', 'Bắt đầu', 'Hoàn thành']} rows={orders.filter((order) => order.mixing || order.mixingStatus || ['mixing', 'mixing-supplement'].includes(order.stage)).map((order) => <tr key={order.id}><td>{order.id}</td><td>{order.product}</td><td>{order.lot}</td><td>{getOrderAssignedMachineLabel(order, machines)}</td><td>{order.mixingStatus || order.mixing?.status || '-'}</td><td>{order.mixingStartAt || order.mixing?.startedAt || '-'}</td><td>{order.mixingCompletedAt || order.mixing?.completedAt || '-'}</td></tr>)} /></section>
       </>
     )
     return (
@@ -4565,17 +4581,18 @@ function MixingMachineCatalogPage({ data, setData, user }) {
       const nextMachines = exists
         ? currentMachines.map((item) => item.machineCode === editingMachineCode ? machine : item)
         : [...currentMachines, machine]
-      return addLogToData({ ...current, mixingMachines: normalizeMixingMachines(nextMachines) }, `${editingMachineCode ? 'Cập nhật' : 'Thêm'} máy phối trộn ${machine.machineCode}.`)
+      return addLogToData({ ...current, mixingMachines: normalizeMixingMachines(nextMachines) }, `${editingMachineCode ? 'Cập nhật' : 'Thêm'} máy phối trộn ${formatMixingMachineLabel(machine)}.`)
     })
-    setNotice(`${editingMachineCode ? 'Đã cập nhật' : 'Đã thêm'} máy phối trộn ${machine.machineCode}.`)
+    setNotice(`${editingMachineCode ? 'Đã cập nhật' : 'Đã thêm'} máy phối trộn ${formatMixingMachineLabel(machine)}.`)
     resetMachineDraft()
   }
   const deactivateMachine = (machineCode) => {
+    const machineLabel = getMixingMachineLabelByCode(machineCode, machines)
     setData((current) => addLogToData({
       ...current,
       mixingMachines: normalizeMixingMachines(current.mixingMachines).map((machine) => machine.machineCode === machineCode ? { ...machine, status: 'INACTIVE' } : machine),
-    }, `Ngừng sử dụng máy phối trộn ${machineCode}.`))
-    setNotice(`Đã chuyển ${machineCode} sang INACTIVE.`)
+    }, `Ngừng sử dụng máy phối trộn ${machineLabel}.`))
+    setNotice(`Đã chuyển ${machineLabel} sang INACTIVE.`)
     if (editingMachineCode === machineCode) resetMachineDraft()
   }
   const resolveMachineRequest = (order, approved) => {
@@ -4587,7 +4604,7 @@ function MixingMachineCatalogPage({ data, setData, user }) {
     }
     const nextMachine = machines.find((machine) => machine.machineCode === request.requestedMachine && machine.status === 'READY')
     if (approved && !nextMachine) {
-      setNotice(`Máy ${request.requestedMachine} không tồn tại hoặc không ở trạng thái READY.`)
+      setNotice(`Máy ${getMixingMachineLabelByCode(request.requestedMachine, machines)} không tồn tại hoặc không ở trạng thái READY.`)
       return
     }
     const rejectReason = approved ? '' : window.prompt('Lý do từ chối:', '')?.trim()
@@ -4651,7 +4668,7 @@ function MixingMachineCatalogPage({ data, setData, user }) {
         },
         updatedAt: resolvedAt,
       } : item),
-    }, `${approved ? 'Duyệt' : 'Từ chối'} đề nghị đổi máy lệnh ${order.orderCode || order.id}: ${request.currentMachine || '-'} -> ${request.requestedMachine}. Lý do: ${request.reason}. Người đề nghị: ${request.requestedBy}. Người duyệt: ${approvedBy}.`))
+    }, `${approved ? 'Duyệt' : 'Từ chối'} đề nghị đổi máy lệnh ${order.orderCode || order.id}: ${getMixingMachineLabelByCode(request.currentMachine, machines)} -> ${getMixingMachineLabelByCode(request.requestedMachine, machines)}. Lý do: ${request.reason}. Người đề nghị: ${request.requestedBy}. Người duyệt: ${approvedBy}.`))
     setNotice(`${approved ? 'Đã duyệt' : 'Đã từ chối'} đề nghị đổi máy ${order.orderCode || order.id}.`)
   }
   return (
@@ -4692,7 +4709,7 @@ function MixingMachineCatalogPage({ data, setData, user }) {
               {machines.map((machine) => (
                 <tr key={machine.machineCode}>
                   <td><strong>{machine.machineCode}</strong></td>
-                  <td>{machine.machineName}</td>
+                  <td>{formatMixingMachineLabel(machine)}</td>
                   <td>{machine.motorPower || '-'}</td>
                   <td>{machine.capacityKg}</td>
                   <td>{machine.department || machine.productionTeam || '-'}</td>
@@ -4716,8 +4733,8 @@ function MixingMachineCatalogPage({ data, setData, user }) {
         <SimpleTable headers={['Lệnh', 'Máy hiện tại', 'Máy đề nghị', 'Lý do', 'Thời gian', 'Hành động']} rows={pendingMachineRequests.map((order) => (
           <tr key={order.id}>
             <td>{order.orderCode || order.id}</td>
-            <td>{order.machineChangeRequest.currentMachine || '-'}</td>
-            <td>{order.machineChangeRequest.requestedMachine}</td>
+            <td>{getMixingMachineLabelByCode(order.machineChangeRequest.currentMachine, machines)}</td>
+            <td>{getMixingMachineLabelByCode(order.machineChangeRequest.requestedMachine, machines)}</td>
             <td>{order.machineChangeRequest.reason}</td>
             <td>{order.machineChangeRequest.requestedAt || '-'}</td>
             <td>
